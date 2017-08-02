@@ -1,0 +1,211 @@
+a:hover {
+    text-decoration:none;
+}
+.user-login-5 .login-container > .login-content > .login-form input {
+    padding-top:5px;
+    padding-bottom:5px;
+}
+.page-content {
+    padding-top:55px;
+    margin-left: -1px;
+}
+.page-header .navbar .navbar-nav .dropdown-menu > li > a {
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+    color:#EEEEEE;
+}
+.page-header .navbar .navbar-nav .dropdown-menu > li > a > i {
+    color:#EEEEEE;
+}
+.page-header .navbar-collapse .navbar-nav .more-dropdown-sub > a::after {
+    top:15px;
+}
+.page-header .navbar .navbar-nav > li > a {
+    padding:10px 20px;
+    font-size:14px;
+}
+.page-header .navbar-collapse .navbar-nav .more-dropdown > a::after {
+    right:0px;
+    top:8px;
+}
+.page-logo-text {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 20px;
+    margin-left: 20px;
+}
+.crg-text {
+    color:#005982;
+}
+.crg-text .renaissance {
+    color:#f26e22;
+}
+
+.page-header .navbar .navbar-nav > li:hover > a {
+    background-color:#005982;
+    color:#CCCCCC;
+}
+.page-header .navbar .navbar-nav .dropdown-menu > li > a:focus, 
+.page-header .navbar .navbar-nav .dropdown-menu > li > a.active, 
+.page-header .navbar .navbar-nav .dropdown-menu > li > a:hover {
+    color:#f26e22;
+}
+.page-header .navbar .navbar-nav .dropdown-menu > li > a:focus > i,
+.page-header .navbar .navbar-nav .dropdown-menu > li > a.active > i,
+.page-header .navbar .navbar-nav .dropdown-menu > li > a:hover > i {
+    color:#f26e22;
+}
+.breadcrumbs {
+    margin-bottom:15px;
+}
+span.required {
+    color:#e73d4a;
+}
+select2-container--bootstrap {
+    display:inline-block;
+}
+
+.profile-stat-title {
+    color: #7f90a4;
+    font-size: 25px;
+    text-align: center;
+}
+.profile-stat-text {
+    color: #5b9bd1;
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+}
+
+body {
+    background-color:#f9f9f9;
+}
+.page-header .navbar-fixed-top {
+    background: -moz-linear-gradient(top,#ececec,white 45px);
+    background: -webkit-gradient(linear,0 0,0 45,from(#ececec),to(#fff));
+    background-repeat: repeat-x;
+}
+.page-on-scroll .page-header .navbar-fixed-top {
+    border-bottom:1px solid #CCC;
+}
+
+.page-header .navbar-collapse .navbar-nav .more-dropdown > a {
+    padding-right:40px;
+}
+
+.page-header .navbar .navbar-nav > li > a {
+    background-color: #EEEEEE;
+}
+.page-header .navbar .navbar-nav li.open:hover > a, .page-header .navbar .navbar-nav li.open > a {
+    background-color:#005982 !important;
+    color:#f26e22 !important;
+}
+.page-header .navbar .navbar-nav li.active > a {
+    background-color:#f26e22;
+    color: #005982;
+}
+
+.page-header .navbar .navbar-nav .dropdown-menu {
+    background-color:#005982;
+}
+
+.page-header .navbar .topbar-actions .btn-group-img .btn {
+    background-color: inherit;
+}
+.page-header .navbar .topbar-actions .btn-group-img .btn > span {
+    color:#f26e22;
+}
+
+.dropdown-menu-v2 {
+    padding: 5px;
+    background-color: #EEEEEE;
+    font-size: 11px;
+    min-width:100px;
+}
+.dropdown-menu-v2 .divider {
+    margin: 5px 0px;
+    background-color:#FFFFFF;
+}
+.dropdown-menu-v2::before {
+    border-bottom-color:#EEEEEE;
+}
+.dropdown-menu-v2 > li > a:hover {
+    background-color:#005982 !important;
+    color:#f26e22 !important;
+}
+
+/*.form-control-static{
+    padding-top: 0;
+}*/
+
+table.table-custom td.warning {
+    background-color: #f0ad4e !important;
+    color: #fff;
+}
+
+table.table-custom td.success {
+    background-color: #5cb85c !important;
+    color: #fff;
+}
+
+table.table-custom td.danger {
+    background-color: #d9534f !important;
+    color: #fff;
+}
+
+.error {
+    color:red;
+}
+
+.title_div{
+    border:1px solid #000;
+    margin: 7px;
+}
+
+.cutm_theme_oranger {
+    background-color:#f26e22;
+}
+
+.cutm_theme_blue {
+    color:#005982;
+}
+
+.cutm_theme_font {
+    color: #005982;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 5px 5px;
+    font-family: Oswald, sans-serif
+}
+
+.cutm_text_bold {
+    font-weight: bolder;
+}
+
+.cutm_dashbord_box{
+    font-size: 16px;
+    font-weight: 400;
+    background-color: #005982;
+    color: #CCCCCC;
+    font-family: Oswald, sans-serif;
+}
+
+.btn_blue {
+    font-size: 14px;
+    font-weight: 400;
+    background-color: #005982;
+    color: #CCCCCC;
+    /*font-family: Oswald, sans-serif;*/
+}
+
+.btn_red {
+    font-size: 14px;
+    font-weight: 400;
+    background-color: #D91E18;
+    color: #CCCCCC;
+    font-family: Oswald, sans-serif;
+}
+
+.cutm_lbl{
+    padding: 5px;
+}

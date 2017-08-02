@@ -1,0 +1,7 @@
+C:
+
+cd C:\Program Files\Tableau\Tableau Server\8.2\bin
+
+tabcmd login -s http://localhost:8001 -u {username} -p {password}
+
+tabcmd get "http://localhost:8001/{url}.{file_type}?{filter_name}={filter_value}" -f "{output}.{file_type}"

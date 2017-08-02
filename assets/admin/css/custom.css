@@ -1,0 +1,130 @@
+/* here you can put your own css to customize and override the theme */
+.alert {
+    position:relative;
+    margin-left: 10px;
+    margin-top: 5px;
+    padding-left: 25px;
+}
+.alert > .fa, .alert > .glyphicon {
+    background: inherit;
+    border: inherit;
+    border-radius: 50%;
+    height: 35px;
+    left: -15px;
+    line-height: 35px;
+    position: absolute;
+    text-align: center;
+    top: -15px;
+    width: 35px;
+}
+
+.page-sidebar-menu li.start {
+    margin-top:15px;
+}
+.has-error .select2-container .select2-choice, .has-error .select2-container .select2-choices {
+    border-color: #A94442;
+}
+.has-error .bootstrap-select .btn {
+    border-color: #A94442;
+}
+#make-data-table {
+    color:#000000;
+}
+
+/* Vertical Align rows */
+.v-align-row {
+    display:table;
+    width: 100%;
+    margin:auto;
+}
+.v-align-row > [class*="col-align-"] {
+    float: none;
+    display: table-cell;
+}
+.v-align-row > .col-align-top {
+    vertical-align: top;
+}
+.v-align-row > .col-align-middle {
+    vertical-align: middle;
+}
+.v-align-row > .col-align-bottom {
+    vertical-align: bottom;
+}
+
+.bordered-row {
+    border: 1px solid #ddd;
+    padding:10px 0px;
+}
+.bordered-row .col-md-6 {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+.text-left-imp{
+    text-align:left !important;
+}
+.text-right-imp{
+    text-align:right !important;
+}
+.text-center-imp{
+    text-align:center !important;
+}
+.remaining-leaves{
+    margin-top: 0px !important; 
+    margin-bottom: 10px; 
+    font-size: 16px; 
+    font-weight: bold; 
+    line-height: 1.2;
+}
+.leave-count{
+    line-height:2.2;
+}
+#med_cert{
+    display:none;
+}
+#medical_cert{
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.error-block{
+    color: #e02222;
+    display: none;
+}
+.margin-bottom-20{
+    margin-bottom:20px;
+}
+
+.line-item{
+    border-top:1px solid #dfdfdf; 
+     
+    padding-top:20px
+}
+
+.loading-img{
+    width: 60px;
+    margin: 50px auto;
+}
+
+.loading-img img{
+    width: 32px;
+    margin: 10px;
+    display: block;
+}
+
+.light-green {
+    background: #eee;
+     padding: 5px 0 8px 0;
+    /*color: #ffffff;*/
+}
+
+table.table-custom td.warning {
+    background-color: #EC971F !important;
+}
+
+table.table-custom td.success {
+    background-color: #449D44 !important;
+}
+
+table.table-custom td.danger {
+    background-color: #C9302C !important;
+}
+
