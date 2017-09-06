@@ -3,7 +3,7 @@
     <div id="print_div">
         <div class="col-md-12">
             <div class="header text-center">
-                <h3>D B Crop Ltd,<?php echo $employee['city_name'] ?></h3>
+                <h3>DB Corp Ltd.,<?php echo $employee['city_name'] ?></h3>
                 <h4>Travelling Bill</h4>
             </div>    
         </div>    
@@ -17,27 +17,31 @@
                                 <div class="col-md-12 portlet light bordered text-center">
                                     <h4 class="form-section">Expense Reimbursement form</h4>
                                     <div class="row">
-                                        <table id="basicTable" class="table table-hover table-bordered">
+                                        <table id="make-data-table_asd1" class="table table-hover table-bordered table-responsive" style="display:block;">                                        
                                             <tbody>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <td><?php echo $employee['first_name'] . " " . $employee['last_name'] ?></td>
-                                                    <th>Employee Id</th>
-                                                    <td><?php echo $employee['employee_id'] ?></td>
-                                                    <th>Designation</th>
-                                                    <td><?php echo $employee['desg_name'] ?></td>
+                                                    <th width="15%">Name</th>
+                                                    <td width="16%"><?php echo $employee['first_name'] . " " . $employee['last_name'] ?></td>
+                                                    <th width="15%">Employee Id</th>
+                                                    <td width="16%"><?php echo $employee['employee_id'] ?></td>
+                                                    <th width="15%">Designation</th>
+                                                    <td width="16%"><?php echo $employee['desg_name'] ?></td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Gender</th>
-                                                    <td><?php echo $employee['gender'] ?></td>
+                                                    <th>Grade</th>
+                                                    <td><?php echo $employee['grade_name'] ?></td>
                                                     <th>Reporting Manager</th>
                                                     <td><?php echo $employee['reporting_manager'] ?></td>
                                                     <th>Departure Date and Time</th>
-                                                    <td><?php echo $request['departure_date'] ?></td>
+                                                    <td><?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Return Date and Time</th>
-                                                    <td><?php echo $request['departure_date'] ?></td>
+                                                    <td><?php
+                                                        if ($request['trip_type'] != "1") {
+                                                            echo date(DATETIME_FORMAT, strtotime($request['return_date']));
+                                                        }
+                                                        ?></td>
                                                     <th>Travel From</th>
                                                     <td><?php echo $request['from_city_name'] ?></td>
                                                     <th>Travel From</th>
@@ -94,7 +98,7 @@
                                 <div class="col-md-12 light bordered ">
                                     <h4 class="form-section">Ticket Details</h4>
                                     <div class="row">
-                                        <table id="basicTable" class="table table-hover table-bordered text-center">
+                                        <table id="ticket_table" class="table table-hover table-bordered text-center">
                                             <thead>
                                                 <tr class="th_blue">
                                                     <th>Sr.No.</th>
@@ -114,7 +118,7 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
-                                                        <td><?php echo $value['date'] ?></td>
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
                                                         <td><?php echo $value['location_from'] ?></td>
                                                         <td><?php echo $value['location_to'] ?></td>
                                                         <td><?php echo $value['arrange_by'] ?></td>
@@ -140,6 +144,36 @@
                                                         </td>
                                                     </tr>
                                                 <?php } ?>
+                                                <?php foreach ($other_trip_expense as $key => $value) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $i++; ?></td>                             
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['trip_date'])); ?></td>
+                                                        <td><?php echo $value['trip_from'] ?></td>
+                                                        <td><?php echo $value['trip_to'] ?></td>
+                                                        <td><?php echo $value['trip_arrange_by'] ?></td>
+                                                        <td><?php
+                                                            if ($value['trip_book_by'] == "1") {
+                                                                echo "Flight";
+                                                            } else if ($value['trip_book_by'] == "2") {
+                                                                echo "Train";
+                                                            } else if ($value['trip_book_by'] == "3") {
+                                                                echo "Car";
+                                                            } else if ($value['trip_book_by'] == "4") {
+                                                                echo "Bus";
+                                                            } else if ($value['trip_book_by'] == "5") {
+                                                                echo "Hotel";
+                                                            }
+                                                            ?></td>
+                                                        <td width="15%">
+                                                            <?php $total = $total + $value['total']; ?>
+                                                            <?php echo $value['total']; ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php } ?>
+
+                                            </tbody>
+                                            <tfoot>
                                                 <tr>
                                                     <td colspan="5"></td>
                                                     <th align="center">Total</th>
@@ -149,7 +183,7 @@
                                                         </b>
                                                     </td>
                                                 </tr>
-                                            </tbody>
+                                            </tfoot>
                                         </table> 
                                     </div>
                                 </div>
@@ -159,7 +193,7 @@
                                 <div class="col-md-12 light bordered ">
                                     <h4 class="form-section">Lodging(Guest House/Hotel/Own Arrangement)</h4>
                                     <div class="row">
-                                        <table id="basicTable" class="table table-hover table-bordered text-center">
+                                        <table id="loading_hotel" class="table table-hover table-bordered text-center">
                                             <thead>
                                                 <tr class="th_blue">
                                                     <th>Sr.No.</th>
@@ -168,6 +202,7 @@
                                                     <th>Room No</th>
                                                     <th>Bill No</th>
                                                     <th>Location</th>
+                                                    <th>Paid By</th>
                                                     <th>Loding Expense</th>
                                                     <th>Other Expense</th>
                                                     <th>Amount</th>
@@ -181,11 +216,12 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
-                                                        <td><?php echo $value['date_from'] ?></td>
-                                                        <td><?php echo $value['date_to'] ?></td>
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['date_from'])); ?></td>
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['date_to'])); ?></td>
                                                         <td><?php echo $value['bill_no']; ?></td>
                                                         <td><?php echo $value['bill_no_1']; ?></td>
                                                         <td><?php echo $value['location'] ?></td>
+                                                        <td><?php echo $value['arrange_by'] ?></td>
                                                         <td><?php echo $value['loading_expense_1'] ?></td>
                                                         <td><?php echo $value['other_expense_1'] ?></td>
                                                         <td width="15%"><?php $total1 = $total1 + $value['cost']; ?>
@@ -194,12 +230,35 @@
 
                                                     </tr>
                                                 <?php } ?>
+                                                <?php foreach ($other_loading_booking as $key => $value) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $i++; ?></td>
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['loading_departure'])); ?></td>
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['loading_return'])); ?></td>
+                                                        <td><?php echo $value['room_no']; ?></td>
+                                                        <td><?php echo $value['bill_no']; ?></td>                                                    
+                                                        <td><?php echo $value['location'] ?></td>
+                                                        <td><?php echo $value['arrange_by'] ?></td>
+                                                        <td><?php echo $value['loading_expense'] ?></td>
+                                                        <td><?php echo $value['other_expense'] ?></td>
+                                                        <td width="15%"><?php
+                                                            $total_loading = $value['loading_total'] + $value['loading_expense'] + $value['other_expense'];
+                                                            $total1 = $total1 + $total_loading;
+                                                            ?>
+                                                            <?php echo $total_loading; ?>
+                                                        </td>
+
+                                                    </tr>
+                                                <?php } ?>                                                
+                                            </tbody>
+                                            <tfoot>
                                                 <tr>
-                                                    <td colspan="7"></td>
+                                                    <td colspan="8"></td>
                                                     <th>Total</th>
                                                     <td><b><?php echo $total1; ?></b></td>
                                                 </tr>
-                                            </tbody>
+                                            </tfoot>
                                         </table> 
                                     </div>
                                 </div>
@@ -213,7 +272,7 @@
                                         $i = 1;
                                         $total2 = 0;
                                         ?>
-                                        <table id="basicTable" class="table table-hover table-bordered text-center">
+                                        <table id="da_perticulars" class="table table-hover table-bordered text-center">
                                             <thead>
                                                 <tr class="th_blue">
                                                     <th>Sr.No.</th>
@@ -228,25 +287,39 @@
                                             <tbody>
                                                 <tr>
                                                     <td><?php echo $i; ?></td>
-                                                    <td><?php echo $request['departure_date']; ?></td>
-                                                    <td><?php echo $request['return_date']; ?></td>
+                                                    <td><?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?></td>
+                                                    <td><?php echo date(DATETIME_FORMAT, strtotime($request['return_date'])); ?></td>
                                                     <td><?php echo $request['to_city_name']; ?></td>
-                                                    <td><?php echo $day; ?></td>
+                                                    <td><?php
+                                                        echo $day . " Day," . $hours . " hours";
+                                                        ?></td>
                                                     <td><?php echo $request['DA_allowance']; ?></td>
                                                     <td width="15%">
                                                         <?php
                                                         $da_total = $request['DA_allowance'] * $day;
+                                                        if ($hours != '0') {
+                                                            if ($hours != '') {
+                                                                if ($hours < 14) {
+                                                                    $da = $request['DA_allowance'] / 2;
+                                                                    $da_total = $da_total + $da;
+                                                                } else {
+                                                                    $da_total = $da_total + $request['DA_allowance'];
+                                                                }
+                                                            }
+                                                        }
                                                         $total2 = $total2 + $da_total;
                                                         ?>
                                                         <?php echo $da_total; ?>
                                                     </td>
-                                                </tr>
+                                                </tr>                                                
+                                            </tbody>
+                                            <tfoot>
                                                 <tr>
                                                     <td colspan="5"></td>
                                                     <th>Total</th>
                                                     <td><b><?php echo $total2; ?></b></td>
                                                 </tr>
-                                            </tbody>
+                                            </tfoot>
                                         </table> 
                                     </div>
                                 </div>
@@ -257,7 +330,7 @@
                                     <h4 class="form-section">Conveyance-Car Hire Bills</h4>
                                     <div class="row">
                                         <?php $total3 = 0; ?>
-                                        <table id="basicTable" class="table table-hover table-bordered text-center">
+                                        <table id="conveyance_car" class="table table-hover table-bordered text-center">
                                             <thead>
                                                 <tr class="th_blue">
                                                     <th>Sr.No.</th>
@@ -277,31 +350,57 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
-                                                        <td><?php echo $value['date'] ?></td>
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
                                                         <td><?php echo $value['location_from'] ?></td>
                                                         <td><?php echo $value['location_to'] ?></td>
-                                                        <td><?php
-                                                        if ($value['book_by'] == "1") {
-                                                            echo "Uber";
-                                                        } else if ($value['book_by'] == "2") {
-                                                            echo "Ola";
-                                                        } else if ($value['book_by'] == "3") {
-                                                            echo "Auto";
-                                                        }
-                                                        ?></td>
                                                         <td><?php echo $value['arrange_by'] ?></td>
+                                                        <td><?php
+                                                            if ($value['book_by'] == "1") {
+                                                                echo "Uber";
+                                                            } else if ($value['book_by'] == "2") {
+                                                                echo "Ola";
+                                                            } else if ($value['book_by'] == "3") {
+                                                                echo "Auto";
+                                                            }
+                                                            ?></td>
+
                                                         <td width="15%">
                                                             <?php $total3 = $total3 + $value['cost']; ?>
                                                             <?php echo $value['cost']; ?>
                                                         </td>
                                                     </tr>
                                                 <?php } ?>
+                                                <?php foreach ($other_con_booking as $key => $value) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $i++; ?></td>
+                                                        <td><?php echo date(DATETIME_FORMAT, strtotime($value['con_date'])) ?></td>
+                                                        <td><?php echo $value['con_from'] ?></td>
+                                                        <td><?php echo $value['con_to'] ?></td>
+                                                        <td><?php echo $value['con_arrange_by'] ?></td>
+                                                        <td><?php
+                                                            if ($value['con_book_by'] == "1") {
+                                                                echo "Uber";
+                                                            } else if ($value['con_book_by'] == "2") {
+                                                                echo "Ola";
+                                                            } else if ($value['con_book_by'] == "3") {
+                                                                echo "Auto";
+                                                            }
+                                                            ?></td>
+                                                        <td width="15%">
+                                                            <?php $total3 = $total3 + $value['total']; ?>
+                                                            <?php echo $value['total']; ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php } ?>                                                
+                                            </tbody>
+                                            <tfoot>
                                                 <tr>
                                                     <td colspan="5"></td>
                                                     <th>Total</th>
                                                     <td><b><?php echo $total3; ?></b></td>
                                                 </tr>
-                                            </tbody>
+                                            </tfoot>
                                         </table> 
                                     </div>
                                 </div>
@@ -312,74 +411,151 @@
                                     <h4 class="form-section">Other Expense Details</h4>
                                     <div class="row">
                                         <?php $total4 = 0; ?>
-                                        <table id="basicTable" class="table table-hover table-bordered text-center">
+                                        <?php $total5 = 0; ?>
+                                        <table id="other_expense" class="table table-hover table-bordered text-center">
                                             <thead>
                                                 <tr class="th_blue">
                                                     <th>Sr.No.</th>
+                                                    <th>Date</th>
                                                     <th>Expense Details</th>
                                                     <th>Location</th>
+                                                    <th>Paid By</th>
                                                     <th>Bill No</th>
                                                     <th>Amount</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3"></td>
-                                                    <th>Total</th>
-                                                    <th><?php echo $total4; ?></th>
-                                                </tr>
+                                                <?php
+                                                $i = 1;
+                                                if (isset($other_manager_expense)) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $i; ?></td>
+                                                        <td id="other_manager_expense_date">
+                                                            <?php
+                                                            if ($request['return_date'] != '') {
+                                                                echo date(DATETIME_FORMAT, strtotime($request['departure_date'])) . " To " . date(DATETIME_FORMAT, strtotime($request['return_date']));
+                                                            } else {
+                                                                echo date(DATETIME_FORMAT, strtotime($request['departure_date']));
+                                                            }
+                                                            ?>                                                        
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            echo "Food: Rs." . $other_manager_expense_food . "<br>";
+                                                            echo "Travel: Rs." . $other_manager_expense_travel . "<br>";
+                                                            echo "Others: Rs." . $other_manager_expense_other . "<br>";
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if (isset($other_manager_expense_location)) {
+                                                                echo $other_manager_expense_location;
+                                                            }
+                                                            ?></td>
+                                                        <td>
+                                                            <?php
+                                                            echo $request['to_city_name'] . " Travel Desk";
+                                                            ?>
+                                                        </td>
+                                                        <td>-</td>
+                                                        <td><?php
+                                                            echo $other_manager_expense;
+                                                            $total5 = $total5 + $other_manager_expense;
+                                                            ?></td>
+                                                    </tr>
+                                                    <?php
+                                                    $i++;
+                                                }
+                                                ?>
+                                                <?php
+                                                $other_total = 0;
+                                                foreach ($other_expense as $key => $value) {
+                                                    $amount = $value['amount'];
+                                                    $other_total = $other_total + $amount;
+                                                    $total5 = $total5 + $amount;
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $i++; ?></td>
+                                                        <td><?php echo $value['date']; ?></td>
+                                                        <td><?php echo $value['expense_name']; ?></td>
+                                                        <td><?php echo $value['expense_type']; ?></td>
+                                                        <td><?php echo $value['arrange_by'] ?></td>
+                                                        <td><?php echo $value['bill_no'] ?></td>
+                                                        <td><?php echo $amount ?></td>
+                                                    </tr>
+                                                <?php } ?>                                         
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5"></td>
+                                                    <td><b>Total</b></td>
+                                                    <td><b><?php echo $total5; ?></b></td>
+                                                </tr>
+                                            </tfoot>
                                         </table> 
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 text-left-imp">Total Travel Claim:</label>
-                                        <div class="col-md-9">
-                                            <p class="form-control-static">
-                                                <b>
+                                <div class="col-md-4 col-xs-12">
+                                    <h4 class="form-section"><spam class="cutm_lbl btn_blue">Expense Summury</spam></h4>
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th>Trip Expense Total</th>
+                                                <th id="lbl_total_claim1">
+                                                    <?php echo $expense_pending['final_total_claim']; ?>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>Paid By Company</th>
+                                                <th id="lbl_total_claim_company">
+                                                    <?php echo $expense_pending['final_total_claim'] - $expense_pending['total_claim']; ?>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>Paid By Self</th>
+                                                <th id="lbl_total_claim">
                                                     <?php
-                                                    echo $expense_pending['total_claim'];
+                                                    echo $expense_pending['total_claim'] - $da_total;
                                                     ?>
-                                                </b>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 text-left-imp">Less Advance:</label>
-                                        <div class="col-md-9">
-                                            <p class="form-control-static">
-                                                <b>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>D.A.</th>
+                                                <th id="lbl_da_total">
+                                                    <?php echo $da_total; ?>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>Other Expense By Travel Desk</th>
+                                                <th>
+                                                    <?php
+                                                    if (isset($other_manager_expense)) {
+                                                        echo $other_manager_expense;
+                                                    }
+                                                    ?>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>Travel Advance</th>
+                                                <th class="col-md-3">
                                                     <?php
                                                     echo $expense_pending['less_advance'];
                                                     ?>
-                                                </b>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 text-left-imp">You Recevied:</label>
-                                        <div class="col-md-9">
-
-                                            <p class="form-control-static" name="your_recived" id="your_recived">
-                                                <b>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>Employee Will be Recived</th>
+                                                <th id="your_recived">
                                                     <?php
                                                     echo $expense_pending['recevied_amount'];
                                                     ?>
-                                                </b>
-                                            </p>
-                                        </div>
-                                    </div>
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

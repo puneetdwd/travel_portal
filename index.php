@@ -1,4 +1,5 @@
 <?php
+
 //echo "Because of some maintenance activity portal is not available for 30 min.<br>Please try after 30 min."; Exit;
 ini_set('date.timezone', 'Asia/Calcutta');
 /*
@@ -19,7 +20,7 @@ ini_set('date.timezone', 'Asia/Calcutta');
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'production');
+	define('ENVIRONMENT', 'development');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

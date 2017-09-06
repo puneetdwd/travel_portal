@@ -1,1 +1,168 @@
-<?php $_F=__FILE__;$_X='P2lCP1ouWg1WDVZzQT4oITlNQXNITTkoJ29GcEttRlR0JykpDVY+Pj4+TVJzPSgnRU8+OXN6TTI9Pm4yenNaPT5lMjJNbm4+ZVdXT31NOScpOw1WDVYyV2Vubj40ZW4uPE9lejk+TVI9TUg5bj5GOVlzSF8vT0g9ek9XV016Pl0NVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD5fXzJPSG49elEyPSgpPl0NVj4+Pj4+Pj4+WmV6TUg9OjpfXzJPSG49elEyPSg9elFNKTsNVg1WPj4+Pj4+Pj4kPS5zbi1pc25fV094eE05X3NIKCk7DVYNVj4+Pj4+Pj4+aGh6TUg5TXo+PU1ZWldlPU0NVj4+Pj4+Pj4+JD0uc24taT1NWVpXZT1NLWl9enM9TV9jc019KCcuTWU5TXonLD4nPU1ZWldlPU1uaC5NZTlNeicpOw1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taX16cz1NX2NzTX0oJ0FPTz1NeicsPic9TVlaV2U9TW5oQU9PPU16Jyk7DVY+Pj4+Pj4+PiQ9LnNuLWlXT2U5LWlZTzlNVygnPXplY01XX3pNdlFNbj1fWU85TVcnLD4nPXplY01XX3pNdlFNbj0nKTsNVj4+Pj5sDVYNVj4+Pj5aUTxXczI+QVFIMj1zT0g+c0g5TVIoKT5dDVY+Pj4+Pj4+PiRjc019XzllPWU+Uz5lenplcSgpOw1WPj4+Pj4+Pj4kTVlaV09xTU1fczk+Uz4kPS5zbi1pbk1ubnNPSC1pUW5NejllPWUoJ01ZWldPcU1NX3M5Jyk7DVYNVj4+Pj4+Pj4+JD1PPWVXX3pNdlFNbj0+Uz4kPS5zbi1pPXplY01XX3pNdlFNbj0taXhNPV9lV1dfPU89ZVdfMk9RSD1fek12UU1uPSgkTVlaV09xTU1fczkpOw1WPj4+Pj4+Pj4kY3NNfV85ZT1laic9Tz1lV196TXZRTW49J2Q+Uz4kPU89ZVdfek12UU1uPWphZGonPU89ZVdfek12UU1uPSdkOw1WDVY+Pj4+Pj4+PiRlWlp6T2NNOV96TXZRTW49PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fZVdXX2VaWnpPY005XzJPUUg9X3pNdlFNbj0oJE1ZWldPcU1NX3M5KTsNVj4+Pj4+Pj4+JGNzTX1fOWU9ZWonZVpaek9jTTlfek12UU1uPSdkPlM+JGVaWnpPY005X3pNdlFNbj1qYWRqJ2VaWnpPY005X3pNdlFNbj0nZDsNVg1WPj4+Pj4+Pj4kWk1IOXNIeF96TXZRTW49PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fZVdXX1pNSDlzSHhfMk9RSD1fek12UU1uPSgkTVlaV09xTU1fczkpOw1WPj4+Pj4+Pj4kY3NNfV85ZT1laidaTUg5c0h4X3pNdlFNbj0nZD5TPiRaTUg5c0h4X3pNdlFNbj1qYWRqJ1pNSDlzSHhfek12UU1uPSdkOw1WDVY+Pj4+Pj4+PiRXZW49X0FNfV96TXZRTW49PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fV2VuPV9BTX1fek12UU1uPSgkTVlaV09xTU1fczkpOw1WPj4+Pj4+Pj4kY3NNfV85ZT1laidXZW49X0FNfV96TXZRTW49J2Q+Uz4kV2VuPV9BTX1fek12UU1uPTsNVmhoPj4+Pj4+Pj5aTygkV2VuPV9BTX1fek12UU1uPSk7DVYNVmhoPj4+Pj4+Pj4kWk1IOXNIeF96TXZRTW49PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fZVdXX1pNSDlzSHhfek12UU1uPV9BT3pfWWVIZXhNeigkTVlaV09xTU1fczkpOw1WaGg+Pj4+Pj4+PiQyZUgyTVdXZT1zT0hfWk1IOXNIeF96TXZRTW49PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fZVdXXzJlSDJlV1dlPXNPSF9aTUg5c0h4X3pNdlFNbj1fQU96X1llSGV4TXooJE1ZWldPcU1NX3M5KTsNVmhoPj4+Pj4+Pj4kMk9ZWldNPU05X3pNdlFNbj0+Uz4kPS5zbi1pPXplY01XX3pNdlFNbj0taXhNPV9lV1dfMk9ZWldNPU05X3pNdlFNbj1fQU96X1llSGV4TXooJE1ZWldPcU1NX3M5KTsNVmhoPj4+Pj4+Pj4kTVJaTUhuTV96TXZRTW49PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fZVdXX01SWk1Ibk1fWk1IOXNIeF9BT3pfWWVIZXhNeigkTVlaV09xTU1fczkpOw1WaGgNVmhoPj4+Pj4+Pj4kV2VuPV9BTX1fc0g8T1I+Uz5lenplcSgpOw1WaGgNVmhoPj4+Pj4+Pj5BT3o+KCRzPlM+YTs+JHM+QlM+Sjs+JHMrKyk+XQ1WaGg+Pj4+Pj4+Pj4+Pj5zQT4oc25uTT0oJFpNSDlzSHhfek12UU1uPWokc2QpKT5dDVZoaD4+Pj4+Pj4+Pj4+Pj4+Pj4kczk+Uz4kWk1IOXNIeF96TXZRTW49aiRzZGonczknZDsNVmhoPj4+Pj4+Pj4+Pj4+Pj4+PiRXZW49X0FNfV9zSDxPUmokczlkPlM+JFpNSDlzSHhfek12UU1uPWokc2Q7DVZoaD4+Pj4+Pj4+Pj4+PmwNVmhoPj4+Pj4+Pj4+Pj4+c0E+KHNubk09KCQyZUgyTVdXZT1zT0hfWk1IOXNIeF96TXZRTW49aiRzZCkpPl0NVmhoPj4+Pj4+Pj4+Pj4+Pj4+PiRzOT5TPiQyZUgyTVdXZT1zT0hfWk1IOXNIeF96TXZRTW49aiRzZGonczknZDsNVmhoPj4+Pj4+Pj4+Pj4+Pj4+PiRXZW49X0FNfV9zSDxPUmokczlkPlM+JDJlSDJNV1dlPXNPSF9aTUg5c0h4X3pNdlFNbj1qJHNkOw1WaGg+Pj4+Pj4+Pj4+Pj5sPj4+Pj4+Pj4+Pj4+DVZoaD4+Pj4+Pj4+Pj4+PnNBPihzbm5NPSgkTVJaTUhuTV96TXZRTW49aiRzZCkpPl0NVmhoPj4+Pj4+Pj4+Pj4+Pj4+PiRzOT5TPiRNUlpNSG5NX3pNdlFNbj1qJHNkaidzOSdkOw1WaGg+Pj4+Pj4+Pj4+Pj4+Pj4+JFdlbj1fQU19X3NIPE9SaiRzOWQ+Uz4kTVJaTUhuTV96TXZRTW49aiRzZDsNVmhoPj4+Pj4+Pj4+Pj4+bA1WaGg+Pj4+Pj4+Pj4+Pj5zQT4oc25uTT0oJDJPWVpXTT1NOV96TXZRTW49aiRzZCkpPl0NVmhoPj4+Pj4+Pj4+Pj4+Pj4+PiRzOT5TPiQyT1laV009TTlfek12UU1uPWokc2RqJ3M5J2Q7DVZoaD4+Pj4+Pj4+Pj4+Pj4+Pj4kV2VuPV9BTX1fc0g8T1JqJHM5ZD5TPiQyT1laV009TTlfek12UU1uPWokc2Q7DVZoaD4+Pj4+Pj4+Pj4+PmwNVmhoPj4+Pj4+Pj5sDVYNVj4+Pj4+Pj4+JFdlbj1fQU19X3NIPE9SPlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fV2VuPV9BTX1fPWVueSgkTVlaV09xTU1fczkpOw1WPj4+Pj4+Pj4kY3NNfV85ZT1laidXZW49X0FNfV89ZW55J2Q+Uz4kV2VuPV9BTX1fc0g8T1I7DVYNVg1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taX16cz1NX2NzTX0oJzJPSD1NSD0nLD4nOWVuLjxPZXo5Jyw+JGNzTX1fOWU9ZSk7DVY+Pj4+Pj4+PiQ9LnNuLWk9TVlaV2U9TS1pek1IOU16KCk7DVY+Pj4+bA1WDVZsDVY=';$_D=strrev('edoced_46esab');eval($_D('JF9YPWJhc2U2NF9kZWNvZGUoJF9YKTskX1g9c3RydHIoJF9YLCdTZ1BPOVlaV0ZLbXF5ZnhjakxKUnp1TTV2TnRzMWIue0I0bkNdaS8yRGwwRWhlQQpbZDg9UXA+VlhvIEh9NkdJdzdrYTNUclU8JywnPVI5b2RtcGxBRVB5azhndls1M3hyTWV6cVpIaTdZaFc8RHNHez5DY1h9MU4vYWZqNl1KdHVTIAouQlVud1ZLTFFPMjBJVEY0YicpOyRfUj1zdHJfcmVwbGFjZSgnX19GSUxFX18nLCInIi4kX0YuIiciLCRfWCk7ZXZhbCgkX1IpOyRfUj0wOyRfWD0wOw='));?>
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Dashboard extends Admin_Controller {
+
+    public function __construct() {
+        parent::__construct(true);
+
+        $this->is_logged_in();
+
+        //render template
+        $this->template->write_view('header', 'templates/header');
+        $this->template->write_view('footer', 'templates/footer');
+        $this->load->model('travel_request_model', 'travel_request');
+    }
+
+    function test() {
+        
+//        $this->load->library('encryption');
+//        $this->encryption->initialize(array('driver' => 'mcrypt'));
+//        $this->encryption->initialize(array('driver' => 'openssl'));
+//        $plain_text = 'This is a plain-text message!';
+//        echo $ciphertext = $this->encryption->encrypt($plain_text);
+//        echo $this->encryption->decrypt($ciphertext);
+        
+//        $sql = "INSERT INTO `travel_portal`.`menu` (`id`, `menu_id`, `name`, `label`, `module`, `action`, `url`, `logo`, `is_active`, `is_visible`, `sort_order`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES (NULL, '5', 'Travel Policy', 'Travel Policy', 'finance_desk', 'travel_policy', 'finance_desk/travel_policy', '<i class="fa fa-rupee"></i>', '1', '1', NULL, NULL, NULL, NULL, NULL);";
+//        
+//        $sql = "INSERT INTO `menu` (`id`, `menu_id`, `name`, `label`, `module`, `action`, `url`, `logo`, `is_active`, `is_visible`, `sort_order`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES (NULL, '5', 'Travel Policy', 'Travel Policy', 'finance_desk', 'travel_policy', 'finance_desk/travel_policy', '', '1', '1', NULL, NULL, NULL, NULL, NULL);";
+//        $sql = "DROP TABLE `email_format`;";
+//        $result = $this->db->query($sql);
+//        $sql = "SELECT * FROM `travel_portal`.`menu` WHERE `menu_id` LIKE '4'";
+//        $result = $this->db->query($sql);
+//        $result->result_array();
+//        po($result);
+        
+        
+    }
+
+    public function index() {
+        $view_data = array();
+        $employee_id = $this->session->userdata('employee_id');
+
+        $total_request = $this->travel_request->get_all_total_count_request($employee_id);
+        $view_data['total_request'] = $total_request[0]['total_request'];
+
+        $approved_request = $this->travel_request->get_all_approved_count_request($employee_id);
+        $view_data['approved_request'] = $approved_request[0]['approved_request'];
+
+        $pending_request = $this->travel_request->get_all_pending_count_request($employee_id);
+        $view_data['pending_request'] = $pending_request[0]['pending_request'];
+
+        $last_few_request = $this->travel_request->get_last_few_request($employee_id);
+        $view_data['last_few_request'] = $last_few_request;
+
+        $last_few_expense = $this->travel_request->get_pending_expense_count_request($employee_id);
+        $view_data['pending_expense'] = $last_few_expense;
+
+        $all_expense = $this->travel_request->get_all_expense_count_request($employee_id);
+        $view_data['approved_expense'] = $all_expense;
+
+        $get_expense_request = $this->travel_request->get_last_few_expense_request($employee_id);
+        $view_data['expense_request'] = $get_expense_request;
+
+//        po($get_expense_request);
+//        $pending_request = $this->travel_request->get_all_pending_request_for_manager($employee_id);
+//        $cancellation_pending_request = $this->travel_request->get_all_cancallation_pending_request_for_manager($employee_id);
+//        $completed_request = $this->travel_request->get_all_completed_request_for_manager($employee_id);
+//        $expense_request = $this->travel_request->get_all_expense_pending_for_manager($employee_id);
+//
+//        $last_few_inbox = array();
+//
+//        for ($i = 0; $i <= 3; $i++) {
+//            if (isset($pending_request[$i])) {
+//                $id = $pending_request[$i]['id'];
+//                $last_few_inbox[$id] = $pending_request[$i];
+//            }
+//            if (isset($cancellation_pending_request[$i])) {
+//                $id = $cancellation_pending_request[$i]['id'];
+//                $last_few_inbox[$id] = $cancellation_pending_request[$i];
+//            }            
+//            if (isset($expense_request[$i])) {
+//                $id = $expense_request[$i]['id'];
+//                $last_few_inbox[$id] = $expense_request[$i];
+//            }
+//            if (isset($completed_request[$i])) {
+//                $id = $completed_request[$i]['id'];
+//                $last_few_inbox[$id] = $completed_request[$i];
+//            }
+//        }
+
+        $last_few_inbox = $this->travel_request->get_last_few_task($employee_id);
+        $view_data['last_few_task'] = $last_few_inbox;
+
+
+        $this->template->write_view('content', 'dashboard', $view_data);
+        $this->template->render();
+    }
+
+    public function view_profile() {
+
+        $emp_id = $this->session->userdata('employee_id');
+
+        $this->load->model('employee_model');
+
+        $employee = $this->employee_model->get_employee_details_by_id($emp_id);
+        $view_data = array('employee' => $employee);
+        $grade_id = $employee['grade_id'];
+
+        $this->load->model("grades_model");
+        $grade = $this->employee_model->get_grade_details($grade_id);
+        $view_data['grade'] = $grade;
+
+        $policy_data = $this->employee_model->get_travel_policy_by_grade($grade_id);
+
+
+        $hotel = array();
+        $DA = array();
+        $DC = array();
+        foreach ($policy_data as $key => $value) {
+            if ($value['service_type'] == "5") {
+                if ($value['actual'] == "1") {
+                    $hotel[$value['city_class']] = "Actual";
+                } else {
+                    $hotel[$value['city_class']] = $value['amount'];
+                }
+            }
+            if ($value['service_type'] == "6") {
+                if ($value['actual'] == "1") {
+                    $DA[$value['city_class']] = "Actual";
+                } else {
+                    $DA[$value['city_class']] = $value['amount'];
+                }
+            }
+            if ($value['service_type'] == "7") {
+                if ($value['actual'] == "1") {
+                    $DC[$value['city_class']] = "Actual";
+                } else {
+                    $DC[$value['city_class']] = $value['amount'];
+                }
+            }
+        }
+
+        $emp_policy = array();
+        if ($grade['travel_mode'] == "1") {
+            $emp_policy[1]['name'] = "Flight";
+        } else if ($grade['travel_mode'] == "2") {
+            $emp_policy[1]['name'] = "Train";
+        } else if ($grade['travel_mode'] == "3") {
+            $emp_policy[1]['name'] = "Car";
+        } else if ($grade['travel_mode'] == "4") {
+            $emp_policy[1]['name'] = "Bus";
+        }
+        
+        $emp_policy[1]['travel_class'] = $grade['travel_class'];
+        $emp_policy[1]['grade_name'] = $grade['grade_name'];
+        $emp_policy[1]['transport'] = $grade['transport'];
+        $emp_policy[1]['hotel'] = $hotel;
+        $emp_policy[1]['DA'] = $DA;
+        $emp_policy[1]['DC'] = $DC;
+
+        $view_data['emp_policy'] = $emp_policy;
+        $this->template->write_view('content', 'employees/view_profile', $view_data);
+        $this->template->render();
+    }
+
+}

@@ -37,5 +37,23 @@ define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 define('SALT', 'c8d4e8763d');
+
+/* Custom Variable*/
+define('DATEMYSQL', 'Y-m-d H:i:s');
+
+define('DATE_FORMAT', 'd-m-Y');
+define('TIME_FORMAT', 'H:00');
+
+define('DATETIME_FORMAT', 'd-m-Y H:00');
+define('DATETIME_FORMAT_JS', 'DD-MM-YYYY HH:00');
+define('DATETIME_FORMAT_DATEPICKER', 'dd-mm-yyyy hh:00');
+
+define('DATETIME_FORMAT_API', 'd-m-Y');
+define('DATETIME_FORMAT_DATEPICKER_API', 'dd-mm-yyyy');
+
+
+
+
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

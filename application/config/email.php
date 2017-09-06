@@ -1,23 +1,51 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/* 
-$config['protocol'] = 'smtp';
+/*** preferences for sending the E-mail	***/
+/*
+//The mail sending protocol.
+$config['protocol'] = 'sendmail';
+
+//The server path to Sendmail.
+$config['mailpath'] = '/usr/sbin/sendmail';
+
+//Character set
+$config['charset'] = 'utf-8';
+
+//Type of mail(text or html). If you send HTML email you must send it as a complete web page. Make sure you don't have any relative links or relative image paths otherwise they will not work.
+$config['mailtype'] = 'html';
+
+//Enable word-wrap.TRUE or FALSE (boolean)
+$config['wordwrap'] = TRUE;*/
+
+/*$config['protocol'] = 'smtp';
 $config['smtp_host'] = 'ssl://smtp.gmail.com';
 $config['smtp_port'] = 465;
-$config['smtp_user'] = 'info@crgroup.co.in';
-$config['smtp_pass'] = 'CRG!#123';
+$config['smtp_user'] = 'dbcorpltd1@gmail.com';
+$config['smtp_pass'] = 'dbcorp@123';
 $config['mailtype'] = 'html';
 $config['crlf'] = "\r\n";
 $config['newline'] = "\r\n";
 $config['bcc_batch_mode'] = true;
-$config['charset'] = 'utf-8'; */
-$config['useragent']        = 'PHPMailer';              
+$config['charset'] = 'utf-8';*/
+
+$config['protocol'] = 'smtp';
+$config['smtp_host'] = 'ssl://smtp.gmail.com';
+$config['smtp_port'] = 465;
+$config['smtp_user'] = 'mytravel@dbcorp.in';
+$config['smtp_pass'] = 'Password@123';
+$config['mailtype'] = 'html';
+$config['crlf'] = "\r\n";
+$config['newline'] = "\r\n";
+$config['bcc_batch_mode'] = true;
+$config['charset'] = 'utf-8';
+
+/*$config['useragent']        = 'PHPMailer';              
 // Mail engine switcher: 'CodeIgniter' or 'PHPMailer'
 $config['protocol']         = 'smtp';                   
 // 'mail', 'sendmail', or 'smtp'
 $config['mailpath']         = '/usr/sbin/sendmail';
 $config['smtp_host']        = 'smtp.gmail.com';
-$config['smtp_user']        = 'info@crgroup.co.in';
-$config['smtp_pass']        = 'CRG!#123';
+$config['smtp_user']        = 'abhishek.kumar@dbcorp.in';
+$config['smtp_pass']        = 'ABHI$%1122';
 $config['smtp_port']        = 465;
 $config['smtp_timeout']     = 30;                       
 // (in seconds)
@@ -43,3 +71,4 @@ $config['newline']          = "\n";                     // "\r\n" or "\n" or "\r
 $config['bcc_batch_mode']   = false;
 $config['bcc_batch_size']   = 200;
 $config['encoding']         = '8bit';                   // The body encoding. For CodeIgniter: '8bit' or '7bit'. For PHPMailer: '8bit', '7bit', 'binary', 'base64', or 'quoted-printable'.
+*/

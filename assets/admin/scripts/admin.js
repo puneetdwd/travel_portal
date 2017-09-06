@@ -353,6 +353,36 @@ $(document).ready(function () {
         })
     });
 
+    $('#occupancy,#hotel_provider_id').change(function () {
+        var base_url = $('#base_url').val();
+        var hotel_provider_id = $("#hotel_provider_id").val();
+        var occupancy = $("#occupancy").val();
+        var get_url = base_url + 'travel_desk/get_hotel_rent_by_occupancy/' + hotel_provider_id + '/' + occupancy;
+        $.get(get_url, function (response) {
+            var results = $.parseJSON(response);
+            var status = results.status;
+            if (status == 1) {
+                var amount = results.amount;
+                $("#accommodation_rent").val(amount);
+            }
+        })
+    });
+
+    $('#car_type,#car_category_id').change(function () {
+        var base_url = $('#base_url').val();
+        var car_category_id = $("#car_category_id").val();
+        var car_type = $("#car_type").val();
+        var get_url = base_url + 'travel_desk/get_car_rent_by_type/' + car_category_id + '/' + car_type;
+        $.get(get_url, function (response) {
+            var results = $.parseJSON(response);
+            var status = results.status;
+            if (status == 1) {
+                var amount = results.amount;
+                $("#car_rent").val(amount);
+            }
+        })
+    });
+
     $('#travel_mode').change(function () {
         //$('#sub-dept').html( '' );
         var base_url = $('#base_url').val();

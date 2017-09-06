@@ -1,1 +1,462 @@
-<?php $_F=__FILE__;$_X='P2lCP1ouWg1WDVYyV2Vubj4vZXpfPXplY01XPk1SPU1IOW4+RjlZc0hfL09IPXpPV1dNej5dDVYNVj4+Pj5aUTxXczI+QVFIMj1zT0g+X18yT0huPXpRMj0oKT5dDVY+Pj4+Pj4+Plplek1IPTo6X18yT0huPXpRMj0oPXpRTSk7DVYNVj4+Pj4+Pj4+JD0uc24taXNuX1dPeHhNOV9zSCgpOw1WaGg+Pj4+Pj4+PiQ9LnNuLWlzbl9Rbk16X2U5WXNIKCk7DVY+Pj4+Pj4+Pmhoek1IOU16Pj1NWVpXZT1NDVY+Pj4+Pj4+PiQuTWU5TXpfOWU9ZT5TPmV6emVxKA1WPj4+Pj4+Pj4pOw1WDVY+Pj4+Pj4+PiQ9LnNuLWk9TVlaV2U9TS1pfXpzPU1fY3NNfSgnLk1lOU16Jyw+Jz1NWVpXZT1NbmguTWU5TXonLD4kLk1lOU16XzllPWUpOw1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taX16cz1NX2NzTX0oJ0FPTz1NeicsPic9TVlaV2U9TW5oQU9PPU16Jyk7DVY+Pj4+Pj4+PiQ9LnNuLWlXT2U5LWlZTzlNVygiPXplY01XX3pNdlFNbj1fWU85TVciLD4nPXplY01XX3pNdlFNbj0nKTsNVj4+Pj4+Pj4+JD0uc24taVdPZTktaVlPOU1XKCI9emVjTVdfMmU9TXhPenFfWU85TVciLD4nPXplY01XXzJlPU14T3pxJyk7DVY+Pj4+bA1WDVY+Pj4+WlE8V3MyPkFRSDI9c09IPnNIOU1SKCQ9emVjTVdfek12UU1uPV9zOT5TPicnKT5dDVY+Pj4+Pj4+PiRNWVpXT3FNTV9zOT5TPiQ9LnNuLWluTW5uc09ILWlRbk16OWU9ZSgnTVlaV09xTU1fczknKTsNVj4+Pj4+Pj4+c0E+KCRNWVpXT3FNTV9zOT4hUz4nJyk+XQ1WPj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZT5TPmV6emVxKCk7DVYNVj4+Pj4+Pj4+Pj4+PnNBPighTVlaPXEoJD16ZWNNV196TXZRTW49X3M5KSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiR6TXZRTW49PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fek12UU1uPV9zOSgkPXplY01XX3pNdlFNbj1fczkpOw1WPj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJz16ZWNNV196TXZRTW49J2Q+Uz4kek12UU1uPTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laid6TXZRTW49X0hRWTxNeidkPlM+JHpNdlFNbj1qJ3pNdlFNbj1fSFFZPE16J2Q7DVY+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ3pNdlFNbj1fSFFZPE16J2Q+Uz56ZUg5KDAwMDAwMDAwLD5QUFBQUFBQKTsNVj4+Pj4+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4+Pj4+JD0uc24taVdPZTktaVlPOU1XKCI9emVjTVdfek1lbk9Ibl9ZTzlNVyIpOw1WPj4+Pj4+Pj4+Pj4+JD16ZWNNV196TWVuT0huPlM+JD0uc24taT16ZWNNV196TWVuT0huX1lPOU1XLWl4TT1fZVdXXz16ZWNNV196TWVuT0huKCk7DVY+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laic9emVjTVdfek1lbk9IbidkPlM+JD16ZWNNV196TWVuT0huOw1WDVY+Pj4+Pj4+Pj4+Pj4kMmV6XzllPU0+Uz4kPS5zbi1pPXplY01XXzJlPU14T3pxLWl4TT1fZVdXXzJlel8yZT1NeE96cSgpOw1WPj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonMmV6XzJlPU14T3pxJ2Q+Uz4kMmV6XzllPU07DVYNVj4+Pj4+Pj4+Pj4+PiQ9LnNuLWlXT2U5LWlZTzlNVygnTVlaV09xTU1fWU85TVcnKTsNVj4+Pj4+Pj4+Pj4+PiRNWVpXT3FNTT5TPiQ9LnNuLWlNWVpXT3FNTV9ZTzlNVy1peE09X01ZWldPcU1NXzxxX3M5KCRNWVpXT3FNTV9zOSk7DVY+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laidNWVpXT3FNTSdkPlM+JE1ZWldPcU1NOw1WPj4+Pj4+Pj4+Pj4+JHh6ZTlNX3M5PlM+JE1ZWldPcU1Naid4emU5TV9zOSdkOw1WDVY+Pj4+Pj4+Pj4+Pj4kTVlaV09xTU1uPlM+JD0uc24taU1ZWldPcU1NX1lPOU1XLWl4TT1fZVdXX01ZWldPcU1NbigpOw1WPj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonTVlaV09xTU1uJ2Q+Uz4kTVlaV09xTU1uOw1WDVY+Pj4+Pj4+Pj4+Pj4kOU1aPV9zOT5TPiRNWVpXT3FNTWonOU1aPV9zOSdkOw1WPj4+Pj4+Pj4+Pj4+JD0uc24taVdPZTktaVlPOU1XKCJaek8KTTI9bl9ZTzlNVyIpOw1WPj4+Pj4+Pj4+Pj4+JFp6TwpNMj1uPlM+JD0uc24taVp6TwpNMj1uX1lPOU1XLWl4TT1fWnpPCk0yPV88cV85TVo9KCQ5TVo9X3M5KTsNVj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ1p6TwpNMj1uJ2Q+Uz4kWnpPCk0yPW47DVYNVg1WPj4+Pj4+Pj4+Pj4+JD0uc24taVdPZTktaVlPOU1XKCc9emVjTVdfWk9XczJxX1lPOU1XJyk7DVY+Pj4+Pj4+Pj4+Pj4kWk9XczJxXzllPWU+Uz4kPS5zbi1pPXplY01XX1pPV3MycV9ZTzlNVy1peE09Xz16ZWNNV19aT1dzMnFfPHFfeHplOU0oJHh6ZTlNX3M5LD4kbk16Y3MyTV89cVpNPlM+J0onKTsNVg1WPj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonZVpaek9jZVdfV01jTVcnZD5TPicnOw1WPj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonek1aT3o9c0h4X1llSGV4TXpfczknZD5TPicnOw1WPj4+Pj4+Pj4+Pj4+c0E+KCFNWVo9cSgkWk9XczJxXzllPWUpKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+c0E+KCRaT1dzMnFfOWU9ZWonZVpaek9jZVdfV01jTVcnZD5TUz4wKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ2VaWnpPY2VXX1dNY01XJ2Q+Uz4kWk9XczJxXzllPWVqJ2VaWnpPY2VXX1dNY01XJ2Q7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiR6TVpPej1zSHhfWWVIZXhNel85ZT1lPlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fTVlaV09xTU1fWWVIZXhNel9zOSgkTVlaV09xTU1fczkpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laid6TVpPej1zSHhfWWVIZXhNel9zOSdkPlM+JHpNWk96PXNIeF9ZZUhleE16XzllPWVqJ3pNWk96PXNIeF9ZZUhleE16X3M5J2Q7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+bD5NV25NPnNBPigkWk9XczJxXzllPWVqJ2VaWnpPY2VXX1dNY01XJ2Q+U1M+ayk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laidlWlp6T2NlV19XTWNNVydkPlM+JFpPV3MycV85ZT1laidlWlp6T2NlV19XTWNNVydkOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kek1aT3o9c0h4X1llSGV4TXpfOWU9ZT5TPiQ9LnNuLWk9emVjTVdfek12UU1uPS1peE09X01ZWldPcU1NX1llSGV4TXpfPGVuTV9zOSgkTVlaV09xTU1fczkpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laid6TVpPej1zSHhfWWVIZXhNel9zOSdkPlM+JHpNWk96PXNIeF9ZZUhleE16XzllPWVqJ3pNWk96PXNIeF9ZZUhleE16X3M5J2Q7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+bD5NV25NPnNBPigkWk9XczJxXzllPWVqJ2VaWnpPY2VXX1dNY01XJ2Q+U1M+YSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laidlWlp6T2NlV19XTWNNVydkPlM+JFpPV3MycV85ZT1laidlWlp6T2NlV19XTWNNVydkOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kek1aT3o9c0h4X1llSGV4TXpfOWU9ZT5TPiQ9LnNuLWk9emVjTVdfek12UU1uPS1peE09X01ZWldPcU1NX1llSGV4TXpfPGVuTV9zOSgkTVlaV09xTU1fczkpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laid6TVpPej1zSHhfWWVIZXhNel9zOSdkPlM+JHpNWk96PXNIeF9ZZUhleE16XzllPWVqJ3pNWk96PXNIeF9ZZUhleE16X3M5J2Q7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+bD5NV25NPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonZVpaek9jZVdfV01jTVcnZD5TPiIwIjsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JHpNWk96PXNIeF9ZZUhleE16XzllPWU+Uz4kPS5zbi1pPXplY01XX3pNdlFNbj0taXhNPV9NWVpXT3FNTV9ZZUhleE16X3M5KCRNWVpXT3FNTV9zOSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ3pNWk96PXNIeF9ZZUhleE16X3M5J2Q+Uz4kek1aT3o9c0h4X1llSGV4TXpfOWU9ZWonek1aT3o9c0h4X1llSGV4TXpfczknZDsNVj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ2VaWnpPY2VXX1dNY01XJ2Q+Uz4iMCI7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JHpNWk96PXNIeF9ZZUhleE16XzllPWU+Uz4kPS5zbi1pPXplY01XX3pNdlFNbj0taXhNPV9NWVpXT3FNTV9ZZUhleE16X3M5KCRNWVpXT3FNTV9zOSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonek1aT3o9c0h4X1llSGV4TXpfczknZD5TPiR6TVpPej1zSHhfWWVIZXhNel85ZT1laid6TVpPej1zSHhfWWVIZXhNel9zOSdkOw1WPj4+Pj4+Pj4+Pj4+bA1WDVY+Pj4+Pj4+Pj4+Pj5zQT4oJGNzTX1fOWU9ZWonek1aT3o9c0h4X1llSGV4TXpfczknZD5TUz4nJyk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ2VaWnpPY2VXX1dNY01XJ2Q+Uz4iMCI7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JHpNWk96PXNIeF9ZZUhleE16XzllPWU+Uz4kPS5zbi1pPXplY01XX3pNdlFNbj0taXhNPV9NWVpXT3FNTV9ZZUhleE16X3M5KCRNWVpXT3FNTV9zOSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonek1aT3o9c0h4X1llSGV4TXpfczknZD5TPiR6TVpPej1zSHhfWWVIZXhNel85ZT1laid6TVpPej1zSHhfWWVIZXhNel9zOSdkOw1WPj4+Pj4+Pj4+Pj4+Pj4+PnNBPigkY3NNfV85ZT1laid6TVpPej1zSHhfWWVIZXhNel9zOSdkPlNTPicnKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ016ek96J2Q+Uz4nZ01aT3o9c0h4PnVlSGV4TXo+RU89PkFPUUg9WCc7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiQ9LnNuLWluTW5uc09ILWluTT1fQVdlbi45ZT1lKCdNenpPeicsPidnTVpPej1zSHg+dWVIZXhNej5FTz0+QU9RSD1YJyk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PnpNOXN6TTI9KDxlbk1fUXpXKCk+WD45ZW4uPE9lejkpOw1WPj4+Pj4+Pj4+Pj4+Pj4+PmwNVj4+Pj4+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4+Pj4+JD16ZWNNeldfMldlbm5fOWU9ZT5TPiQ9LnNuLWk9emVjTVdfek12UU1uPS1peE09Xz16ZWNNV18yV2Vubl88cV94emU5TSgkeHplOU1fczksPiRuTXpjczJNXz1xWk0+Uz4nSicpOw1WPj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonbk1XXz16ZWNNeldfMldlbm4nZD5TPiQ9emVjTXpXXzJXZW5uXzllPWU7DVYNVj4+Pj4+Pj4+Pj4+PiQ9LnNuLWlXT2U5LWlZTzlNVygiMnM9cV9ZTzlNVyIpOw1WPj4+Pj4+Pj4+Pj4+JDJzPXE+Uz4kPS5zbi1pMnM9cV9ZTzlNVy1peE09X2VXV18ycz1xKCk7DVY+Pj4+Pj4+Pj4+Pj4kY3NNfV85ZT1laicycz1xJ2Q+Uz4kMnM9cTsNVg1WPj4+Pj4+Pj4+Pj4+JC5PPU1XX2VXV099ZUgyTT5TPmE7DVY+Pj4+Pj4+Pj4+Pj4kLk89TVdfZVdXT31lSDJNX2UyPVFlVz5TPmE7DVY+Pj4+Pj4+Pj4+Pj4kNEZfZVdXT31lSDJNPlM+YTsNVj4+Pj4+Pj4+Pj4+PiQ0Rl9lV1dPfWVIMk1fZTI9UWVXPlM+YTsNVj4+Pj4+Pj4+Pj4+PiQyT0hjc0gyTV9lV1dPfWVIMk0+Uz5hOw1WPj4+Pj4+Pj4+Pj4+JDJPSGNzSDJNX2VXV099ZUgyTV9lMj1RZVc+Uz5hOw1WPj4+Pj4+Pj4+Pj4+c0E+KCQ9LnNuLWlzSFpRPS1pWk9uPSgpKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZT5TPiQ9LnNuLWlzSFpRPS1pWk9uPSgpOw1WPj4+Pj4+Pj4+Pj4+Pj4+PiR6TXZRTW49X0hRWTxNej5TPiQ9LnNuLWlzSFpRPS1pWk9uPSgnek12UU1uPV9IUVk8TXonKTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kek1BTXpNSDJNX3M5PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TUhNemU9TV96TUFNek1IMk1fczkoKTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1laid6TUFNek1IMk1fczknZD5TPiR6TUFNek1IMk1fczk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZWonTVlaV09xTU1fczknZD5TPiRNWVpXT3FNTV9zOTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1laid6TXZRTW49XzllPU0nZD5TPjllPU0oJ2ItWS05Jyk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZWonbj1lPVFuJ2Q+Uz4nZTI9c2NNJzsNVg1WPj4+Pj4+Pj4+Pj4+Pj4+PnNBPigkWk9uPV85ZT1laidlWlp6T2NlV19XTWNNVydkPlNTPmEpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZWonZVpaek9jZVdfbj1lPVFuJ2Q+Uz4nRlpaek9jTTknOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1laid6TXZRTW49X249ZT1RbidkPlM+J2snOw1WPj4+Pj4+Pj4+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4+Pj4+Pj4+PiQ9T18ycz1xX3M5PlM+JD0uc24taXNIWlE9LWlaT249KCc9T18ycz1xX3M5Jyk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JD1PXzJzPXE+Uz4kPS5zbi1pMnM9cV9ZTzlNVy1peE09XzJzPXEoJD1PXzJzPXFfczkpOw1WPj4+Pj4+Pj4+Pj4+Pj4+PiQ9T18yV2Vubj5TPiQ9T18ycz1xaicyV2VubidkOw1WDVY+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPV3MycV85ZT1lPlM+JD0uc24taT16ZWNNV19aT1dzMnFfWU85TVctaXhNPV9aT1dzMnFfZVdXT31lSDJNXzxxX3h6ZTlNKCR4emU5TV9zOSw+JD1PXzJXZW5uKTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj5BT3pNZTIuPigkWk9XczJxXzllPWU+ZW4+JHlNcT5TaT4kY2VXUU0pPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+c0E+KCRjZVdRTWonbk16Y3MyTV89cVpNJ2Q+U1M+IkwiKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5zQT4oJGNlV1FNaidlMj1RZVcnZD5TUz4iYSIpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kLk89TVdfZVdXT31lSDJNPlM+JGNlV1FNaidlWU9RSD0nZDsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JC5PPU1XX2VXV099ZUgyTV9lMj1RZVc+Uz4wOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+c0E+KCRjZVdRTWonbk16Y3MyTV89cVpNJ2Q+U1M+IlsiKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5zQT4oJGNlV1FNaidlMj1RZVcnZD5TUz4iYSIpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kNEZfZVdXT31lSDJNPlM+JGNlV1FNaidlWU9RSD0nZDsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JDRGX2VXV099ZUgyTV9lMj1RZVc+Uz4wOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+c0E+KCRjZVdRTWonbk16Y3MyTV89cVpNJ2Q+U1M+IjEiKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5zQT4oJGNlV1FNaidlMj1RZVcnZD5TUz4iYSIpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kMk9IY3NIMk1fZVdXT31lSDJNPlM+JGNlV1FNaidlWU9RSD0nZDsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JDJPSGNzSDJNX2VXV099ZUgyTV9lMj1RZVc+Uz4wOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WDVZoaD4+Pj4+Pj4+Pj4+Pj4+Pj4kSE99PlM+bj16PU89c1lNKDllPU0oJ2ItWS05Jyw+bj16PU89c1lNKCQ9LnNuLWlzSFpRPS1pWk9uPSgnOU1aZXo9UXpNXzllPU0nKSkpKTsNVmhoPj4+Pj4+Pj4+Pj4+Pj4+PiRxT1F6XzllPU0+Uz5uPXo9Tz1zWU0oOWU9TSgnYi1ZLTknLD5uPXo9Tz1zWU0oJD0uc24taXNIWlE9LWlaT249KCd6TT1RekhfOWU9TScpKSkpOw1WaGg+Pj4+Pj4+Pj4+Pj4+Pj4+JDllPU05c0FBPlM+JHFPUXpfOWU9TT4tPiRIT307DVZoaD4+Pj4+Pj4+Pj4+Pj4+Pj4kOWVxPlM+QVdPT3ooJDllPU05c0FBPmg+KFthPio+W2E+Kj5rVSkpOw1WDVY+Pj4+Pj4+Pj4+Pj4+Pj4+JDkwPlM+SE19PjRlPU1Uc1lNKCQ9LnNuLWlzSFpRPS1pWk9uPSgnOU1aZXo9UXpNXzllPU0nKSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JDlrPlM+SE19PjRlPU1Uc1lNKCQ9LnNuLWlzSFpRPS1pWk9uPSgnek09UXpIXzllPU0nKSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JHNIPU16Y2VXPlM+JDkwLWk5c0FBKCQ5ayk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JC56PlM+KCRzSD1NemNlVy1pOWVxbj4qPmtVKT4rPiRzSD1NemNlVy1pLjsNVg1WPj4+Pj4+Pj4+Pj4+Pj4+PnNBPigkLno+Qj4wVSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kNEZfZVdXT31lSDJNPlM+JDRGX2VXV099ZUgyTT5oPms7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WDVYNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1laicuTz1NV19lV1dPfWVIMk0nZD5TPiQuTz1NV19lV1dPfWVIMk07DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZWonLk89TVdfZVdXT31lSDJNX2UyPVFlVydkPlM+JC5PPU1XX2VXV099ZUgyTV9lMj1RZVc7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZWonNEZfZVdXT31lSDJNJ2Q+Uz4kNEZfZVdXT31lSDJNOw1WPj4+Pj4+Pj4+Pj4+Pj4+PiRaT249XzllPWVqJzRGX2VXV099ZUgyTV9lMj1RZVcnZD5TPiQ0Rl9lV1dPfWVIMk1fZTI9UWVXOw1WPj4+Pj4+Pj4+Pj4+Pj4+PiRaT249XzllPWVqJzJPSGNzSDJNX2VXV099ZUgyTSdkPlM+JDJPSGNzSDJNX2VXV099ZUgyTTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1laicyT0hjc0gyTV9lV1dPfWVIMk1fZTI9UWVXJ2Q+Uz4kMk9IY3NIMk1fZVdXT31lSDJNX2UyPVFlVzsNVg1WPj4+Pj4+Pj4+Pj4+Pj4+PiRZTVk8TXpfV3NuPT5TPiQ9LnNuLWlzSFpRPS1pWk9uPSgnWU1ZPE16X1dzbj0nKTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kTVlaV09xTU1fSGVZTT5TPiQ9LnNuLWlzSFpRPS1pWk9uPSgnTVlaV09xTU1fSGVZTScpOw1WPj4+Pj4+Pj4+Pj4+Pj4+PnNBPighTVlaPXEoJFlNWTxNel9Xc249KSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1laid4ek9RWl89emVjTVcnZD5TPiIwIjsNVj4+Pj4+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5zQT4oIU1ZWj1xKCRNWVpXT3FNTV9IZVlNKSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZWoneHpPUVpfPXplY01XJ2Q+Uz4iMCI7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1laid4ek9RWl89emVjTVcnZD5TPiJhIjsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj4+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4+Pj4+Pj4+PiQyT1k8X3M5PlM+JD0uc24taT16ZWNNV196TXZRTW49LWl4TT1fPXplY01XX3pNdlFNbj1fMk9ZPHNIZT1zT0hfOXplQT0oJFpPbj1fOWU9ZWonek12UU1uPV9IUVk8TXonZCk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+c0E+KE1ZWj1xKCQyT1k8X3M5KSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kek12UU1uPV9IUVk8TXo+Uz4nJzsNVj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVYNVj4+Pj4+Pj4+Pj4+Pj4+Pj4kOWU9ZT5TPiQ9LnNuLWk9emVjTVdfek12UU1uPS1pUVo5ZT1NXz16ZWNNV196TXZRTW49KCRaT249XzllPWUsPiR6TXZRTW49X0hRWTxNeik7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+c0E+KCQ5ZT1lKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PnNBPihNWVo9cSgkMk9ZPF9zOSkpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiR6TXZRTW49X3M5PlM+JD0uc24taTk8LWlzSG5Nej1fczkoKTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bD5NV25NPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiR6TXZRTW49X3M5PlM+JDJPWTxfczlqJ3M5J2Q7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PmwNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+QU96TWUyLj4oJFlNWTxNel9Xc249PmVuPiR5TXE+U2k+JE1ZWl9zOSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JDllPWVfZXp6ZXE+Uz5lenplcSgNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4nek12UU1uPV9zOSc+U2k+JHpNdlFNbj1fczksDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+J01ZWldPcU1NX3M5Jz5TaT4kTVlaX3M5LA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+KTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PnNBPighJD0uc24taTJPWVlPSC1pc0huTXo9XzllPWUoJDllPWVfZXp6ZXEsPic9emVjTVdfek12UU1uPV9ZTVk8TXonKSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiQ9LnNuLWluTW5uc09ILWluTT1fQVdlbi45ZT1lKCdNenpPeicsPidLenpPej43MjJRenpNOVg+VHpxPkZ4ZXNIIScpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PnpNOXN6TTI9KCQ9LnNuLWlXZW49X1F6VygpLD4nek1Bek1uLicpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PnNBPighTVlaPXEoJE1ZWldPcU1NX0hlWU0pKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kZXhNPlM+JD0uc24taXNIWlE9LWlaT249KCdleE0nKTsNVmhoPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JFlPPHNXTV9ITz5TPiQ9LnNuLWlzSFpRPS1pWk9uPSgnWU88c1dNX0hPJyk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5BT3pNZTIuPigkTVlaV09xTU1fSGVZTT5lbj4keU1xPlNpPiRNWVpfSGVZTSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiQ5ZT1lX2V6emVxPlM+ZXp6ZXEoDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pid6TXZRTW49X3M5Jz5TaT4kek12UU1uPV9zOSwNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+J01ZWldPcU1NX0hlWU0nPlNpPiRNWVpXT3FNTV9IZVlNaiR5TXFkLA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4nZXhNJz5TaT4kZXhNaiR5TXFkLA1WaGg+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PidZTzxzV01fSE8nPlNpPiRZTzxzV01fSE9qJHlNcWQsDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+KTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5zQT4oISQ9LnNuLWkyT1lZT0gtaXNIbk16PV85ZT1lKCQ5ZT1lX2V6emVxLD4nPXplY01XX3pNdlFNbj1fWU1ZPE16X089Lk16bicpKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiQ9LnNuLWluTW5uc09ILWluTT1fQVdlbi45ZT1lKCdNenpPeicsPidLenpPej43MjJRenpNOVg+VHpxPkZ4ZXNIIScpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj56TTlzek0yPSgkPS5zbi1pV2VuPV9RelcoKSw+J3pNQXpNbi4nKTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5zQT4oJFpPbj1fOWU9ZWonZVpaek9jZVdfV01jTVcnZD5TUz5hKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1lPlM+ZXp6ZXEoDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+J3pNdlFNbj1fczknPlNpPiR6TXZRTW49X3M5LA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pic9emVjTVdfPXMyeU09Jz5TaT4nMCcsDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+J2UyMk9ZWU85ZT1zT0gnPlNpPicwJywNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4nMmV6Xy5zek0nPlNpPicwJywNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4nPE9PeTxxbk1XQSc+U2k+J2EnLA1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+KTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiQ5ZT1lPlM+JD0uc24taT16ZWNNV196TXZRTW49LWlRWjllPU1fPXplY01XXzxPT3lzSHgoJFpPbj1fOWU9ZSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5zQT4oJDllPWUpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kek12XzllPWU+Uz5lenplcSgNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+J3pNdlFNbj1fbj1lPVFuJz5TaT4iSiIsDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+KTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kOWU9ZTA+Uz4kPS5zbi1pPXplY01XX3pNdlFNbj0taVFaOWU9TV89emVjTVdfek12UU1uPV9uPWU9UW4oJHpNdl85ZT1lLD4kek12UU1uPV9zOSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JFlueD5TPighTVlaPXEoJHpNdlFNbj1fSFFZPE16KSk+Pz4nPlR6c1o+Z2Vzbk0+blEyMk1ubkFRV1dxPj1PPkYyMk9ZWU85ZT1zT0g+Jz46PidUenNaPmdlc25NPm5RMjJNbm5BUVdXcT49Tz5GMjJPWVlPOWU9c09IPic7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ016ek96J2Q+Uz4ncE9ZTT0uc0h4Pn1NSD0+fXpPSHgsPlpXTWVuTT49enE+ZXhlc0g+V2U9TXpYJzsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PmwNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bD5NV25NPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRZbng+Uz4oIU1ZWj1xKCR6TXZRTW49X0hRWTxNeikpPj8+Jz5UenNaPmdlc25NPm5RMjJNbm5BUVdXcT49Tz51ZUhleE16PkZaWnpPY2VXPic+Oj4nVHpzWj5nZXNuTT5uUTIyTW5uQVFXV3E+PU8+dWVIZXhNej5GWlp6T2NlVz4nOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiQ9LnNuLWluTW5uc09ILWluTT1fQVdlbi45ZT1lKCduUTIyTW5uJyw+JFlueCk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PnpNOXN6TTI9KDxlbk1fUXpXKCk+WD45ZW4uPE9lejkpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ016ek96J2Q+Uz4ncE9ZTT0uc0h4Pn1NSD0+fXpPSHgsPlpXTWVuTT49enE+ZXhlc0g+V2U9TXpYJzsNVj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taX16cz1NX2NzTX0oJzJPSD1NSD0nLD4nMmV6Xz16ZWNNV2hlOTlfMmV6Xz16ZWNNVycsPiRjc019XzllPWUpOw1WPj4+Pj4+Pj4+Pj4+JD0uc24taT1NWVpXZT1NLWl6TUg5TXooKTsNVj4+Pj4+Pj4+bD5NV25NPl0NVj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ016ek96J2Q+Uz4nRjlZc0g+MmVIPkhPPT56TXZRTW49PkFPej5UemVjTVdYJzsNVj4+Pj4+Pj4+Pj4+PiQ9LnNuLWluTW5uc09ILWluTT1fQVdlbi45ZT1lKCdNenpPeicsPidGOVlzSD4yZUg+SE89PnpNdlFNbj0+QU96PlR6ZWNNV1gnKTsNVj4+Pj4+Pj4+Pj4+PnpNOXN6TTI9KDxlbk1fUXpXKCk+WD49emVzSF89emVjTVcpOw1WPj4+Pj4+Pj5sDVY+Pj4+bA1WDVZsDVY=';$_D=strrev('edoced_46esab');eval($_D('JF9YPWJhc2U2NF9kZWNvZGUoJF9YKTskX1g9c3RydHIoJF9YLCdTZ1BPOVlaV0ZLbXF5ZnhjakxKUnp1TTV2TnRzMWIue0I0bkNdaS8yRGwwRWhlQQpbZDg9UXA+VlhvIEh9NkdJdzdrYTNUclU8JywnPVI5b2RtcGxBRVB5azhndls1M3hyTWV6cVpIaTdZaFc8RHNHez5DY1h9MU4vYWZqNl1KdHVTIAouQlVud1ZLTFFPMjBJVEY0YicpOyRfUj1zdHJfcmVwbGFjZSgnX19GSUxFX18nLCInIi4kX0YuIiciLCRfWCk7ZXZhbCgkX1IpOyRfUj0wOyRfWD0wOw='));?>
+<?php
+
+class Car_travel extends Admin_Controller {
+
+    public function __construct() {
+        parent::__construct(true);
+
+        $this->is_logged_in();
+//        $this->is_user_admin();
+        //render template
+        $header_data = array(
+        );
+
+        $this->template->write_view('header', 'templates/header', $header_data);
+        $this->template->write_view('footer', 'templates/footer');
+        $this->load->model("travel_request_model", 'travel_request');
+        $this->load->model("travel_category_model", 'travel_category');
+    }
+
+    public function index($travel_request_id = '') {
+        $employee_id = $this->session->userdata('employee_id');
+        if ($employee_id != '') {
+            $view_data = array();
+
+            if (!empty($travel_request_id)) {
+                $request = $this->travel_request->get_request_id($travel_request_id);
+                $view_data['travel_request'] = $request;
+
+                if (isset($request['request_number'])) {
+                    $view_data['request_number'] = $request['request_number'];
+                } else {
+                    $view_data['request_number'] = rand(11111111, 9999999);
+                }
+            } else {
+                $view_data['request_number'] = rand(11111111, 9999999);
+            }
+
+            $this->load->model("travel_reasons_model");
+            $travel_reasons = $this->travel_reasons_model->get_all_travel_reasons();
+            $view_data['travel_reasons'] = $travel_reasons;
+
+            $car_date = $this->travel_category->get_all_car_category();
+            $view_data['car_category'] = $car_date;
+
+            $this->load->model('employee_model');
+            $employee = $this->employee_model->get_employee_by_id_new($employee_id);
+            $view_data['employee'] = $employee;
+            $grade_id = $employee['grade_id'];
+            $city_id = $employee['city_id'];
+            $cost_center_id = $employee['cost_center_id']; 
+
+            $dept_id = $employee['dept_id'];
+            $this->load->model("projects_model");
+            $projects = $this->projects_model->get_all_projects();
+            $view_data['projects'] = $projects;
+
+            $this->load->model('travel_policy_model');
+            $policy_data = $this->travel_policy_model->get_travel_policy_by_grade($grade_id, $service_type = '3');
+
+            $view_data['approval_level'] = '1';
+            $view_data['reporting_manager_id'] = $reporting_manager_id = $employee['reporting_manager_id'];
+            if (!empty($policy_data)) {
+                if ($policy_data['approval_level'] == 2) {
+                    $view_data['approval_level'] = $policy_data['approval_level'];
+                    $reporting_manager_data = $this->travel_request->get_employee_manager_base_id($employee_id);
+                    $view_data['reporting_manager_id'] = $reporting_manager_data['reporting_manager_id'];
+                } else if ($policy_data['approval_level'] == 0) {
+                    $view_data['approval_level'] = $policy_data['approval_level'];
+                }
+            }
+
+            if ($view_data['reporting_manager_id'] == '' || $view_data['reporting_manager_id'] == '0') {
+                $view_data['error'] = 'Reporting Manager Not found.';
+                $this->session->set_flashdata('error', 'Reporting Manager Not found.');
+                redirect(base_url() . dashboard);
+            }
+
+            $traverl_class_data = $this->travel_request->get_travel_class_by_grade($grade_id, $service_type = '3');
+            $view_data['sel_traverl_class'] = $traverl_class_data;
+
+            $this->load->model("city_model");
+            $city = $this->city_model->get_all_city();
+            $view_data['city'] = $city;
+
+            $hotel_allowance = 0;
+            $hotel_allowance_actual = 0;
+            $DA_allowance = 0;
+            $DA_allowance_actual = 0;
+            $convince_allowance = 0;
+            $convince_allowance_actual = 0;
+
+            /* ----------------- POST DATA---------------------- */
+            if ($this->input->post()) {
+
+                $this->load->library('form_validation');
+                $this->form_validation->set_rules('departure_date', 'Departure Date', 'required');
+                $this->form_validation->set_rules('return_date', 'return_date', 'required');
+                $this->form_validation->set_rules('travel_reason_id', 'travel_reason_id', 'required');
+                $this->form_validation->set_rules('travel_class_id', 'travel_class_id', 'required');
+                $this->form_validation->set_rules('from_city_id', 'from_city_id', 'required');
+                $this->form_validation->set_rules('to_city_id', 'to_city_id', 'required');
+                if ($this->form_validation->run() == FALSE) {
+                    $this->session->set_flashdata('error', 'Please follow validation rules!');
+                    redirect('train_travel', 'refresh');
+                } else {
+
+                    if (!empty($travel_request_id)) {
+                        $this->travel_request->delete_request_other_member($travel_request_id);
+                    }
+
+                    $emp_list = $this->session->userdata('emp_list');
+                    $member_list = array();
+                    if (!empty($emp_list)) {
+                        foreach ($emp_list as $key => $value) {
+                            $member_list[] = $key;
+                        }
+                    }
+
+                    $from_city_id = $this->input->post('from_city_id');
+                    $to_city_id = $this->input->post('to_city_id');
+                    if ($from_city_id == $to_city_id) {
+                        $this->session->set_flashdata('error', 'To and From Location can not be same..!!');
+                        redirect('flight_travel', 'refresh');
+                    }
+
+
+
+                    $departure_date = date(DATEMYSQL, strtotime($this->input->post('departure_date')));
+                    $return_date = date(DATEMYSQL, strtotime($this->input->post('return_date')));
+
+                    $departure_date = $this->input->post('departure_date');
+                    $return_date = $this->input->post('return_date');
+                    if ($return_date != '') {
+                        if ($departure_date > $return_date) {
+                            $this->session->set_flashdata('error', 'Return date must be greater then the departure date');
+                            redirect('flight_travel', 'refresh');
+                        }
+                    }
+                    $post_data = $this->input->post();
+
+                    $post_data['departure_date'] = date(DATEMYSQL, strtotime($post_data['departure_date']));
+                    $post_data['return_date'] = date(DATEMYSQL, strtotime($post_data['return_date']));
+
+                    $request_number = $this->input->post('request_number');
+                    $reference_id = $this->travel_request->generate_reference_id();
+                    $post_data['reference_id'] = $reference_id;
+                    $post_data['employee_id'] = $employee_id;
+                    $post_data['request_date'] = date('Y-m-d');
+                    $post_data['status'] = 'active';
+
+                    $project_id = $this->input->post('project_id');
+                    if ($project_id == '') {
+                        $post_data['project_id'] = null;
+                    }
+
+                    $return_date = $this->input->post('return_date');
+                    if ($return_date == '') {
+                        $travel_date = date(DATETIME_FORMAT, strtotime($departure_date));
+                        $travel_day = "1";
+                        $post_data['trip_type'] = '1';
+                        $post_data['return_date'] = null;
+                    } else {
+                        $now = strtotime(date('Y-m-d', strtotime($this->input->post('departure_date'))));
+                        $your_date = strtotime(date('Y-m-d', strtotime($this->input->post('return_date'))));
+                        $datediff = $your_date - $now;
+                        $travel_day = floor($datediff / (60 * 60 * 24));
+                        $travel_date = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                    }
+
+                    if ($post_data['approval_level'] == 0) {
+                        $post_data['approval_status'] = 'Approved';
+                        $post_data['request_status'] = '2';
+                    }
+
+                    $to_city_id = $this->input->post('to_city_id');
+                    $to_city = $this->city_model->get_city($to_city_id);
+                    $to_class = $to_city['class'];
+
+                    $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
+                    foreach ($policy_data as $key => $value) {
+                        if ($value['service_type'] == "5") {
+                            if ($value['actual'] == "0") {
+                                $hotel_allowance = $value['amount'];
+                            } else {
+                                $hotel_allowance_actual = 1;
+                            }
+                        } else if ($value['service_type'] == "6") {
+                            if ($value['actual'] == "0") {
+                                $DA_allowance = $value['amount'];
+                            } else {
+                                $DA_allowance_actual = 1;
+                            }
+                        } else if ($value['service_type'] == "7") {
+                            if ($value['actual'] == "0") {
+                                $convince_allowance = $value['amount'];
+                            } else {
+                                $convince_allowance_actual = 1;
+                            }
+                        }
+                    }
+
+                    $d1 = new DateTime($this->input->post('departure_date'));
+                    $d2 = new DateTime($this->input->post('return_date'));
+                    $interval = $d1->diff($d2);
+                    $hr = ($interval->days * 24) + $interval->h;
+
+                    if ($hr < 14) {
+                        $DA_allowance = $DA_allowance / 2;
+                    }
+
+
+                    $post_data['hotel_allowance'] = $hotel_allowance;
+                    $post_data['hotel_allowance_actual'] = $hotel_allowance_actual;
+                    $post_data['DA_allowance'] = $DA_allowance;
+                    $post_data['DA_allowance_actual'] = $DA_allowance_actual;
+                    $post_data['convince_allowance'] = $convince_allowance;
+                    $post_data['convince_allowance_actual'] = $convince_allowance_actual;
+
+//                $member_list = $this->input->post('member_list');
+                    $employee_name = $this->input->post('employee_name');
+                    $age = $this->input->post('age');
+                    $mobile_no = $this->input->post('mobile_no');
+                    $email = $this->input->post('email');
+                    if (!empty($member_list)) {
+                        $post_data['group_travel'] = "1";
+                    } else {
+                        $post_data['group_travel'] = "0";
+                        if (!empty($employee_name)) {
+                            foreach ($employee_name as $key => $emp_name) {
+                                if ($employee_name[$key] != '' && $age[$key] != '' && $mobile_no[$key] != '' && $email[$key] != '') {
+                                    $post_data['group_travel'] = "1";
+                                }
+                            }
+                        }
+                    }
+
+                    $comb_id = $this->travel_request->get_travel_request_combination_draft($post_data['request_number']);
+                    if (empty($comb_id)) {
+                        $request_number = '';
+                    }
+
+                    $data = $this->travel_request->update_travel_request($post_data, $request_number);
+                    if ($data) {
+                        if (empty($comb_id)) {
+                            $request_id = $this->db->insert_id();
+                        } else {
+                            $request_id = $comb_id['id'];
+                        }
+                        if (!empty($member_list)) {
+                            foreach ($member_list as $key => $emp_id) {
+                                $data_array = array(
+                                    'request_id' => $request_id,
+                                    'employee_id' => $emp_id,
+                                );
+                                if (!$this->common->insert_data($data_array, 'travel_request_member')) {
+                                    $this->session->set_flashdata('error', 'Error Occurred. Try Again!');
+                                    redirect($this->last_url(), 'refresh');
+                                }
+                            }
+                        }
+                        if (!empty($employee_name)) {
+
+                            foreach ($employee_name as $key => $emp_name) {
+                                if ($employee_name[$key] != '' && $age[$key] != '' && $mobile_no[$key] != '' && $email[$key] != '') {
+                                    $data_array = array(
+                                        'request_id' => $request_id,
+                                        'employee_name' => $employee_name[$key],
+                                        'age' => $age[$key],
+                                        'mobile_no' => $mobile_no[$key],
+                                        'email' => $email[$key],
+                                    );
+                                    if (!$this->common->insert_data($data_array, 'travel_request_member_others')) {
+                                        $this->session->set_flashdata('error', 'Error Occurred. Try Again!');
+                                        redirect($this->last_url(), 'refresh');
+                                    }
+                                }
+                            }
+                        }
+
+                        if ($post_data['approval_level'] == 0) {
+                            $post_data = array(
+                                'request_id' => $request_id,
+                                'travel_ticket' => '1',
+                                'accommodation' => '1',
+                                'car_hire' => '1',
+                                'bookbyself' => '0',
+                                'bookbymanager' => '1',
+                            );
+                            $data = $this->travel_request->update_travel_booking($post_data);
+                            if ($data) {
+                                $req_data = array(
+                                    'request_status' => "3",
+                                );
+                                $data1 = $this->travel_request->update_travel_request_status($req_data, $request_id);
+                                $msg = (!empty($request_number)) ? ' Trip Raised Successfully for Accommodation ' : 'Trip Raised Successfully for Accommodation ';
+                            } else {
+                                $view_data['error'] = 'Something went wrong, please try again later.';
+                            }
+
+                            $email_template = $this->common->select_data_by_id('email_format', 'mail_id', '2');
+                            if (!empty($email_template)) {
+                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                $request_data['amount'] = $request_data['hotel_allowance'] + $request_data['da_allowance'] + $request_data['convince_allowance'];
+
+                                $departure_date = $request_data['departure_date'];
+                                $return_date = $request_data['return_date'];
+                                if ($return_date == '') {
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    $request_data['day_plan'] = "1";
+                                } else {
+                                    $now = strtotime(date('Y-m-d', strtotime($departure_date)));
+                                    $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
+                                    $datediff = $your_date - $now;
+                                    $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                                }
+
+                                if ($request_data['travel_type'] == "1") {
+                                    $travel_mode = "Flight";
+                                } else if ($request_data['travel_type'] == "2") {
+                                    $travel_mode = "Train";
+                                } else if ($request_data['travel_type'] == "3") {
+                                    $travel_mode = "Car";
+                                } else if ($request_data['travel_type'] == "4") {
+                                    $travel_mode = "Bus";
+                                } else {
+                                    $travel_mode = "";
+                                }
+                                $request_data['travel_mode'] = $travel_mode;
+                                $request_data['url'] = "<a target='_blanck' href='" . base_url("employee_request/view/") . "/" . $request_id . "' style='text-decoration-line: none;'>Click here</a>";
+
+
+                                $subject = $email_template[0]['subject'];
+                                $mailformat = $email_template[0]['emailformat'];
+                                $subject = str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject))))))))))));
+                                $message = str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat))))))))))));
+                                $cc = '';
+                                $to = $request_data['employee_email'];
+                                $this->sendEmail($to, $subject, $message, $cc);
+                            }
+
+                            $email_template = $this->common->select_data_by_id('email_format', 'mail_id', '6');
+                            if (!empty($email_template)) {
+                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                $request_data['amount'] = $request_data['hotel_allowance'] + $request_data['da_allowance'] + $request_data['convince_allowance'];
+                                $from_city_id = $request_data['from_city_id'];
+                                $cost_center_list = $this->travel_request->get_cost_center_by_city_id($from_city_id);
+                                $cost_center_id = $cost_center_list['cost_center_id'];
+
+                                $departure_date = $request_data['departure_date'];
+                                $return_date = $request_data['return_date'];
+                                if ($return_date == '') {
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    $request_data['day_plan'] = "1";
+                                } else {
+                                    $now = strtotime(date('Y-m-d', strtotime($departure_date)));
+                                    $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
+                                    $datediff = $your_date - $now;
+                                    $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                                }
+
+                                if ($request_data['travel_type'] == "1") {
+                                    $travel_mode = "Flight";
+                                } else if ($request_data['travel_type'] == "2") {
+                                    $travel_mode = "Train";
+                                } else if ($request_data['travel_type'] == "3") {
+                                    $travel_mode = "Car";
+                                } else if ($request_data['travel_type'] == "4") {
+                                    $travel_mode = "Bus";
+                                } else {
+                                    $travel_mode = "";
+                                }
+                                $request_data['travel_mode'] = $travel_mode;
+                                $request_data['url'] = "<a target='_blanck' href='" . base_url("employee_request/view/") . "/" . $request_id . "' style='text-decoration-line: none;'>Click here</a>";
+
+                                $subject = $email_template[0]['subject'];
+                                $mailformat = $email_template[0]['emailformat'];
+                                $subject = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject)))))))))))))))));
+                                $message = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat)))))))))))))))));
+
+                                $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
+                                if (!empty($travel_email)) {
+                                    $to_email = '';
+                                    $cc = $request_data['employee_email'];
+                                    foreach ($travel_email as $key => $value) {
+                                        $to_email[] = $value['email'];
+                                    }
+                                    $this->sendEmail($to_email, $subject, $message, $cc);
+                                }
+                            }
+                        } else {
+                            $msg = (!empty($request_number)) ? "Trip raised successfully for Manager's approval." : "Trip raised successfully for Manager's approval.";
+
+                            $email_template = $this->common->select_data_by_id('email_format', 'mail_id', '1');
+                            if (!empty($email_template)) {
+                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                $request_data['amount'] = $request_data['hotel_allowance'] + $request_data['da_allowance'] + $request_data['convince_allowance'];
+
+                                $departure_date = $request_data['departure_date'];
+                                $return_date = $request_data['return_date'];
+                                if ($return_date == '') {
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    $request_data['day_plan'] = "1";
+                                } else {
+                                    $now = strtotime(date('Y-m-d', strtotime($departure_date)));
+                                    $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
+                                    $datediff = $your_date - $now;
+                                    $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                                }
+
+                                if ($request_data['travel_type'] == "1") {
+                                    $travel_mode = "Flight";
+                                } else if ($request_data['travel_type'] == "2") {
+                                    $travel_mode = "Train";
+                                } else if ($request_data['travel_type'] == "3") {
+                                    $travel_mode = "Car";
+                                } else if ($request_data['travel_type'] == "4") {
+                                    $travel_mode = "Bus";
+                                } else {
+                                    $travel_mode = "";
+                                }
+                                $request_data['travel_mode'] = $travel_mode;
+                                $request_data['url'] = "<a target='_blanck' href='" . base_url("employee_request/approval_request/") . "/" . $request_id . "' style='text-decoration-line: none;'>Click here</a>";
+
+
+                                $subject = $email_template[0]['subject'];
+                                $mailformat = $email_template[0]['emailformat'];
+
+                                $subject = str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject))))))))))));
+                                $message = str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat))))))))))));
+
+                                $cc = $request_data['employee_email'];
+                                $to = $request_data['manager_email'];
+                                $this->sendEmail($to, $subject, $message, $cc);
+                            }
+                        }
+
+
+                        $this->session->set_flashdata('success', $msg);
+                        redirect(base_url() . dashboard);
+                    } else {
+                        $view_data['error'] = 'Something went wrong, please try again later.';
+                    }
+                }
+            } else {
+                $array = array(
+                    "emp_list" => ''
+                );
+                $this->session->set_userdata($array);
+            }
+            $this->template->write_view('content', 'car_travel/add_car_travel', $view_data);
+            $this->template->render();
+        } else {
+            $view_data['error'] = 'Admin can not request for Travel.';
+            $this->session->set_flashdata('error', 'Admin can not request for Travel.');
+            redirect(base_url() . train_travel);
+        }
+    }
+
+}

@@ -1,1 +1,700 @@
-<?php $_F=__FILE__;$_X='P2lCP1ouWg1WDVZzQT4oITlNQXNITTkoJ29GcEttRlR0JykpDVY+Pj4+TVJzPSgnRU8+OXN6TTI9Pm4yenNaPT5lMjJNbm4+ZVdXT31NOScpOw1WDVYyV2Vubj4gbk16bj5NUj1NSDluPi8zXy9PSD16T1dXTXo+XQ1WDVY+Pj4+WlE8V3MyPkFRSDI9c09IPl9fMk9Ibj16UTI9KCk+XQ1WPj4+Pj4+Pj5aZXpNSD06Ol9fMk9Ibj16UTI9KD16UU0pOw1WDVY+Pj4+Pj4+Pmhoek1IOU16Pj1NWVpXZT1NDVY+Pj4+Pj4+PiQuTWU5TXpfOWU9ZT5TPmV6emVxKA1WPj4+Pj4+Pj4+Pj4+J1pleE0nPlNpPidZZW49TXpuJywNVj4+Pj4+Pj4+Pj4+PiduUTwnPlNpPidRbk16bicNVj4+Pj4+Pj4+KTsNVg1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taX16cz1NX2NzTX0oJy5NZTlNeicsPic9TVlaV2U9TW5oLk1lOU16Jyw+JC5NZTlNel85ZT1lKTsNVj4+Pj4+Pj4+JD0uc24taT1NWVpXZT1NLWl9enM9TV9jc019KCdBT089TXonLD4nPU1ZWldlPU1uaEFPTz1NeicpOw1WPj4+PmwNVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD5zSDlNUigpPl0NVj4+Pj4+Pj4+JD0uc24taXNuX1dPeHhNOV9zSCgpOw1WPj4+Pj4+Pj4kPS5zbi1pc25fUW5Nel9lOVlzSCgpOw1WDVY+Pj4+Pj4+PiQ9LnNuLWlXT2U5LWlZTzlNVygnUW5Nel9ZTzlNVycpOw1WPj4+Pj4+Pj4kUW5Nem4+Uz4kPS5zbi1pUW5Nel9ZTzlNVy1peE09X2VXV19Rbk16bigpOw1WPj4+Pj4+Pj4kY3NNfV85ZT1lPlM+ZXp6ZXEoJ1FuTXpuJz5TaT4kUW5Nem4pOw1WDVY+Pj4+Pj4+PiQ9LnNuLWk9TVlaV2U9TS1pfXpzPU1fY3NNfSgnMk9IPU1IPScsPidRbk16bmhzSDlNUicsPiRjc019XzllPWUpOw1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taXpNSDlNeigpOw1WPj4+PmwNVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD5jc019KCRRbk16SGVZTSk+XQ1WPj4+Pj4+Pj4kPS5zbi1pc25fV094eE05X3NIKCk7DVY+Pj4+Pj4+PiQ9LnNuLWlzbl9Rbk16X2U5WXNIKCk7DVYNVj4+Pj4+Pj4+JD0uc24taVdPZTktaVlPOU1XKCdRbk16X1lPOU1XJyk7DVY+Pj4+Pj4+PiRRbk16PlM+JD0uc24taVFuTXpfWU85TVctaXhNPV9Rbk16KCRRbk16SGVZTSk7DVY+Pj4+Pj4+PiRjc019XzllPWU+Uz5lenplcSgnUW5Neic+U2k+JFFuTXopOw1WDVY+Pj4+Pj4+PiQ9LnNuLWk9TVlaV2U9TS1pfXpzPU1fY3NNfSgnMk9IPU1IPScsPidRbk16bmhjc019X1FuTXonLD4kY3NNfV85ZT1lKTsNVj4+Pj4+Pj4+JD0uc24taT1NWVpXZT1NLWl6TUg5TXooKTsNVj4+Pj5sDVYNVj4+Pj5aUTxXczI+QVFIMj1zT0g+ZTk5KCRRbk16SGVZTT5TPicnKT5dDVY+Pj4+Pj4+PiQ9LnNuLWlzbl9XT3h4TTlfc0goKTsNVj4+Pj4+Pj4+JD0uc24taXNuX1FuTXpfZTlZc0goKTsNVg1WPj4+Pj4+Pj4kY3NNfV85ZT1lPlM+ZXp6ZXEoKTsNVj4+Pj4+Pj4+JD0uc24taVdPZTktaVlPOU1XKCdRbk16X1lPOU1XJyk7DVYNVj4+Pj4+Pj4+c0E+KCFNWVo9cSgkUW5NekhlWU0pKT5dDVY+Pj4+Pj4+Pj4+Pj4kUW5Nej5TPiQ9LnNuLWlRbk16X1lPOU1XLWl4TT1fUW5NeigkUW5NekhlWU0pOw1WPj4+Pj4+Pj4+Pj4+JGNzTX1fOWU9ZWonUW5NeidkPlM+JFFuTXo7DVY+Pj4+Pj4+PmwNVj4+Pj4+Pj4+c0E+KCQ9LnNuLWlzSFpRPS1pWk9uPSgpKT5dDVY+Pj4+Pj4+Pj4+Pj4kWk9uPTllPWU+Uz4kPS5zbi1pc0haUT0taVpPbj0oKTsNVj4+Pj4+Pj4+Pj4+PiRaT249OWU9ZWonPXFaTSdkPlM+J2U5WXNIJzsNVj4+Pj4+Pj4+Pj4+PiRRbk16X3M5PlM+IU1ZWj1xKCRRbk16aidzOSdkKT4/PiRRbk16aidzOSdkPjo+Jyc7DVYNVj4+Pj4+Pj4+Pj4+PiQ5ZT1lPlM+JD0uc24taVFuTXpfWU85TVctaXhNPV9Rbk16KCRaT249OWU9ZWonUW5NekhlWU0nZCw+JFFuTXpfczkpOw1WDVY+Pj4+Pj4+Pj4+Pj5zQT4oTVlaPXEoJDllPWUpKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+JE9RPVpRPT5TPiQ9LnNuLWlRbk16X1lPOU1XLWlRWjllPU1fUW5NeigkWk9uPTllPWUsPiRRbk16X3M5KTsNVg1WPj4+Pj4+Pj4+Pj4+Pj4+PnNBPigkT1E9WlE9KT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRZbng+Uz4oIU1ZWj1xKCRRbk16SGVZTSkpPj8+JyBuTXo+blEyMk1ubkFRV1dxPiBaOWU9TTknPjo+JyBuTXo+blEyMk1ubkFRV1dxPkY5OU05JzsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JD0uc24taW5Nbm5zT0gtaW5NPV9BV2VuLjllPWUoJ25RMjJNbm4nLD4kWW54KTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+ek05c3pNMj0oPGVuTV9RelcoKT5YPidRbk16bicpOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ016ek96J2Q+Uz4ncE9ZTT0uc0h4Pn1NSD0+fXpPSHgsPlpXTWVuTT49enE+ZXhlc0g+JzsNVj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiRjc019XzllPWVqJ016ek96J2Q+Uz4nIG5NekhlWU0+ZVd6TWU5cT5NUnNuPW4nOw1WPj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj5sDVYNVg1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taX16cz1NX2NzTX0oJzJPSD1NSD0nLD4nUW5Nem5oZTk5X1FuTXonLD4kY3NNfV85ZT1lKTsNVj4+Pj4+Pj4+JD0uc24taT1NWVpXZT1NLWl6TUg5TXooKTsNVj4+Pj5sDVYNVj4+Pj5aUTxXczI+QVFIMj1zT0g+V094c0goKT5dDVY+Pj4+Pj4+PnNBPigkPS5zbi1pbk1ubnNPSC1pUW5NejllPWUoJ1FuTXpIZVlNJykpPl0NVj4+Pj4+Pj4+Pj4+PnpNOXN6TTI9KDxlbk1fUXpXKCk+WD4nOWVuLjxPZXo5Jyk7DVY+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4kOWU9ZT5TPmV6emVxKCk7DVY+Pj4+Pj4+PnNBPigkPS5zbi1pc0haUT0taVpPbj0oKSk+XQ1WPj4+Pj4+Pj4+Pj4+JFpPbj1fOWU9ZT5TPiQ9LnNuLWlzSFpRPS1pWk9uPSgpOw1WDVY+Pj4+Pj4+Pj4+Pj4kPS5zbi1pV09lOS1pWU85TVcoJyBuTXpfWU85TVcnKTsNVj4+Pj4+Pj4+Pj4+PiRPUT1aUT0+Uz4kPS5zbi1pIG5Nel9ZTzlNVy1pMi5NMnlfV094c0goJFpPbj1fOWU9ZWonUW5NekhlWU0nZCw+JFpPbj1fOWU9ZWonWmVubn1PejknZCw+JFpPbj1fOWU9ZWonPXFaTSdkKTsNVg1WPj4+Pj4+Pj4+Pj4+c0E+KCRPUT1aUT1qJ3BURlQgcCdkPlNTPidwUTIyTW5uJyk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PnpNOXN6TTI9KDxlbk1fUXpXKCk+WD4nOWVuLjxPZXo5Jyk7DVY+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiQ5ZT1laidNenpPeidkPlM+JE9RPVpRPWondXBDJ2Q7DVY+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4kPS5zbi1pV09lOS1pY3NNfSgnV094c0hrJyw+JDllPWUpOw1WPj4+PmwNVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD5XT3hPUT0oKT5dDVY+Pj4+Pj4+PiQ9LnNuLWluTW5uc09ILWluTW5uXzlNbj16T3EoKTsNVj4+Pj4+Pj4+ek05c3pNMj0oPGVuTV9RelcoKT5YPidRbk16bmhXT3hzSCcpOw1WPj4+PmwNVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD4yLmVIeE1fWmVubn1PejkoKT5dDVY+Pj4+Pj4+PiQ9LnNuLWlzbl9XT3h4TTlfc0goKTsNVj4+Pj4+Pj4+JDllPWU+Uz5lenplcSgpOw1WDVY+Pj4+Pj4+PnNBPigkPS5zbi1pc0haUT0taVpPbj0oKSk+XQ1WDVY+Pj4+Pj4+Pj4+Pj4kPS5zbi1pV09lOS1pWU85TVcoJ1FuTXpfWU85TVcnKTsNVj4+Pj4+Pj4+Pj4+PiRRbk16SGVZTT5TPiQ9LnNuLWluTW5uc09ILWlRbk16OWU9ZSgnUW5NekhlWU0nKTsNVj4+Pj4+Pj4+Pj4+PiQ9cVpNPlM+JD0uc24taW5Nbm5zT0gtaVFuTXo5ZT1lKCc9cVpNJyk7DVYNVj4+Pj4+Pj4+Pj4+PiQ9LnNuLWlXT2U5LWlXczx6ZXpxKCdBT3pZX2NlV3M5ZT1zT0gnKTsNVj4+Pj4+Pj4+Pj4+PiRjZVdzOWU9TT5TPiQ9LnNuLWlBT3pZX2NlV3M5ZT1zT0g7DVYNVj4+Pj4+Pj4+Pj4+PiRjZVdzOWU9TS1pbk09X3pRV01uKCdPVzknLD4nN1c5Pm1lbm59T3o5Jyw+Jz16c1l8ek12UXN6TTl8Um5uXzJXTWVIJyk7DVY+Pj4+Pj4+Pj4+Pj4kY2VXczllPU0taW5NPV96UVdNbignSE19Jyw+J0VNfT5tZW5ufU96OScsPic9enNZfHpNdlFzek05fFJubl8yV01lSCcpOw1WPj4+Pj4+Pj4+Pj4+JGNlV3M5ZT1NLWluTT1felFXTW4oJzJPSEFzellfWmVubn1PejknLD4nL09IQXN6WT5tZW5ufU96OScsPic9enNZfHpNdlFzek05fFJubl8yV01lSCcpOw1WDVY+Pj4+Pj4+Pj4+Pj5zQT4oJGNlV3M5ZT1NLWl6UUgoKT5TU1M+PXpRTSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiRaT249XzllPWU+Uz4kPS5zbi1pc0haUT0taVpPbj0oKTsNVg1WPj4+Pj4+Pj4+Pj4+Pj4+PnNBPigkWk9uPV85ZT1laidITX0nZD5TU1M+JFpPbj1fOWU9ZWonMk9IQXN6WV9aZW5ufU96OSdkKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRRbk16PlM+JD0uc24taVFuTXpfWU85TVctaTIuTTJ5X1dPeHNIKCRRbk16SGVZTSw+JD0uc24taXNIWlE9LWlaT249KCdPVzknKSw+JD1xWk0pOw1WDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PnNBPigkUW5NemoncFRGVCBwJ2Q+U1M+J3BRMjJNbm4nKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kMi5lSHhNOT5TPiQ9LnNuLWlRbk16X1lPOU1XLWkyLmVIeE1fWmVubn1PejkoJFFuTXpIZVlNLD4kPS5zbi1pc0haUT0taVpPbj0oJ0hNfScpKTsNVg1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+c0E+KCQyLmVIeE05KT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JD0uc24taW5Nbm5zT0gtaW5NPV9BV2VuLjllPWUoJ25RMjJNbm4nLD4nbWVubn1Pejk+blEyMk1ubkFRV1dxPlFaOWU9TTlYJyk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+ek05c3pNMj0oPGVuTV9RelcoKSk7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sPk1Xbk0+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiQ5ZT1laidNenpPeidkPlM+J3BPWU09LnNIeD59TUg9Pn16T0h4LD5tV01lbk0+PXpxPmV4ZXNIWCc7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kOWU9ZWonTXp6T3onZD5TPic3Vzk+OU9NbkhcJz0+WWU9Mi4sPm1XTWVuTT5aek9jczlNPjJPenpNMj0+WmVubn1PejknOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+Pj4+Pj4+Pj4+bD5NV25NPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JDllPWU+aidNenpPeidkPlM+J0VNfT5tZW5ufU96OT5lSDk+L09IQXN6WT5tZW5ufU96OT45T01uSFwnPT5ZZT0yLic7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj4+Pj4+bD5NV25NPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4kOWU9ZWonTXp6T3onZD5TPmNlV3M5ZT1zT0hfTXp6T3puKCk7DVY+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taX16cz1NX2NzTX0oJzJPSD1NSD0nLD4nMi5lSHhNX1plbm59T3o5Jyw+JDllPWUpOw1WPj4+Pj4+Pj4kPS5zbi1pPU1ZWldlPU0taXpNSDlNeigpOw1WPj4+PmwNVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD4yLmVIeE1fbj1lPVFuKCRRbk16SGVZTSw+JG49ZT1Rbik+XQ1WPj4+Pj4+Pj4kPS5zbi1pV09lOS1pWU85TVcoJyBuTXpfWU85TVcnKTsNVj4+Pj4+Pj4+JFFuTXo+Uz4kPS5zbi1pIG5Nel9ZTzlNVy1peE09X1FuTXooJFFuTXpIZVlNKTsNVg1WPj4+Pj4+Pj5zQT4oISRRbk16KT5dDVY+Pj4+Pj4+Pj4+Pj4kPS5zbi1pbk1ubnNPSC1pbk09X0FXZW4uOWU9ZSgnTXp6T3onLD4nM0hjZVdzOT56TTJPejknKTsNVj4+Pj4+Pj4+bD5NV25NPl0NVg1WPj4+Pj4+Pj4+Pj4+c0E+KCQ9LnNuLWkgbk16X1lPOU1XLWkyLmVIeE1fbj1lPVFuKCRRbk16SGVZTSw+JG49ZT1RbikpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4kPS5zbi1pbk1ubnNPSC1pbk09X0FXZW4uOWU9ZSgnblEyMk1ubicsPicgbk16PlllenlNOT5lbj4nPlg+KCRuPWU9UW4+U1M+YT4/PidzSGUyPXNjTSc+Oj4nZTI9c2NNJykpOw1WPj4+Pj4+Pj4+Pj4+bD5NV25NPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4kPS5zbi1pbk1ubnNPSC1pbk09X0FXZW4uOWU9ZSgnTXp6T3onLD4ncE9ZTT0uc0h4Pn1NSD0+fXpPSHgsPm1XTWVuTT49enE+ZXhlc0hYJyk7DVY+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+PmwNVj4+Pj4+Pj4+ek05c3pNMj0oPGVuTV9RelcoKT5YPidRbk16bicpOw1WPj4+PmwNVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD45TVdNPU1fUW5NeigkUW5NekhlWU0pPl0NVj4+Pj4+Pj4+JD0uc24taVdPZTktaVlPOU1XKCcgbk16X1lPOU1XJyk7DVY+Pj4+Pj4+PiRRbk16PlM+JD0uc24taSBuTXpfWU85TVctaXhNPV9Rbk16KCRRbk16SGVZTSk7DVYNVj4+Pj4+Pj4+c0E+KCEkUW5Neik+XQ1WPj4+Pj4+Pj4+Pj4+JD0uc24taW5Nbm5zT0gtaW5NPV9BV2VuLjllPWUoJ016ek96Jyw+JzNIY2VXczk+ek0yT3o5Jyk7DVY+Pj4+Pj4+Pmw+TVduTT5dDVYNVj4+Pj4+Pj4+Pj4+PnNBPigkPS5zbi1pIG5Nel9ZTzlNVy1pOU1XTT1NX3M9TVkoJFFuTXpIZVlNKSk+XQ1WPj4+Pj4+Pj4+Pj4+Pj4+PiQ9LnNuLWluTW5uc09ILWluTT1fQVdlbi45ZT1lKCduUTIyTW5uJyw+JyBuTXo+OU1XTT1NOT5uUTIyTW5uQVFXV3EnKTsNVj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+JD0uc24taW5Nbm5zT0gtaW5NPV9BV2VuLjllPWUoJ016ek96Jyw+J3BPWU09LnNIeD59TUg9Pn16T0h4LD5tV01lbk0+PXpxPmV4ZXNIWCcpOw1WPj4+Pj4+Pj4+Pj4+bA1WPj4+Pj4+Pj5sDVYNVj4+Pj4+Pj4+ek05c3pNMj0oPGVuTV9RelcoKT5YPidRbk16bicpOw1WPj4+PmwNVg1WPj4+PlpRPFdzMj5BUUgyPXNPSD5BT3p4Tz1fWmVubn1PejkoKT5dDVY+Pj4+Pj4+PiQ5ZT1lPlM+ZXp6ZXEoKTsNVj4+Pj4+Pj4+c0E+KCQ9LnNuLWlzSFpRPS1pWk9uPSgpKT5dDVY+Pj4+Pj4+Pj4+Pj4kWk9uPV85ZT1lPlM+JD0uc24taXNIWlE9LWlaT249KCk7DVY+Pj4+Pj4+Pj4+Pj4kPS5zbi1pV09lOS1pWU85TVcoJyBuTXpfWU85TVcnKTsNVg1WPj4+Pj4+Pj4+Pj4+JFFuTXo+Uz4kPS5zbi1pIG5Nel9ZTzlNVy1pQXNIOV9Rbk16XzxxX01ZZXNXKCRaT249XzllPWVqJ01ZZXNXX3M5J2QpOw1WPj4+Pj4+Pj4+Pj4+c0E+KDJPUUg9KCRRbk16KT5pUz4wKT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+JD1PeU1IPlM+JD0uc24taSBuTXpfWU85TVctaXpNbk09Xz1PeU1IKCRaT249XzllPWVqJ01ZZXNXX3M5J2QpOw1WPj4+Pj4+Pj4+Pj4+Pj4+PnNBPigkPU95TUgpPl0NVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JFdzSHk+Uz4nQU96eE89X1plbm59T3o5aHpNbk09X1plbm59T3o5aCc+WD4kPU95TUg7DVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PiRuUTwKTTI9PlM+Im1lbm59T3o5PmdNbk09PiBnST4iOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kWU1ubmV4TT5TPiI0TWV6PiI+WD4kUW5NemonQXN6bj1fSGVZTSdkPlg+Jz4nPlg+JFFuTXpqJ1dlbj1fSGVZTSdkPlg+Ij4sQjx6aUI8emkNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+bVdNZW5NPkJlPi56TUFTJyI+WD48ZW5NX1F6VygpPlg+JFdzSHk+WD4iJ2kvV3MyeT50TXpNQmhlaVg+QU96PnpNbk09Pj0uTT5aZW5ufU96OVhCPHppDVY+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pm1XTWVuTT45Tz5ITz0+bi5lek0+cU9Rej5aZW5ufU96OT59cz0uPmVIcU9ITVhCPHppQjx6aVQuZUh5PmJPUVhCPHppQjx6aXVlSGV4TXoiOw1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kPU8+Uz4kUW5NemonUW5NekhlWU0nZDsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JD0uc24taW5NSDl1ZXNXKCQ9Tyw+JG5RPApNMj0sPiRZTW5uZXhNKTsNVg1WPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4kWW54PlM+ImJPUXo+WmVubn1Pejk+ek1uTT0+V3NIeT4uZW4+PE1NSD5uTUg9Pj1PPnFPUXo+TS1ZZXNXPmU5OXpNbm5YIjsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+JD0uc24taW5Nbm5zT0gtaW5NPV9BV2VuLjllPWUoJ25RMjJNbm4nLD4kWW54KTsNVj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+ek05c3pNMj0oPGVuTV9RelcoKT5YPidRbk16bmhXT3hzSCcpOw1WPj4+Pj4+Pj4+Pj4+Pj4+PmwNVj4+Pj4+Pj4+Pj4+Pmw+TVduTT5dDVY+Pj4+Pj4+Pj4+Pj4+Pj4+JDllPWVqJ016ek96J2Q+Uz4nS1llc1c+czk+SE89PnpNeHNuPU16TTkhISc7DVY+Pj4+Pj4+Pj4+Pj5sDVY+Pj4+Pj4+PmwNVg1WPj4+Pj4+Pj4kPS5zbi1pV09lOS1pY3NNfSgnV094c0hrJyw+JDllPWUpOw1WPj4+PmwNVg1WbA1W';$_D=strrev('edoced_46esab');eval($_D('JF9YPWJhc2U2NF9kZWNvZGUoJF9YKTskX1g9c3RydHIoJF9YLCdTZ1BPOVlaV0ZLbXF5ZnhjakxKUnp1TTV2TnRzMWIue0I0bkNdaS8yRGwwRWhlQQpbZDg9UXA+VlhvIEh9NkdJdzdrYTNUclU8JywnPVI5b2RtcGxBRVB5azhndls1M3hyTWV6cVpIaTdZaFc8RHNHez5DY1h9MU4vYWZqNl1KdHVTIAouQlVud1ZLTFFPMjBJVEY0YicpOyRfUj1zdHJfcmVwbGFjZSgnX19GSUxFX18nLCInIi4kX0YuIiciLCRfWCk7ZXZhbCgkX1IpOyRfUj0wOyRfWD0wOw='));?>
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Users extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct(true);
+
+//render template
+        $header_data = array(
+            'page' => 'masters',
+            'sub' => 'users'
+        );
+
+        $this->template->write_view('header', 'templates/header', $header_data);
+        $this->template->write_view('footer', 'templates/footer');
+    }
+
+    public function index() {
+        $this->is_logged_in();
+        $this->is_user_admin();
+
+        $this->load->model('user_model');
+        $users = $this->user_model->get_all_users();
+        $view_data = array('users' => $users);
+
+        $this->template->write_view('content', 'users/index', $view_data);
+        $this->template->render();
+    }
+
+    public function view($username) {
+        $this->is_logged_in();
+        $this->is_user_admin();
+
+        $this->load->model('user_model');
+        $user = $this->user_model->get_user($username);
+        $view_data = array('user' => $user);
+
+        $this->template->write_view('content', 'users/view_user', $view_data);
+        $this->template->render();
+    }
+
+    public function add($username = '') {
+        $this->is_logged_in();
+        $this->is_user_admin();
+
+        $view_data = array();
+        $this->load->model('user_model');
+
+        if (!empty($username)) {
+            $user = $this->user_model->get_user($username);
+            $view_data['user'] = $user;
+        }
+        if ($this->input->post()) {
+            $postdata = $this->input->post();
+            $postdata['type'] = 'admin';
+            $user_id = !empty($user['id']) ? $user['id'] : '';
+
+            $data = $this->user_model->get_user($postdata['username'], $user_id);
+
+            if (empty($data)) {
+                $output = $this->user_model->update_user($postdata, $user_id);
+
+                if ($output) {
+                    $msg = (!empty($username)) ? 'User successfully Updated' : 'User successfully Added';
+                    $this->session->set_flashdata('success', $msg);
+                    redirect(base_url() . 'users');
+                } else {
+                    $view_data['error'] = 'Something went wrong, please try again ';
+                }
+            } else {
+                $view_data['error'] = 'Username already exists';
+            }
+        }
+
+
+        $this->template->write_view('content', 'users/add_user', $view_data);
+        $this->template->render();
+    }
+
+    public function login_check() {
+//        echo $this->db->database;;die();
+        if ($this->session->userdata('username')) {
+            redirect(base_url() . 'dashboard');
+        }
+
+        $data = array();
+        if ($this->input->post()) {
+
+            $uid = $_REQUEST['username'];
+            $pwd = $_REQUEST['password'];
+//            $ldap_host = "10.51.82.51"; //final IP conform by Abhishekji 
+////            $ldap_host = "10.51.82.50";
+////            $ldap_host = "10.51.6.1";
+//            $ldap = ldap_connect($ldap_host);
+//            if ($bind = @ldap_bind($ldap, "dbgroup\\" . $uid, $pwd)) {
+//// authenticated
+//                ldap_unbind($ldap);
+
+            $post_data = $this->input->post();
+            $this->load->model('User_model');
+            $psfim_data = $this->User_model->check_login_psfim_check($post_data['username'], $post_data['password']);
+
+            if (!empty($psfim_data)) {
+
+                $output = $this->User_model->check_login_check($post_data['username'], $post_data['password']);
+
+                if (!empty($output)) {
+                    if ($output['STATUS'] == 'Success') {
+//                            $data = $this->update_employee($post_data['username']);
+//                            if (isset($data['status'])) {
+//                                if ($data['status'] == "0") {
+//                                    $msg = $data['msg'];
+//                                    $data['error'] = $msg;
+//                                    $this->session->sess_destroy();
+//                                    $this->session->set_flashdata('error', "Invalid Username");
+//                                } else {
+//                                    redirect(base_url() . 'dashboard');
+//                                }
+//                            } else {
+                        redirect(base_url() . 'dashboard');
+//                            }
+                    } else {
+                        $data['error'] = $output['MSG'];
+                    }
+                } else {
+//code for update employee profile 
+//                        $this->add_new_employee($post_data['username']);
+                }
+            } else {
+                $data['error'] = $output['MSG'];
+            }
+//write code for further process
+//            } else {
+//// invalid name or password
+//                ldap_unbind($ldap);
+//                $data['error'] = "invalid name or password";
+////return false;
+////write code for authentication fail process
+////                exit;
+//            }
+//authenticate($uid,$pwd);
+//            ob_end_flush();
+        }
+
+        $this->load->view('login2', $data);
+    }
+
+    public function login() {
+//        echo $this->db->database;;die();
+        if ($this->session->userdata('username')) {
+            redirect(base_url() . 'dashboard');
+        }
+
+        $data = array();
+        if ($this->input->post()) {
+
+            $uid = $_REQUEST['username'];
+            $pwd = $_REQUEST['password'];
+            $ldap_host = "10.51.82.51"; //final IP conform by Abhishekji 
+//            $ldap_host = "10.51.82.50";
+//            $ldap_host = "10.51.6.1";
+            $ldap = ldap_connect($ldap_host);
+            if ($bind = @ldap_bind($ldap, "dbgroup\\" . $uid, $pwd)) {
+// authenticated
+                ldap_unbind($ldap);
+
+                $post_data = $this->input->post();
+                $this->load->model('User_model');
+                $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
+
+                if (!empty($psfim_data)) {
+
+                    $output = $this->User_model->check_login($post_data['username'], $post_data['password']);
+
+                    if (!empty($output)) {
+                        if ($output['STATUS'] == 'Success') {
+                            $data = $this->update_employee($post_data['username']);
+                            if (isset($data['status'])) {
+                                if ($data['status'] == "0") {
+                                    $msg = $data['msg'];
+                                    $data['error'] = $msg;
+                                    $this->session->sess_destroy();
+                                    $this->session->set_flashdata('error', "Invalid Username");
+                                } else {
+                                    redirect(base_url() . 'dashboard');
+                                }
+                            } else {
+                                redirect(base_url() . 'dashboard');
+                            }
+                        } else {
+                            $data['error'] = $output['MSG'];
+                        }
+                    } else {
+//code for update employee profile 
+                        $this->add_new_employee($post_data['username']);
+                    }
+                } else {
+                    $data['error'] = $output['MSG'];
+                }
+//write code for further process
+            } else {
+// invalid name or password
+                ldap_unbind($ldap);
+                $data['error'] = "invalid name or password";
+//return false;
+//write code for authentication fail process
+//                exit;
+            }
+//authenticate($uid,$pwd);
+            ob_end_flush();
+        }
+
+        $this->load->view('login2', $data);
+    }
+
+    function add_new_employee($username = "") {
+
+        $post_data = $this->input->post();
+        $this->load->model('User_model');
+
+
+        $sql = "SELECT * FROM grades";
+        $user = $this->db->query($sql);
+        $grade_array = $user->result_array();
+
+        $grade_data = array();
+        foreach ($grade_array as $key => $value) {
+            $grade_data[$value['grade_name']] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM designations";
+        $user = $this->db->query($sql);
+        $desg_array = $user->result_array();
+        $desg_data = array();
+        foreach ($desg_array as $key => $value) {
+            $desg_data[strtolower($value['desg_name'])] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM departments";
+        $user = $this->db->query($sql);
+        $dept_array = $user->result_array();
+        $dept_data = array();
+        foreach ($dept_array as $key => $value) {
+            $dept_data[strtolower($value['dept_name'])] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM indian_cities";
+        $user = $this->db->query($sql);
+        $city_array = $user->result_array();
+        $city_data = array();
+        $city_data1 = array();
+        foreach ($city_array as $key => $value) {
+            $city_data[strtolower($value['name'])] = $value['cost_center_id'];
+            $city_data1[strtolower($value['name'])] = $value['id'];
+        }
+
+        $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
+        $value = $psfim_data['data'];
+        $value['employee_id'] = $value['EMPLID'];
+
+
+        if ($value['STEP'] == " " || $value['STEP'] == "" || $value['STEP'] == NULL) {
+            $GRADE = $value['GRADE'];
+        } else {
+            $GRADE = $value['GRADE'] . "/" . $value['STEP'];
+        }
+
+        $designation = strtolower($value['DESCR6']);
+        $department = strtolower($value['Z_PRNTDEPT_DESCR']);
+
+        $city = strtolower($value['CITY']);
+        $cost_center = strtolower($value['DESCR4']);
+
+        if (!isset($grade_data[$GRADE])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Grade!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($value['employee_id'])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Record!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($desg_data[$designation])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Designation!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($dept_data[$department])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Department!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($city_data1[$city])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid City!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($city_data[$city])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Cost Center!, Please contact Administrator";
+            return $data;
+        }
+
+        $grade_id = $grade_data[$GRADE];
+        $desg_id = $desg_data[strtolower($designation)];
+        $dept_id = $dept_data[strtolower($department)];
+
+        $cost_center_id = $city_data[strtolower($city)];
+        $city_id = $city_data1[strtolower($city)];
+
+        if ($value['BIRTHDATE'] == "0000-00-00 00:00:00") {
+            $date = $value['BIRTHDATE'] = null;
+        } else {
+            $date = $value['BIRTHDATE'] = date('Y-m-d', strtotime($value['BIRTHDATE']));
+        }
+
+        $sql = "SELECT * FROM employees WHERE id = " . $value['employee_id'];
+        $user = $this->db->query($sql);
+        $user = $user->result_array();
+        unset($value['dashboardrole']);
+        if ($value['employee_id'] != '' && $desg_id != '' && $dept_id != '' && $cost_center_id != '') {
+            $employee = array(
+                "id" => $value['employee_id'],
+                "grade_id" => $grade_id,
+                "empID" => $value['employee_id'],
+                "employee_id" => $value['employee_id'],
+                "gi_email" => $value['EMAIL_ADDR'],
+                "designation_id" => $desg_id,
+                "dept_id" => $dept_id,
+                "cost_center_id" => $cost_center_id,
+                "city_id" => $city_id,
+                "reporting_manager_id" => $value['SUPERVISOR_ID'],
+                "ea_manager_id" => "0",
+                "reporting_person_id" => $value['SUPERVISOR_ID'],
+                "location" => "",
+                "father_name" => "",
+                "gender" => "Male",
+                "blood_group" => "",
+                "dob" => $date,
+                "phone" => $value['PHONE1'],
+                "emergency_phone" => "",
+                "emergency_phone2" => "",
+                "email" => $value['EMAIL_ADDR'],
+                "l_address1" => "",
+                "l_address2" => "",
+                "l_city" => $value['CITY'],
+                "l_state" => $value['STATE'],
+                "l_post_code" => $value['POSTAL'],
+                "l_country" => $value['COUNTRY'],
+                "p_address1" => $value['ADDRESS1'],
+                "p_address2" => $value['ADDRESS2'],
+                "p_city" => $value['CITY'],
+                "p_state" => $value['STATE'],
+                "p_post_code" => $value['POSTAL'],
+                "p_country" => $value['COUNTRY'],
+                "pan" => "",
+                "bank_name" => "",
+                "bank_account_number" => "",
+                "bank_account_name" => "",
+                "bank_ifsc" => "",
+                "bank_address" => "",
+                "bank_address" => "active",
+                "image" => "",
+                "created" => date("Y-m-d H:i:s"),
+                "modified" => date("Y-m-d H:i:s"),
+                "status_modified" => date("Y-m-d H:i:s"),
+            );
+            $value['is_active'] = "active";
+
+            $result = $this->db->insert('employees', $employee);
+            $value['email'] = $value['EMAIL_ADDR'];
+            $value['is_active'] = "1";
+            $value['username'] = $value['alias'];
+            unset($value['EMPLID']);
+            unset($value['EMAIL_ADDR']);
+            unset($value['alias']);
+            unset($value['gender']);
+            $result = $this->db->insert('users', $value);
+            $this->login();
+            $data['status'] = "1";
+            $data['msg'] = "";
+            return $data;
+        } else {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid record";
+            return $data;
+        }
+    }
+
+    function update_employee($username = "") {
+
+        $post_data = $this->input->post();
+        $this->load->model('User_model');
+
+
+        $sql = "SELECT * FROM grades";
+        $user = $this->db->query($sql);
+        $grade_array = $user->result_array();
+
+        $grade_data = array();
+        foreach ($grade_array as $key => $value) {
+            $grade_data[$value['grade_name']] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM designations";
+        $user = $this->db->query($sql);
+        $desg_array = $user->result_array();
+        $desg_data = array();
+        foreach ($desg_array as $key => $value) {
+            $desg_data[strtolower($value['desg_name'])] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM departments";
+        $user = $this->db->query($sql);
+        $dept_array = $user->result_array();
+        $dept_data = array();
+        foreach ($dept_array as $key => $value) {
+            $dept_data[strtolower($value['dept_name'])] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM indian_cities";
+        $user = $this->db->query($sql);
+        $city_array = $user->result_array();
+        $city_data = array();
+        $city_data1 = array();
+        foreach ($city_array as $key => $value) {
+            $city_data[strtolower($value['name'])] = $value['cost_center_id'];
+            $city_data1[strtolower($value['name'])] = $value['id'];
+        }
+
+        $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
+        $value = $psfim_data['data'];
+        $value['employee_id'] = $value['EMPLID'];
+
+
+//        $value['DESCR4'] = "sangudfghwdjhdskfdgfj";
+
+        if ($value['STEP'] == " " || $value['STEP'] == "" || $value['STEP'] == NULL) {
+            $GRADE = $value['GRADE'];
+        } else {
+            $GRADE = $value['GRADE'] . "/" . $value['STEP'];
+        }
+        $designation = strtolower($value['DESCR6']);
+        $department = strtolower($value['Z_PRNTDEPT_DESCR']);
+
+        $city = strtolower($value['CITY']);
+        $cost_center = strtolower($value['DESCR4']);
+
+        if (!isset($grade_data[$GRADE])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Grade!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($value['employee_id'])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Record!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($desg_data[$designation])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Designation!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($dept_data[$department])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Department!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($city_data1[$city])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid City!, Please contact Administrator";
+            return $data;
+        }
+
+        if (!isset($city_data[$city])) {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid Cost Center!, Please contact Administrator";
+            return $data;
+        }
+
+        $grade_id = $grade_data[$GRADE];
+        $desg_id = $desg_data[$designation];
+        $dept_id = $dept_data[$department];
+
+        $city_id = $city_data1[$city];
+        $cost_center_id = $city_data[$city];
+        
+        if ($value['BIRTHDATE'] == "0000-00-00 00:00:00") {
+            $date = $value['BIRTHDATE'] = null;
+        } else {
+            $date = $value['BIRTHDATE'] = date('Y-m-d', strtotime($value['BIRTHDATE']));
+        }
+
+
+        $sql = "SELECT * FROM employees WHERE id = " . $value['employee_id'];
+        $user = $this->db->query($sql);
+        $user = $user->result_array();
+        if ($value['employee_id'] != '' && $desg_id != '' && $dept_id != '' && $cost_center_id != '') {
+            $employee = array(
+                "id" => $value['employee_id'],
+                "grade_id" => $grade_id,
+                "empID" => $value['employee_id'],
+                "employee_id" => $value['employee_id'],
+                "gi_email" => $value['EMAIL_ADDR'],
+                "designation_id" => $desg_id,
+                "dept_id" => $dept_id,
+                "cost_center_id" => $cost_center_id,
+                "city_id" => $city_id,
+                "reporting_manager_id" => $value['SUPERVISOR_ID'],
+                "ea_manager_id" => "0",
+                "reporting_person_id" => $value['SUPERVISOR_ID'],
+                "location" => "",
+                "father_name" => "",
+                "gender" => "Male",
+                "blood_group" => "",
+                "dob" => $date,
+                "phone" => $value['PHONE1'],
+                "emergency_phone" => "",
+                "emergency_phone2" => "",
+                "email" => $value['EMAIL_ADDR'],
+                "l_address1" => "",
+                "l_address2" => "",
+                "l_city" => $value['CITY'],
+                "l_state" => $value['STATE'],
+                "l_post_code" => $value['POSTAL'],
+                "l_country" => $value['COUNTRY'],
+                "p_address1" => $value['ADDRESS1'],
+                "p_address2" => $value['ADDRESS2'],
+                "p_city" => $value['CITY'],
+                "p_state" => $value['STATE'],
+                "p_post_code" => $value['POSTAL'],
+                "p_country" => $value['COUNTRY'],
+                "pan" => "",
+                "bank_name" => "",
+                "bank_account_number" => "",
+                "bank_account_name" => "",
+                "bank_ifsc" => "",
+                "bank_address" => "",
+                "bank_address" => "active",
+                "image" => "",
+                "modified" => date("Y-m-d H:i:s"),
+                "status_modified" => date("Y-m-d H:i:s"),
+            );
+            $value['is_active'] = "active";
+
+            $this->db->where('employee_id', $value['employee_id']);
+            $result = $this->db->update('employees', $employee);
+
+            $value['email'] = $value['EMAIL_ADDR'];
+            $value['is_active'] = "1";
+            $value['username'] = $value['alias'];
+            unset($value['gender']);
+            unset($value['EMPLID']);
+            unset($value['EMAIL_ADDR']);
+            unset($value['alias']);
+            unset($value['dashboardrole']);
+
+            $this->db->where('employee_id', $value['employee_id']);
+            $result = $this->db->update('users', $value);
+            $data['status'] = "1";
+            $data['msg'] = "";
+            return $data;
+        } else {
+            $data['status'] = "0";
+            $data['msg'] = "Invalid record";
+            return $data;
+        }
+    }
+
+    public function logout() {
+        $this->session->sess_destroy();
+        redirect(base_url() . 'users/login');
+    }
+
+    public function change_password() {
+        $this->is_logged_in();
+        $data = array();
+
+        if ($this->input->post()) {
+
+            $this->load->model('user_model');
+            $username = $this->session->userdata('username');
+            $type = $this->session->userdata('type');
+
+            $this->load->library('form_validation');
+            $validate = $this->form_validation;
+
+            $validate->set_rules('old', 'Old Password', 'trim|required|xss_clean');
+            $validate->set_rules('new', 'New Password', 'trim|required|xss_clean');
+            $validate->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean');
+
+            if ($validate->run() === true) {
+                $post_data = $this->input->post();
+
+                if ($post_data['new'] === $post_data['confirm_password']) {
+                    $user = $this->user_model->check_login($username, $this->input->post('old'), $type);
+
+                    if ($user['STATUS'] == 'Success') {
+                        $changed = $this->user_model->change_password($username, $this->input->post('new'));
+
+                        if ($changed) {
+                            $this->session->set_flashdata('success', 'Password successfully updated.');
+                            redirect(base_url());
+                        } else {
+                            $data['error'] = 'Something went wrong, Please try again.';
+                        }
+                    } else {
+                        $data['error'] = 'Old doesn\'t match, Please provide correct password';
+                    }
+                } else {
+                    $data ['error'] = 'New Password and Confirm Password doesn\'t match';
+                }
+            } else {
+                $data['error'] = validation_errors();
+            }
+        }
+
+        $this->template->write_view('content', 'change_password', $data);
+        $this->template->render();
+    }
+
+    public function change_status($username, $status) {
+        $this->load->model('User_model');
+        $user = $this->User_model->get_user($username);
+
+        if (!$user) {
+            $this->session->set_flashdata('error', 'Invalid record');
+        } else {
+
+            if ($this->User_model->change_status($username, $status)) {
+                $this->session->set_flashdata('success', 'User marked as ' . ($status == 0 ? 'inactive' : 'active'));
+            } else {
+                $this->session->set_flashdata('error', 'Something went wrong, Please try again.');
+            }
+        }
+        redirect(base_url() . 'users');
+    }
+
+    public function delete_user($username) {
+        $this->load->model('User_model');
+        $user = $this->User_model->get_user($username);
+
+        if (!$user) {
+            $this->session->set_flashdata('error', 'Invalid record');
+        } else {
+
+            if ($this->User_model->delete_item($username)) {
+                $this->session->set_flashdata('success', 'User deleted successfully');
+            } else {
+                $this->session->set_flashdata('error', 'Something went wrong, Please try again.');
+            }
+        }
+
+        redirect(base_url() . 'users');
+    }
+
+    public function forgot_password() {
+        $data = array();
+        if ($this->input->post()) {
+            $post_data = $this->input->post();
+            $this->load->model('User_model');
+
+            $user = $this->User_model->find_user_by_email($post_data['email_id']);
+            if (count($user) >= 1) {
+                $token = $this->User_model->reset_token($post_data['email_id']);
+                if ($token) {
+                    $link = 'forgot_password/reset_password/' . $token;
+                    $subject = "Password Reset URL ";
+                    $message = "Dear " . $user['first_name'] . ' ' . $user['last_name'] . " ,<br><br>
+                    Please <a href='" . base_url() . $link . "'>Click Here</a>. for reset the password.<br>
+                    Please do not share your password with anyone.<br><br>Thank You.<br><br>Manager";
+                    $to = $user['username'];
+                    $this->sendMail($to, $subject, $message);
+
+                    $msg = "Your password reset link has been sent to your e-mail address.";
+                    $this->session->set_flashdata('success', $msg);
+                    redirect(base_url() . 'users/login');
+                }
+            } else {
+                $data['error'] = 'Email id not registered!!';
+            }
+        }
+
+        $this->load->view('login2', $data);
+    }
+
+}
