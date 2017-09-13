@@ -17,6 +17,7 @@
             <th>Single<br> Occupancy Rate</th>
             <th>Double<br> Occupancy Rate</th>
             <th>Hotel/GH<br> Category</th>
+			<th>Type</th>
         </tr>
     </thead>
 </tbody>
@@ -43,7 +44,8 @@
             } else if ($data['category'] == "7") {
                 echo "7 Star";
             }
-            ?></td>
+          ?></td>
+		  <td><?php echo $data['type']; ?></td>
     </tr>
 <?php } ?>
 </tbody>

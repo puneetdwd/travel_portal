@@ -4,7 +4,8 @@ class Travel_policy_model extends CI_Model {
 
     public function get_all_travel_policy() {
 
-        $sql = "SELECT t.*,g.grade_name from travel_policy t LEFT JOIN grades g on g.id = t.grade_id WHERE t.status = 'active'";
+        //$sql = "SELECT t.*,g.grade_name from travel_policy t LEFT JOIN grades g on g.id = t.grade_id WHERE t.status = 'active'";
+		$sql = "SELECT t.*,g.grade_name from travel_policy t LEFT JOIN grades g on g.id = t.grade_id";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

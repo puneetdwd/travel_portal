@@ -174,27 +174,72 @@ class Report extends Admin_Controller {
 
     public function top_hotel_stay() {
         $view_data = array();
-        $data = 'id,name as city_name';
+        
+		
+		
+		
+		
+		
+		
+		$grades = $this->grades_model->get_all_grades();
+        $view_data = array();
+        $view_data['grades'] = $grades;
+
+        $this->load->model("department_model");
+        $department_date = $this->department_model->get_all_department();
+        $view_data['department'] = $department_date;
+
+        $join_str = array();
+        $join_str[0] = array(
+            'table' => 'indian_cities c',
+            'join_table_id' => 'c.id',
+            'from_table_id' => 'indian_cities.cost_center_id',
+            'join_type' => 'LEFT'
+        );
+        $data = 'c.id,c.name as city_name';
+        $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, 'city_name', 'ASC', '', '', $join_str, 'indian_cities.cost_center_id');
+        $view_data['cost_center'] = $cost_center;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$data = 'id,name as city_name';
         $city_data = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.status' => 'active'), $data, '', '', '', '', array());
         $view_data['city_data'] = $city_data;
 
-        $hotel = $this->report_model->get_all_top_hotel_stay($top_count = '5');
-        $request_data = array();
+        //$hotel = $this->report_model->get_all_top_hotel_stay($top_count = '5');
+        $hotel = $this->report_model->get_all_type_top_stay($top_count = '10');
+		
+		$request_data = array();
         foreach ($hotel as $key => $value) {
             $hotel_provider_id = $value['hotel_provider_id'];
             $hotel_data = $this->report_model->get_hotel_details($hotel_provider_id);
             if (!empty($hotel_data)) {
-                $value['name'] = $hotel_data['name'];
+                $value['id'] = $hotel_data['id'];
+				$value['name'] = $hotel_data['name'];
                 $value['amount'] = $hotel_data['amount'];
                 $value['half_amount'] = $hotel_data['half_amount'];
                 $value['city_name'] = $hotel_data['city_name'];
                 $value['category'] = $hotel_data['category'];
+				$value['type'] = $value['type'];
             } else {
-                $value['name'] = "";
+                $value['id'] = "";
+				$value['name'] = "";
                 $value['amount'] = "";
                 $value['half_amount'] = "";
                 $value['city_name'] = "";
                 $value['category'] = "";
+				$value['type'] = '';
             }
             $request_data[] = $value;
         }
@@ -203,56 +248,77 @@ class Report extends Admin_Controller {
         $this->template->render();
     }
 
-    function get_hotel_toppers() {
-        $top_count = "100";
-        $this->input->post('top_count');
-        $city_id = $this->input->post('city_id');
-        $hotel = $this->report_model->get_all_top_hotel_stay($top_count, $city_id);
-        $request_data = array();
-        foreach ($hotel as $key => $value) {
-            $hotel_provider_id = $value['hotel_provider_id'];
-            $hotel_data = $this->report_model->get_hotel_details($hotel_provider_id);
-            if (!empty($hotel_data)) {
-                $value['name'] = $hotel_data['name'];
-                $value['amount'] = $hotel_data['amount'];
-                $value['half_amount'] = $hotel_data['half_amount'];
-                $value['city_name'] = $hotel_data['city_name'];
-                $value['category'] = $hotel_data['category'];
-            } else {
-                $value['name'] = "";
-                $value['amount'] = "";
-                $value['half_amount'] = "";
-                $value['city_name'] = "";
-                $value['category'] = "";
-            }
-            $request_data[] = $value;
-        }
-        $view_data = array('hotel' => $request_data);
-        $this->load->view('report/list_top_hotel_stay', $view_data);
-    }
-
     public function top_guest_house_stay() {
         $view_data = array();
-        $data = 'id,name as city_name';
+        
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$grades = $this->grades_model->get_all_grades();
+        $view_data = array();
+        $view_data['grades'] = $grades;
+
+        $this->load->model("department_model");
+        $department_date = $this->department_model->get_all_department();
+        $view_data['department'] = $department_date;
+
+        $join_str = array();
+        $join_str[0] = array(
+            'table' => 'indian_cities c',
+            'join_table_id' => 'c.id',
+            'from_table_id' => 'indian_cities.cost_center_id',
+            'join_type' => 'LEFT'
+        );
+        $data = 'c.id,c.name as city_name';
+        $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, 'city_name', 'ASC', '', '', $join_str, 'indian_cities.cost_center_id');
+        $view_data['cost_center'] = $cost_center;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$data = 'id,name as city_name';
         $city_data = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.status' => 'active'), $data, '', '', '', '', array());
         $view_data['city_data'] = $city_data;
         $request_data = array();
-        $hotel = $this->report_model->get_all_top_guest_house_stay($top_count = '5');
-        foreach ($hotel as $key => $value) {
+        //$hotel = $this->report_model->get_all_top_guest_house_stay($top_count = '5');
+        $hotel = $this->report_model->get_all_type_top_stay($top_count = '10');
+		foreach ($hotel as $key => $value) {
             $hotel_provider_id = $value['hotel_provider_id'];
             $hotel_data = $this->report_model->get_hotel_details($hotel_provider_id);
             if (!empty($hotel_data)) {
-                $value['name'] = $hotel_data['name'];
+                $value['id'] = $hotel_data['id'];
+				$value['name'] = $hotel_data['name'];
                 $value['amount'] = $hotel_data['amount'];
                 $value['half_amount'] = $hotel_data['half_amount'];
                 $value['city_name'] = $hotel_data['city_name'];
                 $value['category'] = $hotel_data['category'];
+				$value['type'] = $value['type'];
             } else {
-                $value['name'] = "";
+                $value['id'] = "";
+				$value['name'] = "";
                 $value['amount'] = "";
                 $value['half_amount'] = "";
                 $value['city_name'] = "";
                 $value['category'] = "";
+				$value['type'] = "";
             }
             $request_data[] = $value;
         }
@@ -270,13 +336,15 @@ class Report extends Admin_Controller {
             $hotel_provider_id = $value['hotel_provider_id'];
             $hotel_data = $this->report_model->get_hotel_details($hotel_provider_id);
             if (!empty($hotel_data)) {
-                $value['name'] = $hotel_data['name'];
+                $value['id'] = $hotel_data['id'];
+				$value['name'] = $hotel_data['name'];
                 $value['amount'] = $hotel_data['amount'];
                 $value['half_amount'] = $hotel_data['half_amount'];
                 $value['city_name'] = $hotel_data['city_name'];
                 $value['category'] = $hotel_data['category'];
             } else {
-                $value['name'] = "";
+                $value['id'] = "";
+				$value['name'] = "";
                 $value['amount'] = "";
                 $value['half_amount'] = "";
                 $value['city_name'] = "";
@@ -287,5 +355,96 @@ class Report extends Admin_Controller {
         $view_data = array('hotel' => $request_data);
         $this->load->view('report/list_top_guest_house_stay', $view_data);
     }
-
+    
+	function get_hotel_toppers() {
+        $top_count = "100";
+        $this->input->post('top_count');
+        $city_id = $this->input->post('city_id');
+        $hotel = $this->report_model->get_all_top_hotel_stay($top_count, $city_id);
+        $request_data = array();
+        foreach ($hotel as $key => $value) {
+            $hotel_provider_id = $value['hotel_provider_id'];
+            $hotel_data = $this->report_model->get_hotel_details($hotel_provider_id);
+            if (!empty($hotel_data)) {
+                $value['id'] = $hotel_data['id'];
+				$value['name'] = $hotel_data['name'];
+                $value['amount'] = $hotel_data['amount'];
+                $value['half_amount'] = $hotel_data['half_amount'];
+                $value['city_name'] = $hotel_data['city_name'];
+                $value['category'] = $hotel_data['category'];
+            } else {
+                $value['id'] = "";
+				$value['name'] = "";
+                $value['amount'] = "";
+                $value['half_amount'] = "";
+                $value['city_name'] = "";
+                $value['category'] = "";
+            }
+            $request_data[] = $value;
+        }
+        $view_data = array('hotel' => $request_data);
+        $this->load->view('report/list_top_hotel_stay', $view_data);
+    }
+    
+	
+	function get_all_type_toppers() {
+        
+		$top_count = "100";
+        $this->input->post('top_count');
+        $city_id = $this->input->post('city_id');
+		$grade_id = $this->input->post('grade_id');
+		$dept_id = $this->input->post('dept_id');
+        $type = $this->input->post('type');
+		
+		//$hotel = $this->report_model->get_all_top_hotel_stay($top_count, $city_id);
+		$hotel = $this->report_model->get_all_type_top_stay($top_count, $city_id, $grade_id, $dept_id, $type);
+		
+		//echo $hotel; exit;
+		
+        $request_data = array();
+        foreach ($hotel as $key => $value) {
+            $hotel_provider_id = $value['hotel_provider_id'];
+            $hotel_data = $this->report_model->get_hotel_details($hotel_provider_id);
+            if (!empty($hotel_data)) {
+                $value['id'] = $hotel_data['id'];
+				$value['name'] = $hotel_data['name'];
+                $value['amount'] = $hotel_data['amount'];
+                $value['half_amount'] = $hotel_data['half_amount'];
+                $value['city_name'] = $hotel_data['city_name'];
+                $value['category'] = $hotel_data['category'];
+				if($value['type']==1)
+				{
+				 $value['type'] = 'Hotel';
+				}
+				elseif($value['type']==2)
+				{
+				 $value['type'] = 'Guest House';
+				}
+            } else {
+                $value['id'] = "";
+				$value['name'] = "";
+                $value['amount'] = "";
+                $value['half_amount'] = "";
+                $value['city_name'] = "";
+                $value['category'] = "";
+				$value['type'] = "";
+            }
+            $request_data[] = $value;
+        }
+        $view_data = array('hotel' => $request_data);
+        $this->load->view('report/list_top_hotel_stay', $view_data);
+    }
+	
+	function get_visitors() {
+        $request_data = array();
+		$city_id = $this->input->post('city_id');
+		$grade_id = $this->input->post('grade_id');
+		$dept_id = $this->input->post('dept_id');
+        $type = $this->input->post('type');
+		$HOT_ID = $this->input->post('hotel_or_GH_id');
+		$visitors = $this->report_model->get_hotelVisitorsDetail($city_id, $grade_id, $dept_id, $type, $HOT_ID);
+		$request_data[] = $visitors;
+		$view_data = array('visitors' => $request_data);
+        $this->load->view('report/list_visitors', $view_data);
+    }
 }

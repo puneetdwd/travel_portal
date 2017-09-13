@@ -4,11 +4,9 @@ class Service_proviers_model extends CI_Model {
 
     public function get_all_service_proviers($state_id ='') {
 
-        $sql = "SELECT t.*,c.name as city_name from service_proviers t "
-                . "LEFT JOIN indian_cities c ON c.id = t.city_id "
-                . "WHERE t.status = 'active'";
+        $sql = "SELECT t.*,c.name as city_name from service_proviers t LEFT JOIN indian_cities c ON c.id = t.city_id ";
         if ($state_id != '') {
-            $sql .= " and state_id = '".$state_id."'";
+            $sql .= " WHERE state_id = '".$state_id."'";
         }
         $result = $this->db->query($sql);
         return $result->result_array();

@@ -30,7 +30,7 @@
 			<div class="col-md-2">
                 <select name="dept_id" id="dept_id" class="form-control required select2me"
                         data-placeholder="Select Department" data-error-container="#add-designation-level-error">
-                    <option value="0">All Depaerment</option>                                        
+                    <option value="0">All Departments</option>                                        
                     <?php foreach ($department as $data) { ?>
                         <option value="<?php echo $data['id']; ?>">
                             <?php echo $data['dept_name']; ?>

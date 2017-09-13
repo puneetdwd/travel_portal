@@ -4,9 +4,11 @@ class projects_model extends CI_Model {
 
     public function get_all_projects() {
 
-        $sql = "SELECT t.*,d.dept_name from projects t "
-                . "LEFT JOIN departments d on d.id = t.dept_id "
-                . "WHERE t.status = 'active' ";
+        //$sql = "SELECT t.*,d.dept_name from projects t "
+        //. "LEFT JOIN departments d on d.id = t.dept_id "
+        //. "WHERE t.status = 'active' ";
+		
+		$sql = "SELECT t.*,d.dept_name from projects t LEFT JOIN departments d on d.id = t.dept_id";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

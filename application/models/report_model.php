@@ -192,16 +192,20 @@ class report_model extends CI_Model {
 
     public function get_hotel_details($hotel_provider_id) {
 
-        $sql = "SELECT e.name,e.amount,e.half_amount,e.category,c.name as city_name from travel_category e "
-                . "LEFT JOIN indian_cities c ON c.id = e.city_id "
-                . " WHERE ";
-        $sql .= " e.id = '" . $hotel_provider_id . "' ";
-
+        $sql = "SELECT e.id, e.name, e.amount, e.half_amount, e.category, c.name as city_name from travel_category e LEFT JOIN indian_cities c ON c.id = e.city_id WHERE e.id = '" . $hotel_provider_id . "' ";
 
         $result = $this->db->query($sql);
         return $result->row_array();
     }
 
+	public function get_hotelVisitorsDetail($city_id, $grade_id, $dept_id, $type, $HOT_ID)
+	 {
+      $sql= "select hotel_booking.hotel_provider_id, hotel_booking.request_id, hotel_booking.check_in_date, hotel_booking.check_out_date, hotel_booking.bill_no_1, travel_request.employee_id, travel_request.reference_id, users.NAME_DISPLAY, users.CITY, users.GRADE, users.email, users.PHONE1 from hotel_booking left join travel_request on hotel_booking.request_id=travel_request.id left join users on travel_request.employee_id= users.employee_id where hotel_booking.hotel_provider_id= '".$HOT_ID."'";
+
+	  $result = $this->db->query($sql);
+      return $result->row_array();
+     }
+	
     public function get_all_top_guest_house_stay($top_count = '5', $city_id = '') {
 
 //        $sql = "SELECT count(hotel_provider_id) as total_stay,e.name,e.amount,e.half_amount,e.category,c.name as city_name from hotel_booking t "
@@ -224,6 +228,48 @@ class report_model extends CI_Model {
 
         $sql .= " group by t.hotel_provider_id order by count(t.hotel_provider_id) desc limit " . $top_count . " ";
 
+        $result = $this->db->query($sql);
+        return $result->result_array();
+    }
+
+	public function get_all_type_top_stay($top_count = '5', $city_id = '', $grade_id = '', $dept_id = '', $type = '') {
+
+		$sql = "SELECT t.hotel_provider_id, count(hotel_provider_id) as total_stay, e.type from hotel_booking t "
+            . "LEFT JOIN travel_category e ON e.id = t.hotel_provider_id "
+            . "LEFT JOIN indian_cities c ON c.id = t.city_id "
+            . "LEFT JOIN travel_request tt ON tt.id = t.request_id "
+            . "LEFT JOIN employees ee  ON ee.employee_id = tt.employee_id ";
+
+        $conda = array();
+
+        if ($grade_id != '' && $grade_id != '0') {
+            $conda[] = " ee.grade_id = '" . $grade_id . "' ";
+            //$sql .= " where ee.grade_id = '" . $grade_id . "' ";
+        }
+
+        if ($dept_id != '' && $dept_id != '0') {
+            $conda[] = " ee.dept_id = '" . $dept_id . "' ";
+            //$sql .= " where ee.dept_id = '" . $dept_id . "' ";
+        }
+
+		if ($type != '' && $type != '0') {
+            $conda[] = " e.type= '".$type."' ";
+        }
+
+        if ($city_id != '' && $city_id != '0') {
+            $conda[] = " e.city_id = '" . $city_id . "' ";
+            //$sql .= " where e.city_id = '" . $city_id . "' ";
+        }
+
+        if(count($conda)>0)
+		 {
+          $qstr = implode(' and ', $conda);
+          $sql .= ' where ' . $qstr;
+         }
+
+        $sql .= " group by t.hotel_provider_id order by count(t.hotel_provider_id) desc limit " . $top_count . " ";
+
+		//return $sql;
         $result = $this->db->query($sql);
         return $result->result_array();
     }

@@ -21,7 +21,7 @@ class City extends Admin_Controller {
     public function index() {
         $city = $this->city_model->get_all_city();        
         $view_city = array('city' => $city);
-//        po($view_city);
+		//po($view_city);
         $this->template->write_view('content', 'city/index_city', $view_city);
         $this->template->render();
     }

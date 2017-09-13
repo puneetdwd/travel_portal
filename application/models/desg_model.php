@@ -4,7 +4,8 @@ class Desg_model extends CI_Model {
 
     public function get_all_desg() {
 
-        $sql = "SELECT * from designations t WHERE t.status='active'";
+        //$sql = "SELECT * from designations t WHERE t.status='active'";
+		$sql = "SELECT * from designations";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

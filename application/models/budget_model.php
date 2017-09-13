@@ -4,10 +4,14 @@ class Budget_model extends CI_Model {
 
     public function get_budget() {
 
-        $sql = "SELECT t.*,c.name as cost_center_name,d.dept_name as department from budget t "
-                . "LEFT JOIN indian_cities c ON c.id = t.cost_center_id "
-                . "LEFT JOIN departments d ON d.id = t.department_id "
-                . "WHERE t.status = 'active'";
+        //$sql = "SELECT t.*,c.name as cost_center_name,d.dept_name as department from budget t "
+        //. "LEFT JOIN indian_cities c ON c.id = t.cost_center_id "
+        //. "LEFT JOIN departments d ON d.id = t.department_id "
+        //. "WHERE t.status = 'active'";
+        
+		$sql = "SELECT t.*,c.name as cost_center_name,d.dept_name as department from budget t "
+        . "LEFT JOIN indian_cities c ON c.id = t.cost_center_id "
+        . "LEFT JOIN departments d ON d.id = t.department_id";
         $result = $this->db->query($sql);
         return $result->result_array();
     }
