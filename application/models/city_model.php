@@ -4,8 +4,7 @@ class city_model extends CI_Model {
 
     public function get_all_city() {
 
-        $sql = "SELECT t.*,c.name as cost_center,s.state_name from indian_cities t LEFT JOIN indian_cities c ON c.id = t.cost_center_id LEFT JOIN state_list s ON s.id = t.state_id";
-		
+        $sql = "SELECT t.*, c.name as cost_center,s.state_name from indian_cities t LEFT JOIN indian_cities c ON c.id = t.cost_center_id LEFT JOIN state_list s ON s.id = t.state_id order by t.name ASC";
 		//$sql = "SELECT t.*,c.name as cost_center,s.state_name from indian_cities t LEFT JOIN indian_cities c ON c.id = t.cost_center_id LEFT JOIN state_list s ON s.id = t.state_id WHERE t.status = 'active'";
         $result = $this->db->query($sql);
         return $result->result_array();

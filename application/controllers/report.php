@@ -31,10 +31,10 @@ class Report extends Admin_Controller {
             'join_type' => 'LEFT'
         );
         $data = 'c.id,c.name as city_name';
-        $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, '', '', '', '', $join_str, 'indian_cities.cost_center_id');
+        $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, 'c.name', 'ASC', '', '', $join_str, 'indian_cities.cost_center_id');
         $view_data['cost_center'] = $cost_center;
         
-		$city=$this->common->select_data_by_condition('indian_cities',$con_array=array('status' => 'active'));
+		$city=$this->common->select_data_by_condition('indian_cities',$con_array=array('status' => 'active'), '', 'name', 'ASC');
         $view_data['cities'] = $city;
 		
         $this->load->model("states_model");
@@ -67,7 +67,7 @@ class Report extends Admin_Controller {
         $this->template->write_view('content', 'report/admin_graph', $view_data);
         $this->template->render();
     }
-    
+
     function get_admin_report(){
         $grade_id = $this->input->post('grade_id');
         $city_id = $this->input->post('city_id');
@@ -112,7 +112,7 @@ class Report extends Admin_Controller {
             'join_type' => 'LEFT'
         );
         $data = 'c.id,c.name as city_name';
-        $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, '', '', '', '', $join_str, 'indian_cities.cost_center_id');
+        $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, 'c.name', 'ASC', '', '', $join_str, 'indian_cities.cost_center_id');
         $view_data['cost_center'] = $cost_center;
 
         $request = $this->report_model->get_all_top_traveler($top_count = '5');
@@ -175,12 +175,6 @@ class Report extends Admin_Controller {
     public function top_hotel_stay() {
         $view_data = array();
         
-		
-		
-		
-		
-		
-		
 		$grades = $this->grades_model->get_all_grades();
         $view_data = array();
         $view_data['grades'] = $grades;
@@ -200,21 +194,8 @@ class Report extends Admin_Controller {
         $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, 'city_name', 'ASC', '', '', $join_str, 'indian_cities.cost_center_id');
         $view_data['cost_center'] = $cost_center;
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		$data = 'id,name as city_name';
-        $city_data = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.status' => 'active'), $data, '', '', '', '', array());
+        $city_data = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.status' => 'active'), $data, 'name', 'ASC', '', '', array());
         $view_data['city_data'] = $city_data;
 
         //$hotel = $this->report_model->get_all_top_hotel_stay($top_count = '5');
@@ -251,19 +232,6 @@ class Report extends Admin_Controller {
     public function top_guest_house_stay() {
         $view_data = array();
         
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		$grades = $this->grades_model->get_all_grades();
         $view_data = array();
         $view_data['grades'] = $grades;
@@ -283,19 +251,8 @@ class Report extends Admin_Controller {
         $cost_center = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.cost_center_id !=' => '', 'indian_cities.status' => 'active'), $data, 'city_name', 'ASC', '', '', $join_str, 'indian_cities.cost_center_id');
         $view_data['cost_center'] = $cost_center;
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		$data = 'id,name as city_name';
-        $city_data = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.status' => 'active'), $data, '', '', '', '', array());
+        $city_data = $this->common->select_data_by_condition('indian_cities', $con_array = array('indian_cities.status' => 'active'), $data, 'name', 'ASC', '', '', array());
         $view_data['city_data'] = $city_data;
         $request_data = array();
         //$hotel = $this->report_model->get_all_top_guest_house_stay($top_count = '5');

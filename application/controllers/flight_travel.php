@@ -79,7 +79,9 @@ class Flight_travel extends Admin_Controller {
 
             $this->load->model("city_model");
             $city = $this->city_model->get_all_city();
-            $view_data['city'] = $city;
+            //echo '<pre>'; print_r($city); exit;
+			//echo $this->db->last_query(); exit;
+			$view_data['city'] = $city;
 
             $hotel_allowance = 0;
             $hotel_allowance_actual = 0;

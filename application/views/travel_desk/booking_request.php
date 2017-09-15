@@ -3,11 +3,23 @@
 <!--<input id="searchTextField" type="text" size="50">-->
 <div class="page-content"> 
     <!-- BEGIN PAGE CONTENT-->
-    <div class="row hidden-xs">
-        <div style="text-align:center;margin-top: 0px;" data-original-title="" title="">
-            <!-- ngRepeat: state in arrStates track by $index -->
-            <div ng-repeat="state in arrStates track by $index" style="display:inline-block;vertical-align:top" class="ng-scope" data-original-title="" title="">
-                <div style="padding:10px;text-align:center;display:inline-block;width:100px;" data-original-title="" title="">
+	
+	<?php
+	if(isset($request['approval_status']) and isset($request['request_status']) and $request['approval_status']!= "Rejected" and $request['request_status']>="2")
+	{
+	 ?><div class="row"><div class="col-md-8"></div>
+	 <div class="pull-right col-md-4">
+	 <span class="btn btn_red">Reject</span>
+	 <span class="btn btn_blue">Approve </span>
+	 </div></div><?php
+	}
+	
+	
+	?><div class="row hidden-xs">
+       <div style="text-align:center;margin-top: 0px;" data-original-title="" title="">
+         <!-- ngRepeat: state in arrStates track by $index -->
+           <div ng-repeat="state in arrStates track by $index" style="display:inline-block;vertical-align:top" class="ng-scope" data-original-title="" title="">
+             <div style="padding:10px;text-align:center;display:inline-block;width:100px;" data-original-title="" title="">
                     <?php if ($request['request_status'] >= "1") {
                         ?>
                         <div style="width: 50px; height: 50px; color: white; padding: 17px; margin: 0px auto; border-radius: 50px !important; background-color: #27a4b0;" ng-style="$parent.getBackgroundColor($index)" class="ng-binding" data-original-title="" title="">✔</div>

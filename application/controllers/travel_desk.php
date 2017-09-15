@@ -317,7 +317,7 @@ class Travel_desk extends Admin_Controller {
 
     function booking($request_id) {
 
-        $employee_id = $this->session->userdata('employee_id');
+		$employee_id = $this->session->userdata('employee_id');
         $cost_center_data = $this->travel_desk->get_cost_centre_id_by_emp($employee_id);
         if (!empty($cost_center_data)) {
             $cost_center_id = $cost_center_data['cost_center_id'];
