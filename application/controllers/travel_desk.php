@@ -113,6 +113,13 @@ class Travel_desk extends Admin_Controller {
         }
     }
 
+	public function classification() {
+        $city = $this->travel_request->get_active_city();        
+        $view_city = array('city' => $city);
+		$this->template->write_view('content', 'travel_desk/classification', $view_city);
+        $this->template->render();
+    }
+
     function cancel_request($request_id) {
         $view_request = array();
         $request = $this->travel_request->get_all_request_by_id($request_id);

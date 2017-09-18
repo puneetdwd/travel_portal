@@ -78,10 +78,8 @@ class Flight_travel extends Admin_Controller {
             $view_data['sel_traverl_class'] = $traverl_class_data;
 
             $this->load->model("city_model");
-            $city = $this->city_model->get_all_city();
-            //echo '<pre>'; print_r($city); exit;
-			//echo $this->db->last_query(); exit;
-			$view_data['city'] = $city;
+            $city = $this->city_model->get_airport_all_city();
+            $view_data['city'] = $city;
 
             $hotel_allowance = 0;
             $hotel_allowance_actual = 0;
@@ -279,6 +277,7 @@ class Flight_travel extends Admin_Controller {
                             $post_data = array(
                                 'request_id' => $request_id,
                                 'travel_ticket' => '1',
+                                'return_travel_ticket' => '1',
                                 'accommodation' => '1',
                                 'car_hire' => '1',
                                 'bookbyself' => '0',

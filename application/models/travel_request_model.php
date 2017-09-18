@@ -21,6 +21,16 @@ class Travel_request_model extends CI_Model {
         return 'TR/' . str_pad($new_code, 4, '0', STR_PAD_LEFT);
     }
 
+	public function get_active_city() {
+
+        $sql = "SELECT t.*,c.name as cost_center,s.state_name from indian_cities t "
+                . "LEFT JOIN indian_cities c ON c.id = t.cost_center_id "
+                . "LEFT JOIN state_list s ON s.id = t.state_id "
+                . "WHERE t.status = 'active' order by name ASC";
+        $result = $this->db->query($sql);
+        return $result->result_array();
+    }
+
     public function get_all_request($employee_id = '', $cancel_status = '') {
 
         $sql = "SELECT b.id as booking_req_id,p.name as project_name,b.*,x.*,travel_request.*,b.bookbyself,CONCAT(u.first_name,' ',u.last_name) as reporting_manager_name,f.name as from_city_name,d.name as to_city_name,r.reason,c.name as travel_class from travel_request "
