@@ -501,10 +501,9 @@ class Travel_desk extends Admin_Controller {
     function other_expense() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-            
             $this->form_validation->set_rules('foods', 'foods', 'required');
             $this->form_validation->set_rules('travel', 'travel', 'required');
-//            $this->form_validation->set_rules('other', 'other', 'required');
+			//$this->form_validation->set_rules('other', 'other', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Error!! Other expense all field is requied!');
                 redirect('travel_desk/booking/'.$request_id, 'refresh');

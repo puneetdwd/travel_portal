@@ -903,13 +903,13 @@ if ($request['other_manager_expense'] == "0") { ?>
 <input type="number" min="0" class="form-control required" name="other" id="other">
 </div>-->
 
-<div class="form-group col-xs-12"><input type="checkbox" title="Employee stay in a guest house is 50% of the applicable DA" class="form-control" />
+<div class="form-group col-xs-12"><input value="1" type="radio" name="DA_50" title="Employee stay in a guest house is 50% of the applicable DA" class="form-control" />
 <label title="Employee stay in a guest house is 50% of the applicable DA" class="control-label text-left-imp">Guest House with food (DA@50%)</label></div>
 
-<div class="form-group col-xs-12"><input type="checkbox" title="Employee will get the DA minus the expense on food." class="form-control" />
+<div class="form-group col-xs-12"><input value="2" type="radio" name="DA_50" title="Employee will get the DA minus the expense on food." class="form-control" />
 <label class="control-label text-left-imp" title="Employee will get the DA minus the expense on food.">Hotel arrangement with food by company (DA@50%)</label></div>
 
-<div class="form-group col-xs-12"><input title="Employee would be entitled for DA@50% of the entitlemant" type="checkbox" class="form-control" />
+<div class="form-group col-xs-12"><input value="3" title="Employee would be entitled for DA@50% of the entitlemant" type="radio" name="DA_50" class="form-control" />
 <label title="Employee would be entitled for DA@50% of the entitlemant" class="control-label text-left-imp">Conference/Seminar/Workshop/Training meal</label>
 <label title="Employee would be entitled for DA@50% of the entitlemant" class="control-label text-left-imp">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arranged by Dainik Bhaskar (DA is NOT admissible)</label></div>
 
