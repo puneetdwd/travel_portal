@@ -391,12 +391,13 @@ class Travel_desk extends Admin_Controller {
 	 if($cancelMessage!='')
 	 {
 	  $message .= "</br> Reason of rejection is given below-:</br>";
-	  $message .= '<b>'.$cancelMessage.'</b>';
+	  $message .= '<b>'.$cancelMessage.'</b></br>';
 	 }
 	 $message .= "</br> Thanks</br> Travel Desk </br> DB CORP";
 	 if($to!='')
 	  {
-	   $this->sendEmail($to, $subject, $message, $cc);
+	   $this->sendEmail($to, $subject, $message);
+	   //$this->sendEmail($to, $subject, $message, $cc);
 	  }
 	 return true;
 	}
