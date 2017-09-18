@@ -273,8 +273,7 @@ data-placeholder="Select a Flight Provider">
 }
 }
 }
-?>
-<?php
+
 if ($request['travel_ticket'] == '1') {
 if ($request['travel_type'] == '2') {
 if ($request['trip_ticket'] != '1') {
@@ -891,8 +890,7 @@ if ($request['other_manager_expense'] == "0") { ?>
 <div id="otherExp_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes" >
 <h4 class="form-section marginLeft15">
 <span class="cutm_lbl btn_blue">Other Expenses </span><br><br>
-<span style="font-size: 13px;">(Please Mention Other Expenses Of Traveler If Provided By Travel Desk )</span>
-</h4>
+<span style="font-size: 13px;">(Please Mention Other Expenses Of Traveler If Provided By Travel Desk )</span></h4>
 <form action="<?php echo base_url('travel_desk/other_expense'); ?>" id="other_expense_form" enctype="multipart/form-data" method="post" class="validate-form" role="form">
 <div class="row">
 <div class="col-md-12">
@@ -918,15 +916,6 @@ if ($request['other_manager_expense'] == "0") { ?>
 <div class="form-group col-xs-12"><input value="3" title="Employee would be entitled for DA@50% of the entitlemant" type="radio" name="DA_50" class="form-control" />
 <label title="Employee would be entitled for DA@50% of the entitlemant" class="control-label text-left-imp">Conference/Seminar/Workshop/Training meal</label>
 <label title="Employee would be entitled for DA@50% of the entitlemant" class="control-label text-left-imp">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arranged by Dainik Bhaskar (DA is NOT admissible)</label></div>
-
-
-
-
-
-
-
-
-
 
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">&nbsp;</label>                                    
@@ -998,21 +987,6 @@ $i++;
 </div>
 </div>
 </div>
-
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="cancelForm">
-<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-<h4 class="modal-title">Reject Request</h4></div><div class="modal-body">
-<div class="row"><div class="form-group col-xs-12">
-<div id="postFail" style="display:none;" class="alert alert-danger fade in alert-dismissable" style="margin-top:18px;">
-<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-<strong>Alert!</strong>Please enter reason of rejection.</div>
-<label class="control-label text-left-imp">Reason of Rejection<span class="required" aria-required="true"> * </span>:</label>                                    
-<div class="input-group"><textarea cols="78" rows="6" name="rejectionReason" id="rejectionReason"></textarea></div></div>
-<div class="form-group col-xs-12"><input type="hidden" name="subjectOfRejection" id="subjectOfRejection" />
-<input type="hidden" name="subjectID" id="subjectID" value="<?php echo $request['request_id']; ?>" />
-<button class="btn red form-control" onClick="postRejection();" type="button">Reject</button>
-</div></div></div></div></div></div>
 
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="emp_modal">
 <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
@@ -1116,7 +1090,27 @@ $i++;
 </div>
 </div>
 </div><!-- /.modal-dialog -->
-</div>    
+</div>
+
+
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="cancelForm">
+<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h4 class="modal-title">Reject Request</h4></div><div class="modal-body">
+<div class="row"><div class="form-group col-xs-12">
+<div id="postFail" style="display:none;" class="alert alert-danger fade in alert-dismissable" style="margin-top:18px;">
+<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+<strong>Alert!</strong>Please enter reason of rejection.</div>
+<label class="control-label text-left-imp">Reason of Rejection<span class="required" aria-required="true"> * </span>:</label>                                    
+<div class="input-group"><textarea cols="78" rows="6" name="rejectionReason" id="rejectionReason"></textarea></div></div>
+<div class="form-group col-xs-12"><input type="hidden" name="subjectOfRejection" id="subjectOfRejection" />
+<input type="hidden" name="subjectID" id="subjectID" value="<?php echo $request['request_id']; ?>" />
+<button class="btn red form-control" onClick="postRejection();" type="button">Reject</button>
+</div></div></div></div></div></div>
+
+
+
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 <script src="<?php echo base_url(); ?>assets/new/global/plugins/moment.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url(); ?>assets/new/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>

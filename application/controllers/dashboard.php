@@ -39,7 +39,8 @@ class Dashboard extends Admin_Controller {
     }
 
     public function index() {
-        $view_data = array();
+        
+		$view_data = array();
         $employee_id = $this->session->userdata('employee_id');
 
         $total_request = $this->travel_request->get_all_total_count_request($employee_id);
@@ -52,7 +53,8 @@ class Dashboard extends Admin_Controller {
         $view_data['pending_request'] = $pending_request[0]['pending_request'];
 
         $last_few_request = $this->travel_request->get_last_few_request($employee_id);
-        $view_data['last_few_request'] = $last_few_request;
+        //echo '<pre>'; print_r($last_few_request); exit;
+		$view_data['last_few_request'] = $last_few_request;
 
         $last_few_expense = $this->travel_request->get_pending_expense_count_request($employee_id);
         $view_data['pending_expense'] = $last_few_expense;
@@ -92,7 +94,6 @@ class Dashboard extends Admin_Controller {
 
         $last_few_inbox = $this->travel_request->get_last_few_task($employee_id);
         $view_data['last_few_task'] = $last_few_inbox;
-
 
         $this->template->write_view('content', 'dashboard', $view_data);
         $this->template->render();
