@@ -1034,6 +1034,7 @@ class Employee_request extends Admin_Controller {
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
             $total_travel_claim = $total_travel_claim + $other_manager_expense_total;
+			$view_request['DA_50'] = $other_manager_expense['DA_50'];
         }
 
 
@@ -2354,7 +2355,6 @@ class Employee_request extends Admin_Controller {
             }
         }
 
-
         $this->template->write_view('content', 'expense/claim_expense', $view_request);
         $this->template->render();
     }
@@ -2411,6 +2411,7 @@ class Employee_request extends Admin_Controller {
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
             $total_travel_claim = $total_travel_claim + $other_manager_expense_total;
+			
         }
 
         $this->load->model('employee_model');

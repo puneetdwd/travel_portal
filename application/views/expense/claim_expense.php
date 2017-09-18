@@ -511,138 +511,103 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12 light bordered ">
-                                <h4 class="form-section">DA Particulars</h4>
-                                <div class="row">
-                                    <table id="da_perticulars" class="table table-hover table-bordered text-center">
-                                        <thead>
-                                            <tr class="th_blue">                               
-                                                <th>#</th>
-                                                <th>From Date</th>
-                                                <th>To Date</th>
-                                                <th>Location</th>
-                                                <th>No of Day</th>
-                                                <th>DA@per day</th>
-                                                <th>Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>
-                                                    <input type="hidden" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" name="departure_date" id="departure_date">
-                                                    <?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>
-                                                </td>
-                                                <td id="lbl_da_return_date">
-                                                    <?php echo date(DATETIME_FORMAT, strtotime($request['return_date'])); ?>
-                                                </td>
-                                                <td><?php echo $request['to_city_name']; ?></td>
-                                                <td id="lbl_day"><?php
-                                                    echo $day . " Day," . $hours . " hours";
-                                                    ?></td>
-                                                <td  class="col-md-2">
-                                                    <input type="hidden" class="form-control required" name="da_actual" id="da_actual" value="<?php echo $request['DA_allowance_actual']; ?>">
-                                                    <?php
-                                                    if ($request['DA_allowance_actual'] != '1') {
-                                                        echo $request['DA_allowance'];
-                                                        ?>
-                                                        <input type="hidden" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?php echo $request['DA_allowance']; ?>">
-                                                        <?php
-                                                    } else {
-                                                        ?>
-                                                        <input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?php
-                                                        if (!empty($expense_details)) {
-                                                            echo $request['DA_allowance'];
-                                                        } else {
-                                                            echo 0;
-                                                        }
-                                                        ?>">                                                                                                                
-                                                               <?php
-                                                           }
-                                                           ?>
-                                                    <input type="hidden" class="form-control required" name="day" id="day" value="<?php echo $day; ?>">
-                                                    <input type="hidden" class="form-control required" name="hours" id="hours" value="<?php echo $hours; ?>">
-                                                </td>
-                                                <?php
-                                                $total2 = 0;
-                                                $expense_da = 0;
-                                                $da_total = 0;
-                                                if ($request['DA_allowance_actual'] != '1') {
-                                                    $da_total = $request['DA_allowance'] * $day;
+						
+<div class="row"><div class="col-md-12 light bordered ">
+<h4 class="form-section">DA Particulars</h4><div class="row">
+<table id="da_perticulars" class="table table-hover table-bordered text-center">
+<thead><tr class="th_blue"><th>#</th><th>From Date</th>
+<th>To Date</th><th>Location</th><th>No of Day</th>
+<th>DA@per day</th><th>Amount</th></tr></thead><tbody><tr><td>1</td><td>
+<input type="hidden" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" name="departure_date" id="departure_date">
+<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?></td>
+<td id="lbl_da_return_date"><?php echo date(DATETIME_FORMAT, strtotime($request['return_date'])); ?></td>
+<td><?php echo $request['to_city_name']; ?></td>
+<td id="lbl_day"><?php echo $day . " Day," . $hours . " hours"; ?></td>
+<td  class="col-md-2"><input type="hidden" class="form-control required" name="da_actual" id="da_actual" value="<?php echo $request['DA_allowance_actual']; ?>"><?php
+if($request['DA_allowance_actual'] != '1')
+ {
+  echo $request['DA_allowance'];
+  ?><input type="hidden" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?php echo $request['DA_allowance']; ?>"><?php
+ }
+else
+ {
+  ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?php if(!empty($expense_details)){ echo $request['DA_allowance']; } else { echo 0; } ?>"><?php
+ }
+?><input type="hidden" class="form-control required" name="day" id="day" value="<?php echo $day; ?>">
+<input type="hidden" class="form-control required" name="hours" id="hours" value="<?php echo $hours; ?>"></td><?php
+$total2 = 0;
+$expense_da = 0;
+$da_total = 0;
+if($request['DA_allowance_actual'] != '1')
+ {
+  $da_total = $request['DA_allowance'] * $day;
+  if($hours != '0')
+   {
+	if($hours != '')
+	 {
+	  if($hours < 14)
+	   {
+		$da = $request['DA_allowance'] / 2;
+		$da_total = $da_total + $da;
+	   }
+	  else
+	   {
+		$da_total = $da_total + $request['DA_allowance'];
+	   }
+     }
+   }
+  $total2 = $total2 + $da_total;
+ }
+else
+ {
+  if(!empty($expense_details))
+   {
+	$da_total = $request['DA_allowance'] * $day;
+	if($hours != '0')
+	 {
+	  if($hours != '')
+	   {
+		if ($hours < 14)
+		 {
+		  $da = $request['DA_allowance'] / 2;
+		  $da_total = $da_total + $da;
+		 }
+		else
+		 {
+		  $da_total = $da_total + $request['DA_allowance'];
+		 }
+	   }
+	 }
+   }
 
-                                                    if ($hours != '0') {
-                                                        if ($hours != '') {
-                                                            if ($hours < 14) {
-                                                                $da = $request['DA_allowance'] / 2;
-                                                                $da_total = $da_total + $da;
-                                                            } else {
-                                                                $da_total = $da_total + $request['DA_allowance'];
-                                                            }
-                                                        }
-                                                    }
+?><!--<input type="text" id="da_total" name="da_total" value="<?php if (!empty($expense_details)) echo $request['DA_allowance'] * $day; ?>" class="form-control" disabled="">--><?php
 
-                                                    $total2 = $total2 + $da_total;
-                                                    ?>
-                                                    <?php
-                                                } else {
-                                                    ?>
-                                                    <?php
-                                                    if (!empty($expense_details)) {
-                                                        $da_total = $request['DA_allowance'] * $day;
-                                                        if ($hours != '0') {
-                                                            if ($hours != '') {
-                                                                if ($hours < 14) {
-                                                                    $da = $request['DA_allowance'] / 2;
-                                                                    $da_total = $da_total + $da;
-                                                                } else {
-                                                                    $da_total = $da_total + $request['DA_allowance'];
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    ?>
+if(!empty($expense_details))
+ {
+  $total_da = $request['DA_allowance'] * $day;
+  if ($hours != '0')
+   {
+	if ($hours != '')
+	 {
+	  if ($hours < 14)
+	   {
+		$da = $request['DA_allowance'] / 2;
+		$total_da = $total_da + $da;
+	   }
+	  else
+	   {
+		$total_da = $total_da + $request['DA_allowance'];
+	   }
+	 }
+   }
+  $total2 = $total2 + $total_da;
+ }
+ ?><input type="hidden" id="da_total_hidd" name="da_total_hidd" value="<?php echo $total2 ?>"><?php
+}
+?><td width="5%" id="lbl_final_da"><?php echo $da_total; $expense_da = $da_total; ?></td></tr></tbody>
+<tfoot><tr><td colspan="5"></td><th>Total ₹</th>
+<td><b id="da_final_total"><?php if(isset($DA_50) and $DA_50>0){ if($DA_50==3){ echo '0.00'; }elseif($DA_50==1 or $DA_50==2){ $policyApplied= $total2/2; echo round($policyApplied, 2); } }else{ echo $total2 . '.00'; } ?></b></td></tr></tfoot></table></div></div></div>
 
-                                                                                                                                                                                                                    <!--<input type="text" id="da_total" name="da_total" value="<?php if (!empty($expense_details)) echo $request['DA_allowance'] * $day; ?>" class="form-control" disabled="">-->
-                                                    <?php
-                                                    if (!empty($expense_details)) {
-                                                        $total_da = $request['DA_allowance'] * $day;
-                                                        if ($hours != '0') {
-                                                            if ($hours != '') {
-                                                                if ($hours < 14) {
-                                                                    $da = $request['DA_allowance'] / 2;
-                                                                    $total_da = $total_da + $da;
-                                                                } else {
-                                                                    $total_da = $total_da + $request['DA_allowance'];
-                                                                }
-                                                            }
-                                                        }
-                                                        $total2 = $total2 + $total_da;
-                                                    }
-                                                    ?>
-                                            <input type="hidden" id="da_total_hidd" name="da_total_hidd" value="<?php echo $total2 ?>">
-                                            <?php
-                                        }
-                                        ?>
-                                        <td width="5%" id="lbl_final_da">
-                                            <?php
-                                            echo $da_total;
-                                            $expense_da = $da_total;
-                                            ?>
-                                        </td>
-                                        </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="5"></td>
-                                                <th>Total ₹</th>
-                                                <td><b id="da_final_total"><?php echo $total2 . '.00'; ?></b></td>                                        
-                                            </tr>
-                                        </tfoot>
-                                    </table> 
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-md-12 light bordered ">
