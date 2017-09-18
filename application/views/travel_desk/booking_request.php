@@ -1,3 +1,9 @@
+<style>
+.checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
+    margin-left: -10px;
+}
+</style>
+
 <link href="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" ?>" rel="stylesheet" media="screen">
 <!--<input id="searchTextField" type="text" size="50">-->
 <div class="page-content"> 
