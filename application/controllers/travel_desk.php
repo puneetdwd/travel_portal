@@ -315,6 +315,85 @@ class Travel_desk extends Admin_Controller {
         }
     }
 
+	function rejection() {
+	 if($this->input->post('subjectId')>0)
+	  {
+       $subjectId = $this->input->post('subjectId');
+	   $rejectionSubject = $this->input->post('rejectionSubject');
+	   $reason = $this->input->post('reason');
+	   $data_array= array();
+	   $data_array2= array();
+	   $timeStamp= time();
+	   $data_array['created']=$timeStamp;
+	   $data_array['latest_rejection_reason']=$reason;
+	   $data_array2['rejection_reason']=$reason;
+	   $data_array2['request_id']=$subjectId;
+	   $data_array2['created']=$timeStamp;
+	   $data_array2['rejection_subject']=$rejectionSubject;
+	   if($rejectionSubject=='flight' or $rejectionSubject=='train' or $rejectionSubject=='car' or $rejectionSubject=='bus')
+	    {
+		 $cancelledSubject= 'Travel Ticket';
+		 $data_array['travel_ticket']=3;
+	    }
+	   if($rejectionSubject=='returnFlight' or $rejectionSubject=='returnTrain' or $rejectionSubject=='returnCar' or $rejectionSubject=='returnBus')
+	    {
+		 $cancelledSubject= 'Return Travel Ticket';
+		 $data_array['return_travel_ticket']=3;
+	    }
+	   if($rejectionSubject=='accomodation')
+	    {
+		 $cancelledSubject= 'Accommodation';
+		 $data_array['accommodation']=3;
+	    }
+	   if($rejectionSubject=='uberOlaAuto')
+	    {
+		 $cancelledSubject= 'Car Hire';
+		 $data_array['car_hire']=3;
+	    }
+	   if($this->common->update_data($data_array, 'travel_booking', 'request_id', $subjectId))
+	    {
+		 if($this->common->insert_data($data_array2, 'rejection_reasons'))
+		  {
+		   echo 'success';
+		  }
+		 else
+		  {
+		   echo 'half_success';
+		  }
+		 $this->sendRejectionMail($subjectId, $cancelledSubject, $reason);
+	    }
+	   else
+	    {
+		 echo 'fail';
+	    }
+	   // SubjectId ==== //flight, train, car, bus, accomodation, uberOlaAuto, returnFlight, returnTrain, returnCar, returnBus, otherExp
+	  }
+    }
+
+	function sendRejectionMail($requestID, $cancelledSubject, $cancelMessage)
+	{
+	 $findDetail = $this->common->select_data_by_condition('travel_request', array('id' => $requestID), 'reference_id, employee_id');
+	 $tripID= $findDetail[0]['reference_id'];
+	 $employee_id= $findDetail[0]['employee_id'];
+	 $findPersonalDetail = $this->common->select_data_by_condition('users', array('employee_id' => $employee_id), 'NAME_DISPLAY, email, EMAIL_ADDR2');
+	 $name= $findPersonalDetail[0]['NAME_DISPLAY'];
+	 $to= $findPersonalDetail[0]['email'];
+	 $cc= $findPersonalDetail[0]['EMAIL_ADDR2'];
+	 $subject= "Trip '".$tripID."' updates";
+	 $message= "Dear ".$name.",</br> '".$cancelledSubject."' of trip request '".$tripID."' is rejected by travel desk.";
+	 if($cancelMessage!='')
+	 {
+	  $message .= "</br> Reason of rejection is given below-:</br>";
+	  $message .= '<b>'.$cancelMessage.'</b>';
+	 }
+	 $message .= "</br> Thanks</br> Travel Desk </br> DB CORP";
+	 if($to!='')
+	  {
+	   $this->sendEmail($to, $subject, $message, $cc);
+	  }
+	 return true;
+	}
+
     function booking($request_id) {
 
 		$employee_id = $this->session->userdata('employee_id');
@@ -345,9 +424,7 @@ class Travel_desk extends Admin_Controller {
         }
 
         $view_request['request'] = $request;
-        if ($request['other_manager_expense'] == "1") {
-            
-        }
+        if ($request['other_manager_expense'] == "1") {}
         if ($request['group_travel'] == "1") {
             $member_list = $this->travel_request->get_all_member_list_by_id($request_id);
             $view_request['member_list'] = $member_list;
