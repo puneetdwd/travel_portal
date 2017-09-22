@@ -33,7 +33,6 @@ class Travel_desk extends Admin_Controller {
         $cost_center_id = $cost_center_data['cost_center_id'];
 
         $request_arr = $this->travel_desk->get_all_travel_requestSNT($cost_center_id);
-
         $request = array();
         foreach ($request_arr as $key => $value) {
             $request[$value['id']] = $value;
@@ -85,7 +84,7 @@ class Travel_desk extends Admin_Controller {
         $view_request['tomorrow'] = $tomorrow;
         $view_request['yesterday'] = $yesterday;
         $view_request['comingWeek'] = $comingWeek;
-
+//        po($view_request['request']);
         $this->template->write_view('content', 'travel_desk/index', $view_request);
         $this->template->render();
     }
@@ -111,13 +110,6 @@ class Travel_desk extends Admin_Controller {
             $this->session->set_flashdata('error', 'Error Occurred. Try Again!');
             redirect(base_url() . 'travel_desk/inbox');
         }
-    }
-
-	public function classification() {
-        $city = $this->travel_request->get_active_city();        
-        $view_city = array('city' => $city);
-		$this->template->write_view('content', 'travel_desk/classification', $view_city);
-        $this->template->render();
     }
 
     function cancel_request($request_id) {
@@ -322,89 +314,74 @@ class Travel_desk extends Admin_Controller {
         }
     }
 
-	function rejection() {
-	 if($this->input->post('subjectId')>0)
-	  {
-       $subjectId = $this->input->post('subjectId');
-	   $rejectionSubject = $this->input->post('rejectionSubject');
-	   $reason = $this->input->post('reason');
-	   $data_array= array();
-	   $data_array2= array();
-	   $timeStamp= time();
-	   $data_array['created']=$timeStamp;
-	   $data_array['latest_rejection_reason']=$reason;
-	   $data_array2['rejection_reason']=$reason;
-	   $data_array2['request_id']=$subjectId;
-	   $data_array2['created']=$timeStamp;
-	   $data_array2['rejection_subject']=$rejectionSubject;
-	   if($rejectionSubject=='flight' or $rejectionSubject=='train' or $rejectionSubject=='car' or $rejectionSubject=='bus')
-	    {
-		 $cancelledSubject= 'Travel Ticket';
-		 $data_array['travel_ticket']=3;
-	    }
-	   if($rejectionSubject=='returnFlight' or $rejectionSubject=='returnTrain' or $rejectionSubject=='returnCar' or $rejectionSubject=='returnBus')
-	    {
-		 $cancelledSubject= 'Return Travel Ticket';
-		 $data_array['return_travel_ticket']=3;
-	    }
-	   if($rejectionSubject=='accomodation')
-	    {
-		 $cancelledSubject= 'Accommodation';
-		 $data_array['accommodation']=3;
-	    }
-	   if($rejectionSubject=='uberOlaAuto')
-	    {
-		 $cancelledSubject= 'Car Hire';
-		 $data_array['car_hire']=3;
-	    }
-	   if($this->common->update_data($data_array, 'travel_booking', 'request_id', $subjectId))
-	    {
-		 if($this->common->insert_data($data_array2, 'rejection_reasons'))
-		  {
-		   echo 'success';
-		  }
-		 else
-		  {
-		   echo 'half_success';
-		  }
-		 $this->sendRejectionMail($subjectId, $cancelledSubject, $reason);
-	    }
-	   else
-	    {
-		 echo 'fail';
-	    }
-	   // SubjectId ==== //flight, train, car, bus, accomodation, uberOlaAuto, returnFlight, returnTrain, returnCar, returnBus, otherExp
-	  }
+    function rejection() {
+        if ($this->input->post('subjectId') > 0) {
+            $subjectId = $this->input->post('subjectId');
+            $rejectionSubject = $this->input->post('rejectionSubject');
+            $reason = $this->input->post('reason');
+            $data_array = array();
+            $data_array2 = array();
+            $timeStamp = time();
+            $data_array['created'] = $timeStamp;
+            $data_array['latest_rejection_reason'] = $reason;
+            $data_array2['rejection_reason'] = $reason;
+            $data_array2['request_id'] = $subjectId;
+            $data_array2['created'] = $timeStamp;
+            $data_array2['rejection_subject'] = $rejectionSubject;
+            if ($rejectionSubject == 'flight' or $rejectionSubject == 'train' or $rejectionSubject == 'car' or $rejectionSubject == 'bus') {
+                $cancelledSubject = 'Travel Ticket';
+                $data_array['travel_ticket'] = 3;
+            }
+            if ($rejectionSubject == 'returnFlight' or $rejectionSubject == 'returnTrain' or $rejectionSubject == 'returnCar' or $rejectionSubject == 'returnBus') {
+                $cancelledSubject = 'Return Travel Ticket';
+                $data_array['return_travel_ticket'] = 3;
+            }
+            if ($rejectionSubject == 'accomodation') {
+                $cancelledSubject = 'Accommodation';
+                $data_array['accommodation'] = 3;
+            }
+            if ($rejectionSubject == 'uberOlaAuto') {
+                $cancelledSubject = 'Car Hire';
+                $data_array['car_hire'] = 3;
+            }
+            if ($this->common->update_data($data_array, 'travel_booking', 'request_id', $subjectId)) {
+                if ($this->common->insert_data($data_array2, 'rejection_reasons')) {
+                    echo 'success';
+                } else {
+                    echo 'half_success';
+                }
+                $this->sendRejectionMail($subjectId, $cancelledSubject, $reason);
+            } else {
+                echo 'fail';
+            }
+            // SubjectId ==== //flight, train, car, bus, accomodation, uberOlaAuto, returnFlight, returnTrain, returnCar, returnBus, otherExp
+        }
     }
 
-	function sendRejectionMail($requestID, $cancelledSubject, $cancelMessage)
-	{
-	 $findDetail = $this->common->select_data_by_condition('travel_request', array('id' => $requestID), 'reference_id, employee_id');
-	 $tripID= $findDetail[0]['reference_id'];
-	 $employee_id= $findDetail[0]['employee_id'];
-	 $findPersonalDetail = $this->common->select_data_by_condition('users', array('employee_id' => $employee_id), 'NAME_DISPLAY, email, EMAIL_ADDR2');
-	 $name= $findPersonalDetail[0]['NAME_DISPLAY'];
-	 $to= $findPersonalDetail[0]['email'];
-	 $cc= $findPersonalDetail[0]['EMAIL_ADDR2'];
-	 $subject= "Trip '".$tripID."' updates";
-	 $message= "Dear ".$name.",</br> '".$cancelledSubject."' of trip request '".$tripID."' is rejected by travel desk.";
-	 if($cancelMessage!='')
-	 {
-	  $message .= "</br> Reason of rejection is given below-:</br>";
-	  $message .= '<b>'.$cancelMessage.'</b></br>';
-	 }
-	 $message .= "</br> Thanks</br> Travel Desk </br> DB CORP";
-	 if($to!='')
-	  {
-	   $this->sendEmail($to, $subject, $message);
-	   //$this->sendEmail($to, $subject, $message, $cc);
-	  }
-	 return true;
-	}
+    function sendRejectionMail($requestID, $cancelledSubject, $cancelMessage) {
+        $findDetail = $this->common->select_data_by_condition('travel_request', array('id' => $requestID), 'reference_id, employee_id');
+        $tripID = $findDetail[0]['reference_id'];
+        $employee_id = $findDetail[0]['employee_id'];
+        $findPersonalDetail = $this->common->select_data_by_condition('users', array('employee_id' => $employee_id), 'NAME_DISPLAY, email, EMAIL_ADDR2');
+        $name = $findPersonalDetail[0]['NAME_DISPLAY'];
+        $to = $findPersonalDetail[0]['email'];
+        $cc = $findPersonalDetail[0]['EMAIL_ADDR2'];
+        $subject = "Trip '" . $tripID . "' updates";
+        $message = "Dear " . $name . ",</br> '" . $cancelledSubject . "' of trip request '" . $tripID . "' is rejected by travel desk.";
+        if ($cancelMessage != '') {
+            $message .= "</br> Reason of rejection is given below-:</br>";
+            $message .= '<b>' . $cancelMessage . '</b>';
+        }
+        $message .= "</br> Thanks</br> Travel Desk </br> DB CORP";
+        if ($to != '') {
+            $this->sendEmail($to, $subject, $message, $cc);
+        }
+        return true;
+    }
 
     function booking($request_id) {
 
-		$employee_id = $this->session->userdata('employee_id');
+        $employee_id = $this->session->userdata('employee_id');
         $cost_center_data = $this->travel_desk->get_cost_centre_id_by_emp($employee_id);
         if (!empty($cost_center_data)) {
             $cost_center_id = $cost_center_data['cost_center_id'];
@@ -421,6 +398,7 @@ class Travel_desk extends Admin_Controller {
         $view_request['cost_center_id'] = $cost_center_id;
 
         $request = $this->travel_desk->get_travel_request_by_id($request_id);
+//        po($request);
         $from_city_id = $request['from_city_id'];
         $from_cost_center_id = $this->travel_request->get_cost_center_by_city_id($from_city_id);
         $from_cost_center_id = $from_cost_center_id['cost_center_id'];
@@ -432,7 +410,9 @@ class Travel_desk extends Admin_Controller {
         }
 
         $view_request['request'] = $request;
-        if ($request['other_manager_expense'] == "1") {}
+        if ($request['other_manager_expense'] == "1") {
+            
+        }
         if ($request['group_travel'] == "1") {
             $member_list = $this->travel_request->get_all_member_list_by_id($request_id);
             $view_request['member_list'] = $member_list;
@@ -509,12 +489,13 @@ class Travel_desk extends Admin_Controller {
     function other_expense() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
+
             $this->form_validation->set_rules('foods', 'foods', 'required');
             $this->form_validation->set_rules('travel', 'travel', 'required');
-			//$this->form_validation->set_rules('other', 'other', 'required');
+//            $this->form_validation->set_rules('other', 'other', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Error!! Other expense all field is requied!');
-                redirect('travel_desk/booking/'.$request_id, 'refresh');
+                redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
                 $check_booking = $this->common->select_data_by_condition('other_manager_expense', array('request_id' => $request_id), 'request_id');
                 if (empty($check_booking)) {
@@ -591,11 +572,18 @@ class Travel_desk extends Admin_Controller {
         }
     }
 
+	public function classification() {
+        $city = $this->travel_request->get_active_city();        
+        $view_city = array('city' => $city);
+		$this->template->write_view('content', 'travel_desk/classification', $view_city);
+        $this->template->render();
+    }
+
     function car_booking() {
 
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-            
+
             $this->form_validation->set_rules('book_by', 'book_by', 'required');
             $this->form_validation->set_rules('car_category_id', 'car_category_id', 'required');
             $this->form_validation->set_rules('car_type', 'car_type', 'required');
@@ -606,10 +594,10 @@ class Travel_desk extends Admin_Controller {
             $this->form_validation->set_rules('cost', 'cost', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
-                redirect('travel_desk/booking/'.$request_id, 'refresh');
+                redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
 
-                
+
                 $check_booking = $this->common->select_data_by_condition('car_booking', array('request_id' => $request_id), 'request_id');
                 if (empty($check_booking)) {
                     $pick_up_location = $this->input->post('pick_up_location');
@@ -761,10 +749,10 @@ class Travel_desk extends Admin_Controller {
             $this->form_validation->set_rules('check_out_date', 'check_out_date', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
-                redirect('travel_desk/booking/'.$request_id, 'refresh');
+                redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
 
-                
+
                 $check_booking = $this->common->select_data_by_condition('hotel_booking', array('request_id' => $request_id), 'request_id');
                 if (empty($check_booking)) {
                     $request = $this->travel_desk->get_travel_request_by_id($request_id);
@@ -922,7 +910,7 @@ class Travel_desk extends Admin_Controller {
     function flight_booking() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-            
+
             $this->form_validation->set_rules('flight_provider_id', 'flight_provider_id', 'required');
             $this->form_validation->set_rules('pnr_number', 'pnr_number', 'required');
             $this->form_validation->set_rules('cost', 'cost', 'required');
@@ -930,7 +918,7 @@ class Travel_desk extends Admin_Controller {
             $this->form_validation->set_rules('booking_city_id', 'booking_city_id', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
-                redirect('travel_desk/booking/'.$request_id, 'refresh');
+                redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
 
                 if (isset($_FILES['flight_attachment']['name']) && $_FILES['flight_attachment']['name'] != null) {
@@ -938,6 +926,9 @@ class Travel_desk extends Admin_Controller {
                     $check_booking = $this->common->select_data_by_condition('flight_ticket_booking', array('request_id' => $request_id, 'trip_mode' => $trip_mode), 'request_id');
 
                     if (empty($check_booking)) {
+
+                        $flight_provider_id = $this->input->post('flight_provider_id');
+                        $ticket_type = $this->input->post('ticket_type');
                         $pnr_number = $this->input->post('pnr_number');
                         $trip_number = $this->input->post('flight_number');
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
@@ -955,6 +946,7 @@ class Travel_desk extends Admin_Controller {
                         } else {
                             $hotel_booking = "1";
                         }
+
 
 
                         $data_array = $this->input->post();
@@ -976,7 +968,21 @@ class Travel_desk extends Admin_Controller {
                             }
                         }
 
-
+                        $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $flight_provider_id), '*');
+                        $vendor_commission = 0;
+                        if (!empty($vendor_data)) {
+                            if ($ticket_type == 2) {
+                                $vendor_commission = $vendor_data[0]['amount'];
+                            } else {
+                                $vendor_commission = $vendor_data[0]['half_amount'];
+                            }
+                        }
+                        $data_array['ticket_type'] = $ticket_type;
+                        $data_array['vendor_commission'] = $vendor_commission;
+                        $data_array['arrange_by'] = "Company";
+						
+						//echo '<pre>'; print_r($data_array); exit;
+						
                         if ($this->common->insert_data($data_array, 'flight_ticket_booking')) {
                             $data_array = array();
                             $booking_mode = 0;
@@ -1140,7 +1146,7 @@ class Travel_desk extends Admin_Controller {
                     }
                 } else {
                     $this->session->set_flashdata('error', 'Error!! Attachment is required!');
-                    redirect('travel_desk/booking/'.$request_id, 'refresh');
+                    redirect('travel_desk/booking/' . $request_id, 'refresh');
                 }
             }
         } else {
@@ -1152,7 +1158,7 @@ class Travel_desk extends Admin_Controller {
     function train_booking() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-            
+
             $this->form_validation->set_rules('train_provider_id', 'train_provider_id', 'required');
             $this->form_validation->set_rules('pnr_number', 'pnr_number', 'required');
             $this->form_validation->set_rules('cost', 'cost', 'required');
@@ -1160,16 +1166,15 @@ class Travel_desk extends Admin_Controller {
             $this->form_validation->set_rules('booking_city_id', 'booking_city_id', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
-                redirect('travel_desk/booking/'.$request_id, 'refresh');
+                redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
 
                 if (isset($_FILES['train_attachment']['name']) && $_FILES['train_attachment']['name'] != null) {
 
-
-                    
                     $trip_mode = $this->input->post('trip_mode');
                     $check_booking = $this->common->select_data_by_condition('train_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
+
                         $pnr_number = $this->input->post('pnr_number');
                         $trip_number = $this->input->post('train_number');
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
@@ -1220,8 +1225,24 @@ class Travel_desk extends Admin_Controller {
                             }
                         }
 
-
-                        if ($this->common->insert_data($data_array, 'train_ticket_booking')) {
+                        $vendor_id = $this->input->post('train_provider_id');
+                        $ticket_type = $this->input->post('ticket_type');
+                        $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
+                        $vendor_commission = 0;
+                        if (!empty($vendor_data)) {
+                            if ($ticket_type == 2) {
+                                $vendor_commission = $vendor_data[0]['amount'];
+                            } else {
+                                $vendor_commission = $vendor_data[0]['half_amount'];
+                            }
+                        }
+                        $data_array['ticket_type'] = $ticket_type;
+                        $data_array['vendor_commission'] = $vendor_commission;
+                        $data_array['arrange_by'] = "Company";
+                        
+						//echo '<pre>'; print_r($data_array); exit;
+						
+						if ($this->common->insert_data($data_array, 'train_ticket_booking')) {
                             $booking_mode = 0;
                             $redirect_flag = 0;
                             $data_array = array();
@@ -1372,7 +1393,7 @@ class Travel_desk extends Admin_Controller {
                     }
                 } else {
                     $this->session->set_flashdata('error', 'Error!! Attachment is requied!');
-                    redirect('travel_desk/booking/'.$request_id, 'refresh');
+                    redirect('travel_desk/booking/' . $request_id, 'refresh');
                 }
             }
         } else {
@@ -1384,17 +1405,17 @@ class Travel_desk extends Admin_Controller {
     function car_ticket_booking() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-            
+
             $this->form_validation->set_rules('car_provider_id', 'car_provider_id', 'required');
             $this->form_validation->set_rules('cost', 'cost', 'required');
             $this->form_validation->set_rules('booking_city_id', 'booking_city_id', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
-                redirect('travel_desk/booking/'.$request_id, 'refresh');
+                redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
                 if (isset($_FILES['car_attachment']['name']) && $_FILES['car_attachment']['name'] != null) {
                     $trip_mode = $this->input->post('trip_mode');
-                    
+
                     $check_booking = $this->common->select_data_by_condition('car_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
@@ -1435,7 +1456,20 @@ class Travel_desk extends Admin_Controller {
                             }
                         }
 
-
+                        $vendor_id = $this->input->post('car_provider_id');
+                        $ticket_type = $this->input->post('ticket_type');
+                        $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
+                        $vendor_commission = 0;
+                        if (!empty($vendor_data)) {
+                            if ($ticket_type == 2) {
+                                $vendor_commission = $vendor_data[0]['amount'];
+                            } else {
+                                $vendor_commission = $vendor_data[0]['half_amount'];
+                            }
+                        }
+                        $data_array['ticket_type'] = $ticket_type;
+                        $data_array['vendor_commission'] = $vendor_commission;
+                        $data_array['arrange_by'] = "Company";
                         if ($this->common->insert_data($data_array, 'car_ticket_booking')) {
                             $booking_mode = 0;
                             $redirect_flag = 0;
@@ -1538,10 +1572,6 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>From To: </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Train Number: " . $trip_number . "</span></span></p>
-<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR: " . $pnr_number . "</span></span></p>
-<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time:" . $request_data['return_date'] . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
@@ -1595,7 +1625,7 @@ class Travel_desk extends Admin_Controller {
                     }
                 } else {
                     $this->session->set_flashdata('error', 'Error!! Attachment is requied!');
-                    redirect('travel_desk/booking/'.$request_id, 'refresh');
+                    redirect('travel_desk/booking/' . $request_id, 'refresh');
                 }
             }
         } else {
@@ -1607,18 +1637,16 @@ class Travel_desk extends Admin_Controller {
     function bus_ticket_booking() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-            
+
             $this->form_validation->set_rules('bus_provider_id', 'bus_provider_id', 'required');
             $this->form_validation->set_rules('cost', 'cost', 'required');
             $this->form_validation->set_rules('booking_city_id', 'booking_city_id', 'required');
             if ($this->form_validation->run() == FALSE) {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
-                redirect('travel_desk/booking/'.$request_id, 'refresh');
+                redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
                 if (isset($_FILES['bus_attachment']['name']) && $_FILES['bus_attachment']['name'] != null) {
-
                     $trip_mode = $this->input->post('trip_mode');
-                    
                     $check_booking = $this->common->select_data_by_condition('bus_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
@@ -1657,7 +1685,20 @@ class Travel_desk extends Admin_Controller {
                             }
                         }
 
-
+                        $vendor_id = $this->input->post('bus_provider_id');
+                        $ticket_type = $this->input->post('ticket_type');
+                        $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
+                        $vendor_commission = 0;
+                        if (!empty($vendor_data)) {
+                            if ($ticket_type == 2) {
+                                $vendor_commission = $vendor_data[0]['amount'];
+                            } else {
+                                $vendor_commission = $vendor_data[0]['half_amount'];
+                            }
+                        }
+                        $data_array['ticket_type'] = $ticket_type;
+                        $data_array['vendor_commission'] = $vendor_commission;
+                        $data_array['arrange_by'] = "Company";
                         if ($this->common->insert_data($data_array, 'bus_ticket_booking')) {
                             $booking_mode = 0;
                             $redirect_flag = 0;
@@ -1818,7 +1859,7 @@ class Travel_desk extends Admin_Controller {
                     }
                 } else {
                     $this->session->set_flashdata('error', 'Error!! Attachment is requied!');
-                    redirect('travel_desk/booking/'.$request_id, 'refresh');
+                    redirect('travel_desk/booking/' . $request_id, 'refresh');
                 }
             }
         } else {

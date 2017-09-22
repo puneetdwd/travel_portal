@@ -22,7 +22,7 @@ class Grades extends Admin_Controller {
 
     public function index() {
         $grades = $this->grades_model->get_all_grades();
-		//po($grades);
+//        po($grades);
         $view_grades = array('grades' => $grades);
 
         $this->template->write_view('content', 'grades/index_grades', $view_grades);

@@ -17,7 +17,7 @@ class Users extends CI_Controller {
         $this->template->write_view('header', 'templates/header', $header_data);
         $this->template->write_view('footer', 'templates/footer');
     }
-
+    
     public function index() {
         $this->is_logged_in();
         $this->is_user_admin();
@@ -79,77 +79,8 @@ class Users extends CI_Controller {
         $this->template->write_view('content', 'users/add_user', $view_data);
         $this->template->render();
     }
-
-    public function login_check() {
-//        echo $this->db->database;;die();
-        if ($this->session->userdata('username')) {
-            redirect(base_url() . 'dashboard');
-        }
-
-        $data = array();
-        if ($this->input->post()) {
-
-            $uid = $_REQUEST['username'];
-            $pwd = $_REQUEST['password'];
-//            $ldap_host = "10.51.82.51"; //final IP conform by Abhishekji 
-////            $ldap_host = "10.51.82.50";
-////            $ldap_host = "10.51.6.1";
-//            $ldap = ldap_connect($ldap_host);
-//            if ($bind = @ldap_bind($ldap, "dbgroup\\" . $uid, $pwd)) {
-//// authenticated
-//                ldap_unbind($ldap);
-
-            $post_data = $this->input->post();
-            $this->load->model('User_model');
-            $psfim_data = $this->User_model->check_login_psfim_check($post_data['username'], $post_data['password']);
-
-            if (!empty($psfim_data)) {
-
-                $output = $this->User_model->check_login_check($post_data['username'], $post_data['password']);
-
-                if (!empty($output)) {
-                    if ($output['STATUS'] == 'Success') {
-//                            $data = $this->update_employee($post_data['username']);
-//                            if (isset($data['status'])) {
-//                                if ($data['status'] == "0") {
-//                                    $msg = $data['msg'];
-//                                    $data['error'] = $msg;
-//                                    $this->session->sess_destroy();
-//                                    $this->session->set_flashdata('error', "Invalid Username");
-//                                } else {
-//                                    redirect(base_url() . 'dashboard');
-//                                }
-//                            } else {
-                        redirect(base_url() . 'dashboard');
-//                            }
-                    } else {
-                        $data['error'] = $output['MSG'];
-                    }
-                } else {
-//code for update employee profile 
-//                        $this->add_new_employee($post_data['username']);
-                }
-            } else {
-                $data['error'] = $output['MSG'];
-            }
-//write code for further process
-//            } else {
-//// invalid name or password
-//                ldap_unbind($ldap);
-//                $data['error'] = "invalid name or password";
-////return false;
-////write code for authentication fail process
-////                exit;
-//            }
-//authenticate($uid,$pwd);
-//            ob_end_flush();
-        }
-
-        $this->load->view('login2', $data);
-    }
-
+    
     public function login() {
-//        echo $this->db->database;;die();
         if ($this->session->userdata('username')) {
             redirect(base_url() . 'dashboard');
         }
@@ -163,7 +94,7 @@ class Users extends CI_Controller {
 //            $ldap_host = "10.51.82.50";
 //            $ldap_host = "10.51.6.1";
             $ldap = ldap_connect($ldap_host);
-            if (1==1 or @ldap_bind($ldap, "dbgroup\\" . $uid, $pwd)) {
+            if ($bind = @ldap_bind($ldap, "dbgroup\\" . $uid, $pwd)) {
 // authenticated
                 ldap_unbind($ldap);
 
@@ -172,10 +103,11 @@ class Users extends CI_Controller {
                 $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
 
                 if (!empty($psfim_data)) {
-
+                    
                     $output = $this->User_model->check_login($post_data['username'], $post_data['password']);
-
+                   
                     if (!empty($output)) {
+                         
                         if ($output['STATUS'] == 'Success') {
                             $data = $this->update_employee($post_data['username']);
                             if (isset($data['status'])) {
@@ -217,7 +149,7 @@ class Users extends CI_Controller {
     }
 
     function add_new_employee($username = "") {
-
+        
         $post_data = $this->input->post();
         $this->load->model('User_model');
 
@@ -256,12 +188,12 @@ class Users extends CI_Controller {
             $city_data[strtolower($value['name'])] = $value['cost_center_id'];
             $city_data1[strtolower($value['name'])] = $value['id'];
         }
-
+        
         $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
         $value = $psfim_data['data'];
         $value['employee_id'] = $value['EMPLID'];
-
-
+           
+        
         if ($value['STEP'] == " " || $value['STEP'] == "" || $value['STEP'] == NULL) {
             $GRADE = $value['GRADE'];
         } else {
@@ -273,7 +205,7 @@ class Users extends CI_Controller {
 
         $city = strtolower($value['CITY']);
         $cost_center = strtolower($value['DESCR4']);
-
+        
         if (!isset($grade_data[$GRADE])) {
             $data['status'] = "0";
             $data['msg'] = "Invalid Grade!, Please contact Administrator";
@@ -317,16 +249,9 @@ class Users extends CI_Controller {
         $cost_center_id = $city_data[strtolower($city)];
         $city_id = $city_data1[strtolower($city)];
 
-        if ($value['BIRTHDATE'] == "0000-00-00 00:00:00") {
-            $date = $value['BIRTHDATE'] = null;
-        } else {
-            $date = $value['BIRTHDATE'] = date('Y-m-d', strtotime($value['BIRTHDATE']));
-        }
-
         $sql = "SELECT * FROM employees WHERE id = " . $value['employee_id'];
         $user = $this->db->query($sql);
         $user = $user->result_array();
-        unset($value['dashboardrole']);
         if ($value['employee_id'] != '' && $desg_id != '' && $dept_id != '' && $cost_center_id != '') {
             $employee = array(
                 "id" => $value['employee_id'],
@@ -345,7 +270,7 @@ class Users extends CI_Controller {
                 "father_name" => "",
                 "gender" => "Male",
                 "blood_group" => "",
-                "dob" => $date,
+                "dob" => date('Y-m-d', strtotime($value['BIRTHDATE'])),
                 "phone" => $value['PHONE1'],
                 "emergency_phone" => "",
                 "emergency_phone2" => "",
@@ -384,6 +309,7 @@ class Users extends CI_Controller {
             unset($value['EMAIL_ADDR']);
             unset($value['alias']);
             unset($value['gender']);
+            unset($value['dashboardrole']);
             $result = $this->db->insert('users', $value);
             $this->login();
             $data['status'] = "1";
@@ -497,13 +423,6 @@ class Users extends CI_Controller {
 
         $city_id = $city_data1[$city];
         $cost_center_id = $city_data[$city];
-        
-        if ($value['BIRTHDATE'] == "0000-00-00 00:00:00") {
-            $date = $value['BIRTHDATE'] = null;
-        } else {
-            $date = $value['BIRTHDATE'] = date('Y-m-d', strtotime($value['BIRTHDATE']));
-        }
-
 
         $sql = "SELECT * FROM employees WHERE id = " . $value['employee_id'];
         $user = $this->db->query($sql);
@@ -520,13 +439,13 @@ class Users extends CI_Controller {
                 "cost_center_id" => $cost_center_id,
                 "city_id" => $city_id,
                 "reporting_manager_id" => $value['SUPERVISOR_ID'],
-                "ea_manager_id" => "0",
+//                "ea_manager_id" => "0",
                 "reporting_person_id" => $value['SUPERVISOR_ID'],
                 "location" => "",
                 "father_name" => "",
                 "gender" => "Male",
                 "blood_group" => "",
-                "dob" => $date,
+                "dob" => date('Y-m-d', strtotime($value['BIRTHDATE'])),
                 "phone" => $value['PHONE1'],
                 "emergency_phone" => "",
                 "emergency_phone2" => "",
@@ -562,11 +481,11 @@ class Users extends CI_Controller {
             $value['email'] = $value['EMAIL_ADDR'];
             $value['is_active'] = "1";
             $value['username'] = $value['alias'];
-            unset($value['gender']);
             unset($value['EMPLID']);
             unset($value['EMAIL_ADDR']);
             unset($value['alias']);
             unset($value['dashboardrole']);
+            unset($value['gender']);
 
             $this->db->where('employee_id', $value['employee_id']);
             $result = $this->db->update('users', $value);

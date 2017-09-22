@@ -223,7 +223,6 @@ class Employee_request extends Admin_Controller {
     }
 
     function accommodation($request_id) {
-//        po();
         $flag = 0;
         $employee_id = $this->session->userdata('employee_id');
         $request = $this->travel_request->get_emp_request_by_id($request_id, $employee_id);
@@ -241,104 +240,223 @@ class Employee_request extends Admin_Controller {
         $view_request['booking'] = $booking;
 
         if ($this->input->post('submit_ticket')) {
+            $return_mode = $this->input->post('return_mode');
+            $return_travel_ticket = $this->input->post('return_travel_ticket');
             $travel_ticket = $this->input->post('travel_ticket');
             $accommodation = $this->input->post('accommodation');
             $car_hire = $this->input->post('car_hire');
+            if ($return_mode == "3") {
+                $car_hire = 0;
+                $booking_flag = 0;
+                if ($travel_ticket != '' && $return_travel_ticket != '' && $accommodation != '') {
+                    $booking_flag = 1;
+                }
 
-            $booking_flag = 0;
-            if ($travel_ticket != '' && $accommodation != '' && $car_hire != '') {
-                $booking_flag = 1;
-            }
+                $bookbymanager = 0;
+                if ($travel_ticket == '1' || $return_travel_ticket == '1' || $accommodation == '1') {
+                    $bookbymanager = 1;
+                }
+                $bookbyself = 0;
+                if ($travel_ticket == '2' || $return_travel_ticket == '2' || $accommodation == '2') {
+                    $bookbyself = 1;
+                }
 
-            $bookbymanager = 0;
-            if ($travel_ticket == '1' || $accommodation == '1' || $car_hire == '1') {
-                $bookbymanager = 1;
-            }
-            $bookbyself = 0;
-            if ($travel_ticket == '2' || $accommodation == '2' || $car_hire == '2') {
-                $bookbyself = 1;
-            }
-
-            $travel_booking_id = $this->input->post('id');
-            if ($travel_ticket == '' && $accommodation == '' && $car_hire == '') {
-                $this->session->set_flashdata('error', 'Please select accommodation.');
-                $view_data['error'] = 'Please select accommodation.';
-                redirect('employee_request/accommodation/' . $request_id, 'refresh');
-            } else {
-                $post_data = array(
-                    'request_id' => $request_id,
-                    'travel_ticket' => $travel_ticket,
-                    'accommodation' => $accommodation,
-                    'car_hire' => $car_hire,
-                    'bookbymanager' => $bookbymanager,
-                    'bookbyself' => $bookbyself,
-                );
-                $data = $this->travel_booking->update_travel_booking($post_data, $travel_booking_id);
-                if ($data) {
-//                    if ($booking_flag == '1') {
-                    $req_data = array(
-                        'request_status' => "3",
+                $return_mode = $this->input->post('return_mode');
+                if ($return_mode != '') {
+                    $data_array = array(
+                        'return_travel_type' => $return_mode
                     );
-                    $data1 = $this->travel_booking->update_travel_request($req_data, $request_id);
+                    $this->common->update_data($data_array, 'travel_request', 'id', $request_id);
+                }
+
+                $travel_booking_id = $this->input->post('id');
+                if ($travel_ticket == '' && $return_travel_ticket == '' && $accommodation == '') {
+                    $this->session->set_flashdata('error', 'Please select accommodation.');
+                    $view_data['error'] = 'Please select accommodation.';
+                    redirect('employee_request/accommodation/' . $request_id, 'refresh');
+                } else {
+                    $post_data = array(
+                        'request_id' => $request_id,
+                        'travel_ticket' => $travel_ticket,
+                        'return_travel_ticket' => $return_travel_ticket,
+                        'accommodation' => $accommodation,
+                        'car_hire' => "0",
+                        'bookbymanager' => $bookbymanager,
+                        'bookbyself' => $bookbyself,
+                    );
+                    $data = $this->travel_booking->update_travel_booking($post_data, $travel_booking_id);
+                    if ($data) {
+//                    if ($booking_flag == '1') {
+                        $req_data = array(
+                            'request_status' => "3",
+                        );
+                        $data1 = $this->travel_booking->update_travel_request($req_data, $request_id);
 //                    }
-                    $msg = (!empty($travel_booking_id)) ? ' Accommodation request sent to travel desk' : 'Accommodation request sent to travel desk';
+                        $msg = (!empty($travel_booking_id)) ? ' Accommodation request sent to travel desk' : 'Accommodation request sent to travel desk';
 
-                    if ($travel_ticket == '1' || $accommodation == '1' || $car_hire == '1') {
-                        $email_template = $this->common->select_data_by_id('email_format', 'mail_id', '5');
-                        if (!empty($email_template)) {
-                            $request_data = $this->travel_request->get_request_details_by_id($request_id);
-                            $request_data['amount'] = $request_data['hotel_allowance'] + $request_data['da_allowance'] + $request_data['convince_allowance'];
-                            $from_city_id = $request['from_city_id'];
-                            $cost_center_list = $this->travel_request->get_cost_center_by_city_id($from_city_id);
-                            $cost_center_id = $cost_center_list['cost_center_id'];
+                        if ($travel_ticket == '1' || $return_travel_ticket == '1' || $accommodation == '1') {
+                            $email_template = $this->common->select_data_by_id('email_format', 'mail_id', '5');
+                            if (!empty($email_template)) {
+                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                $request_data['amount'] = $request_data['hotel_allowance'] + $request_data['da_allowance'] + $request_data['convince_allowance'];
+                                $from_city_id = $request['from_city_id'];
+                                $cost_center_list = $this->travel_request->get_cost_center_by_city_id($from_city_id);
+                                $cost_center_id = $cost_center_list['cost_center_id'];
 
-                            $departure_date = $request_data['departure_date'];
-                            $return_date = $request_data['return_date'];
-                            if ($return_date == '') {
-                                $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
-                                $request_data['day_plan'] = "1";
-                            } else {
-                                $now = strtotime(date('Y-m-d', strtotime($departure_date)));
-                                $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
-                                $datediff = $your_date - $now;
-                                $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
-                                $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
-                            }
-
-                            if ($request_data['travel_type'] == "1") {
-                                $travel_mode = "Flight";
-                            } else if ($request_data['travel_type'] == "2") {
-                                $travel_mode = "Train";
-                            } else if ($request_data['travel_type'] == "3") {
-                                $travel_mode = "Car";
-                            } else if ($request_data['travel_type'] == "4") {
-                                $travel_mode = "Bus";
-                            } else {
-                                $travel_mode = "";
-                            }
-                            $request_data['travel_mode'] = $travel_mode;
-                            $request_data['url'] = "<a target='_blanck' href='" . base_url("employee_request/view/") . "/" . $request_id . "' style='text-decoration-line: none;'>Click here</a>";
-
-                            $subject = $email_template[0]['subject'];
-                            $mailformat = $email_template[0]['emailformat'];
-                            $subject = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject)))))))))))))))));
-                            $message = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat)))))))))))))))));
-
-                            $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
-                            if (!empty($travel_email)) {
-                                $to_email = '';
-                                $cc = $request_data['employee_email'];
-                                foreach ($travel_email as $key => $value) {
-                                    $to_email[] = $value['email'];
+                                $departure_date = $request_data['departure_date'];
+                                $return_date = $request_data['return_date'];
+                                if ($return_date == '') {
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    $request_data['day_plan'] = "1";
+                                } else {
+                                    $now = strtotime(date('Y-m-d', strtotime($departure_date)));
+                                    $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
+                                    $datediff = $your_date - $now;
+                                    $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
                                 }
-                                $this->sendEmail($to_email, $subject, $message, $cc);
+
+                                if ($request_data['travel_type'] == "1") {
+                                    $travel_mode = "Flight";
+                                } else if ($request_data['travel_type'] == "2") {
+                                    $travel_mode = "Train";
+                                } else if ($request_data['travel_type'] == "3") {
+                                    $travel_mode = "Car";
+                                } else if ($request_data['travel_type'] == "4") {
+                                    $travel_mode = "Bus";
+                                } else {
+                                    $travel_mode = "";
+                                }
+                                $request_data['travel_mode'] = $travel_mode;
+                                $request_data['url'] = "<a target='_blanck' href='" . base_url("travel_desk/booking/") . "/" . $request_id . "' style='text-decoration-line: none;'>Click here</a>";
+
+                                $subject = $email_template[0]['subject'];
+                                $mailformat = $email_template[0]['emailformat'];
+                                $subject = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject)))))))))))))))));
+                                $message = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat)))))))))))))))));
+
+                                $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
+                                if (!empty($travel_email)) {
+                                    $to_email = '';
+                                    $cc = $request_data['employee_email'];
+                                    foreach ($travel_email as $key => $value) {
+                                        $to_email[] = $value['email'];
+                                    }
+                                    $this->sendEmail($to_email, $subject, $message, $cc);
+                                }
                             }
                         }
+                        $this->session->set_flashdata('success', $msg);
+                        redirect(base_url() . employee_request);
+                    } else {
+                        $view_data['error'] = 'Something went wrong, please try again later.';
                     }
-                    $this->session->set_flashdata('success', $msg);
-                    redirect(base_url() . employee_request);
+                }
+            } else {
+                $booking_flag = 0;
+                if ($travel_ticket != '' && $return_travel_ticket != '' && $accommodation != '' && $car_hire != '') {
+                    $booking_flag = 1;
+                }
+
+                $bookbymanager = 0;
+                if ($travel_ticket == '1' || $return_travel_ticket == '1' || $accommodation == '1' || $car_hire == '1') {
+                    $bookbymanager = 1;
+                }
+                $bookbyself = 0;
+                if ($travel_ticket == '2' || $return_travel_ticket == '2' || $accommodation == '2' || $car_hire == '2') {
+                    $bookbyself = 1;
+                }
+
+
+                if ($return_mode != '') {
+                    $data_array = array(
+                        'return_travel_type' => $return_mode
+                    );
+                    $this->common->update_data($data_array, 'travel_request', 'id', $request_id);
+                }
+
+                $travel_booking_id = $this->input->post('id');
+                if ($travel_ticket == '' && $return_travel_ticket == '' && $accommodation == '' && $car_hire == '') {
+                    $this->session->set_flashdata('error', 'Please select accommodation.');
+                    $view_data['error'] = 'Please select accommodation.';
+                    redirect('employee_request/accommodation/' . $request_id, 'refresh');
                 } else {
-                    $view_data['error'] = 'Something went wrong, please try again later.';
+                    $post_data = array(
+                        'request_id' => $request_id,
+                        'travel_ticket' => $travel_ticket,
+                        'return_travel_ticket' => $return_travel_ticket,
+                        'accommodation' => $accommodation,
+                        'car_hire' => $car_hire,
+                        'bookbymanager' => $bookbymanager,
+                        'bookbyself' => $bookbyself,
+                    );
+                    $data = $this->travel_booking->update_travel_booking($post_data, $travel_booking_id);
+                    if ($data) {
+//                    if ($booking_flag == '1') {
+                        $req_data = array(
+                            'request_status' => "3",
+                        );
+                        $data1 = $this->travel_booking->update_travel_request($req_data, $request_id);
+//                    }
+                        $msg = (!empty($travel_booking_id)) ? ' Accommodation request sent to travel desk' : 'Accommodation request sent to travel desk';
+
+                        if ($travel_ticket == '1' || $return_travel_ticket == '1' || $accommodation == '1' || $car_hire == '1') {
+                            $email_template = $this->common->select_data_by_id('email_format', 'mail_id', '5');
+                            if (!empty($email_template)) {
+                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                $request_data['amount'] = $request_data['hotel_allowance'] + $request_data['da_allowance'] + $request_data['convince_allowance'];
+                                $from_city_id = $request['from_city_id'];
+                                $cost_center_list = $this->travel_request->get_cost_center_by_city_id($from_city_id);
+                                $cost_center_id = $cost_center_list['cost_center_id'];
+
+                                $departure_date = $request_data['departure_date'];
+                                $return_date = $request_data['return_date'];
+                                if ($return_date == '') {
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    $request_data['day_plan'] = "1";
+                                } else {
+                                    $now = strtotime(date('Y-m-d', strtotime($departure_date)));
+                                    $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
+                                    $datediff = $your_date - $now;
+                                    $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
+                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                                }
+
+                                if ($request_data['travel_type'] == "1") {
+                                    $travel_mode = "Flight";
+                                } else if ($request_data['travel_type'] == "2") {
+                                    $travel_mode = "Train";
+                                } else if ($request_data['travel_type'] == "3") {
+                                    $travel_mode = "Car";
+                                } else if ($request_data['travel_type'] == "4") {
+                                    $travel_mode = "Bus";
+                                } else {
+                                    $travel_mode = "";
+                                }
+                                $request_data['travel_mode'] = $travel_mode;
+                                $request_data['url'] = "<a target='_blanck' href='" . base_url("travel_desk/booking/") . "/" . $request_id . "' style='text-decoration-line: none;'>Click here</a>";
+
+                                $subject = $email_template[0]['subject'];
+                                $mailformat = $email_template[0]['emailformat'];
+                                $subject = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject)))))))))))))))));
+                                $message = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat)))))))))))))))));
+
+                                $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
+                                if (!empty($travel_email)) {
+                                    $to_email = '';
+                                    $cc = $request_data['employee_email'];
+                                    foreach ($travel_email as $key => $value) {
+                                        $to_email[] = $value['email'];
+                                    }
+                                    $this->sendEmail($to_email, $subject, $message, $cc);
+                                }
+                            }
+                        }
+                        $this->session->set_flashdata('success', $msg);
+                        redirect(base_url() . employee_request);
+                    } else {
+                        $view_data['error'] = 'Something went wrong, please try again later.';
+                    }
                 }
             }
         }
@@ -992,33 +1110,47 @@ class Employee_request extends Admin_Controller {
 
     function download_attchment($file_name = '') {
         if ($file_name != '') {
-            $file_path = $this->config->item('upload_booking_attch_path') . '/' . $file_name;
-            if (file_exists($file_path)) {
-                header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename=' . basename($file_path));
-                header('Content-Transfer-Encoding: binary');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                header('Content-Length: ' . filesize($file_path));
-                ob_clean();
-                flush();
-                readfile($file_path);
-            }
+            $file_path = base_url() . $this->config->item('upload_booking_attch_path') . '/' . $file_name;
+            redirect($file_path);
+//            header('Content-disposition: inline');
+//            header('Content-type: application/msword'); // not sure if this is the correct MIME type
+//            readfile('MyWordDocument.doc');
+//            if (file_exists($file_path)) {
+//                header('Content-Description: File Transfer');
+//                header('Content-Type: application/octet-stream');
+//                header('Content-Disposition: attachment; filename=' . basename($file_path));
+//                header('Content-Transfer-Encoding: binary');
+//                header('Expires: 0');
+//                header('Cache-Control: must-revalidate');
+//                header('Pragma: public');
+//                header('Content-Length: ' . filesize($file_path));
+//                ob_clean();
+//                flush();
+//                readfile($file_path);
+//            }
         }
     }
 
     function claim($request_id) {
+        $flag = 0;
         $total_travel_claim = 0;
         $total_unpaid_claim = 0;
         $employee_id = $this->session->userdata('employee_id');
         $request = $this->expense->get_claim_request_by_id($request_id, $employee_id);
         if (empty($request)) {
-            $this->session->set_flashdata('error', "Something went wrong!");
-            redirect(base_url() . dashboard);
+            $request1 = $this->travel_request->get_emp_request_by_ea_id($request_id, $employee_id);
+            if (empty($request1)) {
+                $this->session->set_flashdata('error', 'Something went wrong');
+                redirect(base_url() . 'employee_request/index');
+            } else {
+                $flag++;
+
+                $employee_id = $request1['employee_id'];
+                $request = $this->expense->get_claim_request_by_id($request_id, $employee_id);
+            }
         }
-        $view_request = array('request' => $request);
+
+		$view_request = array('request' => $request);
         if ($request['project_id'] != '') {
             $project_id = $request['project_id'];
             $this->load->model("projects_model");
@@ -1034,16 +1166,13 @@ class Employee_request extends Admin_Controller {
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
             $total_travel_claim = $total_travel_claim + $other_manager_expense_total;
-			$view_request['DA_50'] = $other_manager_expense['DA_50'];
         }
-
 
         $this->load->model('employee_model');
         $employee = $this->employee_model->get_employee_id($employee_id);
         $view_request['employee'] = $employee;
 
         $expense_details = $this->expense->get_expense_pending($request_id);
-
 
         if (!empty($expense_details)) {
             $this->load->library('encryption');
@@ -1057,16 +1186,9 @@ class Employee_request extends Admin_Controller {
             } else {
                 if ($expense_details['expense_status'] == "Clarification") {
                     $expense_id = $expense_details['id'];
-                    $other_expense = $this->expense->get_other_expense($request_id);
-                    $view_request['other_expense'] = $other_expense;
+
                     $other_trip_expense = $this->expense->get_other_trip_expense($request_id);
                     $view_request['other_trip_expense'] = $other_trip_expense;
-                    $other_loading_booking = $this->expense->get_other_loading_booking($request_id);
-                    $view_request['other_loading_booking'] = $other_loading_booking;
-                    $other_con_booking = $this->expense->get_other_con_booking($request_id);
-                    $view_request['other_con_booking'] = $other_con_booking;
-                    
-                    $view_request['other_expencesData'] = $this->travel_request->get_all_other_expences_data('mast_other_expense');
                 } else {
                     $expense_id = '';
                 }
@@ -1075,6 +1197,18 @@ class Employee_request extends Admin_Controller {
             $expense_id = '';
         }
         $view_request['expense_details'] = $expense_details;
+
+        $other_loading_booking = $this->expense->get_other_loading_booking($request_id);
+        $view_request['other_loading_booking'] = $other_loading_booking;
+
+        $other_expense = $this->expense->get_other_expense($request_id);
+		//echo '<pre>'; print_r($other_expense); exit;
+		//po($other_expense);
+        $view_request['other_expense'] = $other_expense;
+
+        $other_con_booking = $this->expense->get_other_con_booking($request_id);
+        $view_request['other_con_booking'] = $other_con_booking;
+        $view_request['other_expencesData'] = $this->travel_request->get_all_other_expences_data('mast_other_expense');
 
         if ($request['trip_type'] != "1") {
             $first_date = new DateTime($request['departure_date']);
@@ -1098,11 +1232,6 @@ class Employee_request extends Admin_Controller {
         $view_request['day'] = $day;
         $view_request['hours'] = $hours;
 
-
-//        if ($day == '0') {
-//            $day = $view_request['day'] = '1';
-//        }
-
         $da_total = $request['DA_allowance'] * $day;
 
         if ($hours != '0') {
@@ -1116,8 +1245,6 @@ class Employee_request extends Admin_Controller {
             }
         }
 
-//        echo $da_total;
-//        die();
         $total_travel_claim = $total_travel_claim + $da_total;
         $total_unpaid_claim = $total_unpaid_claim + $da_total;
 
@@ -1125,151 +1252,144 @@ class Employee_request extends Admin_Controller {
         $hotel_details = array();
         $car_details = array();
 
+
         if ($request['request_status'] >= '4') {
+
             if ($request['trip_ticket'] == '1') {
                 if ($request['travel_type'] == '1') {
                     $flight_booking = $this->travel_desk->get_flight_ticket_booking($request_id);
                     $view_request['flight_booking'] = $flight_booking;
-
-                    if ($request['trip_type'] != "1") {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
-                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
-                        $data_array['location_from'] = $request['to_city_name'];
-                        $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[1]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[1]['cost'];
-                        $data_array['attachment'] = $flight_booking[1]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-                        if ($request['travel_ticket'] == "2") {
-                            $total_unpaid_claim = $total_unpaid_claim + $flight_booking[0]['cost'];
-                            $total_unpaid_claim = $total_unpaid_claim + $flight_booking[1]['cost'];
-                        }
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
-                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-                        if ($request['travel_ticket'] == "2") {
-                            $total_unpaid_claim = $total_unpaid_claim + $flight_booking[0]['cost'];
-                        }
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '1';
+                    $data_array['type'] = '1';
+                    $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
+                    $data_array['cost'] = $flight_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
+                    $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
+                    $ticket_details[] = $data_array;
+                    if ($request['travel_ticket'] == "2") {
+                        $total_unpaid_claim = $total_unpaid_claim + $flight_booking[0]['cost'];
                     }
                 }
+
                 if ($request['travel_type'] == '2') {
                     $train_booking = $this->travel_desk->get_train_ticket_booking($request_id);
                     $view_request['train_booking'] = $train_booking;
-
-                    if ($request['trip_type'] != "1") {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
-                        $data_array['cost'] = $train_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
-                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
-                        $data_array['location_from'] = $request['to_city_name'];
-                        $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[1]['arrange_by'];
-                        $data_array['cost'] = $train_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[1]['cost'];
-                        $data_array['attachment'] = $train_booking[1]['train_attachment'];
-                        $ticket_details[] = $data_array;
-                        if ($request['travel_ticket'] == "2") {
-                            $total_unpaid_claim = $total_unpaid_claim + $train_booking[0]['cost'];
-                            $total_unpaid_claim = $total_unpaid_claim + $train_booking[1]['cost'];
-                        }
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
-                        $data_array['cost'] = $train_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
-                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
-                        $ticket_details[] = $data_array;
-                        if ($request['travel_ticket'] == "2") {
-                            $total_unpaid_claim = $total_unpaid_claim + $train_booking[0]['cost'];
-                        }
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '2';
+                    $data_array['type'] = '2';
+                    $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
+                    $data_array['cost'] = $train_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
+                    $data_array['attachment'] = $train_booking[0]['train_attachment'];
+                    $ticket_details[] = $data_array;
+                    if ($request['travel_ticket'] == "2") {
+                        $total_unpaid_claim = $total_unpaid_claim + $train_booking[0]['cost'];
                     }
                 }
+
                 if ($request['travel_type'] == '3') {
                     $car_booking = $this->travel_desk->get_car_ticket_booking($request_id);
                     $view_request['car_booking'] = $car_booking;
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '3';
+                    $data_array['type'] = '3';
+                    $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $car_booking[0]['arrange_by'];
+                    $data_array['cost'] = $car_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $car_booking[0]['cost'];
+                    $data_array['attachment'] = $car_booking[0]['car_attachment'];
+                    $ticket_details[] = $data_array;
+                    if ($request['travel_ticket'] == "2") {
+                        $total_unpaid_claim = $total_unpaid_claim + $car_booking[0]['cost'];
+                    }
+                }
 
+                if ($request['travel_type'] == '4') {
+                    $bus_booking = $this->travel_desk->get_bus_ticket_booking($request_id);
+                    $view_request['bus_booking'] = $bus_booking;
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '4';
+                    $data_array['type'] = '4';
+                    $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $bus_booking[0]['arrange_by'];
+                    $data_array['cost'] = $bus_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $bus_booking[0]['cost'];
+                    $data_array['attachment'] = $bus_booking[0]['bus_attachment'];
+                    $ticket_details[] = $data_array;
+                    if ($request['travel_ticket'] == "2") {
+                        $total_unpaid_claim = $total_unpaid_claim + $bus_booking[0]['cost'];
+                    }
+                }
+            }
+
+            if ($request['trip_ticket_return'] == '1') {
+                if ($request['return_travel_type'] == '1') {
+                    $flight_booking = $this->travel_desk->get_flight_ticket_booking($request_id);
+                    $view_request['flight_booking'] = $flight_booking;
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '3';
-                        $data_array['type'] = '3';
-                        $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $car_booking[0]['arrange_by'];
-                        $data_array['cost'] = $car_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $car_booking[0]['cost'];
-                        $data_array['attachment'] = $car_booking[0]['car_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '3';
-                        $data_array['type'] = '3';
-                        $data_array['trip_mode'] = $car_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $car_booking[1]['arrange_by'];
-                        $data_array['cost'] = $car_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $car_booking[1]['cost'];
-                        $data_array['attachment'] = $car_booking[1]['car_attachment'];
+                        $data_array['travel_type'] = '1';
+                        $data_array['type'] = '1';
+                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
+                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
+                        $data_array['cost'] = $flight_booking[0]['cost'];
+                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
+                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
                         $ticket_details[] = $data_array;
                         if ($request['travel_ticket'] == "2") {
-                            $total_unpaid_claim = $total_unpaid_claim + $car_booking[0]['cost'];
-                            $total_unpaid_claim = $total_unpaid_claim + $car_booking[1]['cost'];
+                            $total_unpaid_claim = $total_unpaid_claim + $flight_booking[0]['cost'];
                         }
-                    } else {
+                    }
+                }
+
+                if ($request['return_travel_type'] == '2') {
+                    $train_booking = $this->travel_desk->get_train_ticket_booking($request_id);
+                    $view_request['train_booking'] = $train_booking;
+                    if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
+                        $data_array['location_from'] = $request['to_city_name'];
+                        $data_array['location_to'] = $request['from_city_name'];
+                        $data_array['travel_type'] = '2';
+                        $data_array['type'] = '2';
+                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
+                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
+                        $data_array['cost'] = $train_booking[0]['cost'];
+                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
+                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
+                        $ticket_details[] = $data_array;
+                        if ($request['travel_ticket'] == "2") {
+                            $total_unpaid_claim = $total_unpaid_claim + $train_booking[0]['cost'];
+                        }
+                    }
+                }
+
+                if ($request['return_travel_type'] == '3') {
+                    $car_booking = $this->travel_desk->get_car_ticket_booking($request_id);
+                    $view_request['car_booking'] = $car_booking;
+                    if ($request['trip_type'] != "1") {
+                        $data_array = array();
+                        $data_array['date'] = $request['departure_date'];
+                        $data_array['location_from'] = $request['to_city_name'];
+                        $data_array['location_to'] = $request['from_city_name'];
                         $data_array['travel_type'] = '3';
                         $data_array['type'] = '3';
                         $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
@@ -1283,45 +1403,15 @@ class Employee_request extends Admin_Controller {
                         }
                     }
                 }
-                if ($request['travel_type'] == '4') {
+
+                if ($request['return_travel_type'] == '4') {
                     $bus_booking = $this->travel_desk->get_bus_ticket_booking($request_id);
                     $view_request['bus_booking'] = $bus_booking;
-
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '4';
-                        $data_array['type'] = '4';
-                        $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $bus_booking[0]['arrange_by'];
-                        $data_array['cost'] = $bus_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $bus_booking[0]['cost'];
-                        $data_array['attachment'] = $bus_booking[0]['bus_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '4';
-                        $data_array['type'] = '4';
-                        $data_array['trip_mode'] = $bus_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $bus_booking[1]['arrange_by'];
-                        $data_array['cost'] = $bus_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $bus_booking[1]['cost'];
-                        $data_array['attachment'] = $bus_booking[1]['bus_attachment'];
-                        $ticket_details[] = $data_array;
-                        if ($request['travel_ticket'] == "2") {
-                            $total_unpaid_claim = $total_unpaid_claim + $bus_booking[0]['cost'];
-                            $total_unpaid_claim = $total_unpaid_claim + $bus_booking[1]['cost'];
-                        }
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
                         $data_array['travel_type'] = '4';
                         $data_array['type'] = '4';
                         $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
@@ -1339,7 +1429,8 @@ class Employee_request extends Admin_Controller {
 
             if ($request['hotel_booking'] == '1') {
                 $hotel_booking = $this->travel_request->get_hotel_booking($request_id);
-                $view_request['hotel_booking'] = $hotel_booking;
+                //echo '<pre>'; print_r($hotel_booking['hotel_provider_name']); exit;
+				$view_request['hotel_booking'] = $hotel_booking;
                 $data_array = array();
                 $data_array['date_from'] = $hotel_booking['check_in_date'];
                 $data_array['date_to'] = $hotel_booking['check_out_date'];
@@ -1350,6 +1441,7 @@ class Employee_request extends Admin_Controller {
                 $data_array['other_expense_1'] = $hotel_booking['other_expense_1'];
                 $data_array['cost'] = $hotel_booking['cost'];
                 $data_array['arrange_by'] = $hotel_booking['arrange_by'];
+				$data_array['hotel_provider_name'] = $hotel_booking['hotel_provider_name'];
                 $data_array['type'] = '6';
 
                 $data_array['attachment'] = $hotel_booking['hotel_attchment'];
@@ -1419,76 +1511,106 @@ class Employee_request extends Admin_Controller {
         } else {
             $view_request['sel_traverl_class'] = "";
         }
-        $this->load->model('travel_policy_model');
-        $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
+
+//        $this->load->model('travel_policy_model');
+//        $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
 
         $convince_allowance = '';
         $hotel_allowance = '';
         $DA_allowance = '';
-        foreach ($policy_data as $key => $value) {
-            if ($value['service_type'] == "5") {
-                if ($value['actual'] == "0") {
-                    $hotel_allowance = $value['amount'];
-                } else {
-                    $hotel_allowance = "Actual";
-                }
-            } else if ($value['service_type'] == "6") {
-                if ($value['actual'] == "0") {
-                    $DA_allowance = $value['amount'];
-                } else {
-                    $DA_allowance = "Actual";
-                }
-            } else if ($value['service_type'] == "7") {
-                if ($value['actual'] == "0") {
-                    $convince_allowance = $value['amount'];
-                } else {
-                    $convince_allowance = "Actual";
-                }
-            }
-        }
-        $view_request['DA_allowance'] = $DA_allowance;
-        $view_request['convince_allowance'] = $convince_allowance;
-        $view_request['hotel_allowance'] = $hotel_allowance;
+        $da_allow = '1';
+        $da_amount = '0';
+        $con_allow = '1';
+        $con_amount = '0';
+//        foreach ($policy_data as $key => $value) {
+//            if ($value['service_type'] == "5") {
+//                if ($value['actual'] == "0") {
+//                    $hotel_allowance = $value['amount'];
+//                } else {
+//                    $hotel_allowance = "Actual";
+//                }
+//            } else if ($value['service_type'] == "6") {
+//                $da_allow = $value['actual'];
+//                $da_amount = $value['amount'];
+//                if ($value['actual'] == "0") {
+//                    $DA_allowance = $value['amount'];
+//                } else {
+//                    $DA_allowance = "Actual";
+//                }
+//            } else if ($value['service_type'] == "7") {
+//                $con_allow = $value['actual'];
+//                $con_amount = $value['amount'];
+//                if ($value['actual'] == "0") {
+//                    $convince_allowance = $value['amount'];
+//                } else {
+//                    $convince_allowance = "Actual";
+//                }
+//            }
+//        }
+//        $view_request['da_allow'] = $da_allow;
+//        $view_request['da_amount'] = $da_amount;
+//        $view_request['con_allow'] = $con_allow;
+//        $view_request['con_amount'] = $con_amount;
+
+        $view_request['da_allow'] = $request['DA_allowance_actual'];
+        $view_request['da_amount'] = $request['DA_allowance'];
+        $view_request['con_allow'] = $request['convince_allowance_actual'];
+        $view_request['con_amount'] = $request['convince_allowance'];
 
 
+//        po($request);
+//        $view_request['DA_allowance'] = $DA_allowance;
+//        $view_request['convince_allowance'] = $convince_allowance;
+//        $view_request['hotel_allowance'] = $hotel_allowance;
+        $view_request['DA_allowance'] = $request['DA_allowance'];
+        $view_request['convince_allowance'] = $request['convince_allowance'];
+        $view_request['hotel_allowance'] = $request['hotel_allowance'];
 
-//<!------------------------------------------   POST DATA ------------------------------------------!>//
+//        die();
+//<!------------------------------------------   POST DATA ------------------------------------------!>//                
         if ($this->input->post()) {
-            
-            $DA_allowance;
-            $convince_allowance;
-            $total_eligibility = 0;
-            $expense_da = $this->input->post('expense_da');
-            $expense_con = $this->input->post('expense_con');
-            $total_policy = $expense_da + $expense_con;
-            $flag = 0;
-            $policy_meet = 0;
 
-            if ($DA_allowance != 'Actual') {
-                $total_eligibility = $total_eligibility + $DA_allowance;
-            }
-            if ($convince_allowance != 'Actual') {
-                $total_eligibility = $total_eligibility + $convince_allowance;
-            }
+            $cal_flag = $this->input->post('cal_flag');
+            if ($cal_flag == "1") {
+                $DA_allowance;
+                $convince_allowance;
+                $total_eligibility = 0;
+                $expense_ticket = $this->input->post('expense_ticket');
+                $expense_hotel = $this->input->post('expense_hotel');
+                $expense_da = $this->input->post('expense_da');
+                $expense_con = $this->input->post('expense_con');
+                $expense_oth = $this->input->post('expense_oth');
+                $total_policy = $expense_da + $expense_con;
+                $flag = 0;
+                $policy_meet = 0;
 
-            if ($total_eligibility != 0) {
-                if ($total_eligibility < $total_policy) {
-                    $policy_meet = 1;
+                if ($DA_allowance != 'Actual') {
+                    $total_eligibility = $total_eligibility + $DA_allowance;
                 }
-            }
+                if ($convince_allowance != 'Actual') {
+                    $total_eligibility = $total_eligibility + $convince_allowance;
+                }
 
-            /* ----- 04-09-2017 start ------ */
-            $trip_from = $this->input->post('trip_from');
-            $reference_id = $this->input->post('reference_id');
-            $i = 1;
-            $x = 1;
-            if (!empty($reference_id)) {
-                while ($x <= count($reference_id)) {
-                    $file_upload_name = "trip_attachment_" . $i;
+                if ($total_eligibility != 0) {
+                    if ($total_eligibility < $total_policy) {
+                        $policy_meet = 1;
+                    }
+                }
+
+                /* ----- Ali Code start ------ */
+//                po($_FILES);
+                $other_reference_id = $this->input->post('other_reference_id');
+                $other_row = $this->input->post('other_row');
+//                $i = 1;
+                $x = 1;
+                for ($k = 1; $k < $other_row; $k++) {
+//                if (!empty($other_reference_id)) {
+//                    while ($x <= count($other_reference_id)) {
+                    $file_upload_name = "other_attachment_" . $k;
                     $j = $x;
                     $j--;
-                    $ref_id = $reference_id[$j];
-
+                    echo $ref_id = $other_reference_id[$j];
+                    echo "<br>";
                     if (isset($_FILES[$file_upload_name])) {
 
                         if (isset($_FILES[$file_upload_name]['name']) && $_FILES[$file_upload_name]['name'] != null) {
@@ -1538,570 +1660,680 @@ class Employee_request extends Admin_Controller {
                         }
                         $x++;
                     }
-                    $i++;
+//                        $i++;
+//                    }
                 }
-            }
+//                po();
+                $trip_from = $this->input->post('trip_from');
+                $reference_id = $this->input->post('reference_id');
+                $i = 1;
+                $x = 1;
+                if (!empty($reference_id)) {
+                    while ($x <= count($reference_id)) {
+                        $file_upload_name = "trip_attachment_" . $i;
+                        $j = $x;
+                        $j--;
+                        $ref_id = $reference_id[$j];
 
-            $loading_total = $this->input->post('loading_total');
-            $load_reference_id = $this->input->post('load_reference_id');
-            $i_load = 1;
-            $x_load = 1;
-            if (!empty($load_reference_id)) {
-                while ($x_load <= count($load_reference_id)) {
-                    $file_upload_name = "load_attachment_" . $i_load;
-                    $j_load = $x_load;
-                    $j_load--;
-                    $ref_id = $load_reference_id[$j_load];
+                        if (isset($_FILES[$file_upload_name])) {
 
-                    if (isset($_FILES[$file_upload_name])) {
+                            if (isset($_FILES[$file_upload_name]['name']) && $_FILES[$file_upload_name]['name'] != null) {
+                                $other_attachment = $_FILES[$file_upload_name]['name'];
+                                foreach ($other_attachment as $key => $value) {
+                                    if (!empty($value)) {
+                                        $_FILES['trip_attach']['name'] = $value;
+                                        $_FILES['trip_attach']['type'] = $_FILES[$file_upload_name]['type'][$key];
+                                        $_FILES['trip_attach']['tmp_name'] = $_FILES[$file_upload_name]['tmp_name'][$key];
+                                        $_FILES['trip_attach']['error'] = $_FILES[$file_upload_name]['error'][$key];
+                                        $_FILES['trip_attach']['size'] = $_FILES[$file_upload_name]['size'][$key];
 
-                        if (isset($_FILES[$file_upload_name]['name']) && $_FILES[$file_upload_name]['name'] != null) {
-                            $other_attachment = $_FILES[$file_upload_name]['name'];
-                            foreach ($other_attachment as $key => $value) {
-                                if (!empty($value)) {
-                                    $_FILES['load_attach']['name'] = $value;
-                                    $_FILES['load_attach']['type'] = $_FILES[$file_upload_name]['type'][$key];
-                                    $_FILES['load_attach']['tmp_name'] = $_FILES[$file_upload_name]['tmp_name'][$key];
-                                    $_FILES['load_attach']['error'] = $_FILES[$file_upload_name]['error'][$key];
-                                    $_FILES['load_attach']['size'] = $_FILES[$file_upload_name]['size'][$key];
-
-                                    $file_name = $_FILES['load_attach']['name'];
-                                    $enc_filename = $this->GenerateRandomFilename($file_name);
-                                    $config['upload_path'] = $this->config->item('upload_booking_attch_path');
-                                    $config['allowed_types'] = '*';
-                                    $config['file_name'] = $enc_filename;
-                                    $config['max_size'] = 2048;
-                                    $this->upload->initialize($config);
-                                    if ($this->upload->do_upload('load_attach')) {
-                                        $upload_data = $this->upload->data();
-                                        $data_array = array(
-                                            'request_id' => $request_id,
-                                            'reference_id' => $ref_id,
-                                            'file_name' => $upload_data['file_name'],
-                                        );
-                                        if (!$this->common->insert_data($data_array, 'claim_expense_attachment')) {
-                                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                                            redirect(base_url() . employee_request);
-                                        }
-                                    } else {
-                                        $this->db->where('request_id', $request_id);
-                                        $this->db->delete('claim_expense_attachment');
-
-                                        if ($this->db->affected_rows() > 0) {
-                                            $error = array('error' => $this->upload->display_errors());
-                                            $this->session->set_flashdata('error', $error['error']);
-                                            redirect('employee_request/index', 'refresh');
+                                        $file_name = $_FILES['trip_attach']['name'];
+                                        $enc_filename = $this->GenerateRandomFilename($file_name);
+                                        $config['upload_path'] = $this->config->item('upload_booking_attch_path');
+                                        $config['allowed_types'] = '*';
+                                        $config['file_name'] = $enc_filename;
+                                        $config['max_size'] = 2048;
+                                        $this->upload->initialize($config);
+                                        if ($this->upload->do_upload('trip_attach')) {
+                                            $upload_data = $this->upload->data();
+                                            $data_array = array(
+                                                'request_id' => $request_id,
+                                                'reference_id' => $ref_id,
+                                                'file_name' => $upload_data['file_name'],
+                                            );
+                                            if (!$this->common->insert_data($data_array, 'claim_expense_attachment')) {
+                                                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                                redirect(base_url() . employee_request);
+                                            }
                                         } else {
-                                            $error = array('error' => $this->upload->display_errors());
-                                            $this->session->set_flashdata('error', $error['error']);
-                                            redirect('employee_request/index', 'refresh');
+                                            $this->db->where('request_id', $request_id);
+                                            $this->db->delete('claim_expense_attachment');
+
+                                            if ($this->db->affected_rows() > 0) {
+                                                $error = array('error' => $this->upload->display_errors());
+                                                $this->session->set_flashdata('error', $error['error']);
+                                                redirect('employee_request/index', 'refresh');
+                                            } else {
+                                                $error = array('error' => $this->upload->display_errors());
+                                                $this->session->set_flashdata('error', $error['error']);
+                                                redirect('employee_request/index', 'refresh');
+                                            }
                                         }
                                     }
                                 }
                             }
+                            $x++;
                         }
-                        $x_load++;
+                        $i++;
                     }
-                    $i_load++;
                 }
-            }
-            
-            $con_from = $this->input->post('con_from');
-            $con_reference_id = $this->input->post('con_reference_id');
-            $i_con = 1;
-            $x_con = 1;
-            if (!empty($con_reference_id)) {
-                while ($x_con <= count($con_reference_id)) {
-                    $file_upload_name = "con_attachment_" . $i_con;
-                    $j_con = $x_con;
-                    $j_con--;
-                    $ref_id = $con_reference_id[$j_con];
 
-                    if (isset($_FILES[$file_upload_name])) {
+                $loading_total = $this->input->post('loading_total');
+                $load_reference_id = $this->input->post('load_reference_id');
+                $i_load = 1;
+                $x_load = 1;
+                if (!empty($load_reference_id)) {
+                    while ($x_load <= count($load_reference_id)) {
+                        $file_upload_name = "load_attachment_" . $i_load;
+                        $j_load = $x_load;
+                        $j_load--;
+                        $ref_id = $load_reference_id[$j_load];
 
-                        if (isset($_FILES[$file_upload_name]['name']) && $_FILES[$file_upload_name]['name'] != null) {
-                            $other_attachment = $_FILES[$file_upload_name]['name'];
-                            foreach ($other_attachment as $key => $value) {
-                                if (!empty($value)) {
-                                    $_FILES['con_attach']['name'] = $value;
-                                    $_FILES['con_attach']['type'] = $_FILES[$file_upload_name]['type'][$key];
-                                    $_FILES['con_attach']['tmp_name'] = $_FILES[$file_upload_name]['tmp_name'][$key];
-                                    $_FILES['con_attach']['error'] = $_FILES[$file_upload_name]['error'][$key];
-                                    $_FILES['con_attach']['size'] = $_FILES[$file_upload_name]['size'][$key];
+                        if (isset($_FILES[$file_upload_name])) {
 
-                                    $file_name = $_FILES['con_attach']['name'];
-                                    $enc_filename = $this->GenerateRandomFilename($file_name);
-                                    $config['upload_path'] = $this->config->item('upload_booking_attch_path');
-                                    $config['allowed_types'] = '*';
-                                    $config['file_name'] = $enc_filename;
-                                    $config['max_size'] = 2048;
-                                    $this->upload->initialize($config);
-                                    if ($this->upload->do_upload('con_attach')) {
-                                        $upload_data = $this->upload->data();
-                                        $data_array = array(
-                                            'request_id' => $request_id,
-                                            'reference_id' => $ref_id,
-                                            'file_name' => $upload_data['file_name'],
-                                        );
-                                        if (!$this->common->insert_data($data_array, 'claim_expense_attachment')) {
-                                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                                            redirect(base_url() . employee_request);
-                                        }
-                                    } else {
-                                        $this->db->where('request_id', $request_id);
-                                        $this->db->delete('claim_expense_attachment');
+                            if (isset($_FILES[$file_upload_name]['name']) && $_FILES[$file_upload_name]['name'] != null) {
+                                $other_attachment = $_FILES[$file_upload_name]['name'];
+                                foreach ($other_attachment as $key => $value) {
+                                    if (!empty($value)) {
+                                        $_FILES['load_attach']['name'] = $value;
+                                        $_FILES['load_attach']['type'] = $_FILES[$file_upload_name]['type'][$key];
+                                        $_FILES['load_attach']['tmp_name'] = $_FILES[$file_upload_name]['tmp_name'][$key];
+                                        $_FILES['load_attach']['error'] = $_FILES[$file_upload_name]['error'][$key];
+                                        $_FILES['load_attach']['size'] = $_FILES[$file_upload_name]['size'][$key];
 
-                                        if ($this->db->affected_rows() > 0) {
-                                            $error = array('error' => $this->upload->display_errors());
-                                            $this->session->set_flashdata('error', $error['error']);
-                                            redirect('employee_request/index', 'refresh');
+                                        $file_name = $_FILES['load_attach']['name'];
+                                        $enc_filename = $this->GenerateRandomFilename($file_name);
+                                        $config['upload_path'] = $this->config->item('upload_booking_attch_path');
+                                        $config['allowed_types'] = '*';
+                                        $config['file_name'] = $enc_filename;
+                                        $config['max_size'] = 2048;
+                                        $this->upload->initialize($config);
+                                        if ($this->upload->do_upload('load_attach')) {
+                                            $upload_data = $this->upload->data();
+                                            $data_array = array(
+                                                'request_id' => $request_id,
+                                                'reference_id' => $ref_id,
+                                                'file_name' => $upload_data['file_name'],
+                                            );
+                                            if (!$this->common->insert_data($data_array, 'claim_expense_attachment')) {
+                                                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                                redirect(base_url() . employee_request);
+                                            }
                                         } else {
-                                            $error = array('error' => $this->upload->display_errors());
-                                            $this->session->set_flashdata('error', $error['error']);
-                                            redirect('employee_request/index', 'refresh');
+                                            $this->db->where('request_id', $request_id);
+                                            $this->db->delete('claim_expense_attachment');
+
+                                            if ($this->db->affected_rows() > 0) {
+                                                $error = array('error' => $this->upload->display_errors());
+                                                $this->session->set_flashdata('error', $error['error']);
+                                                redirect('employee_request/index', 'refresh');
+                                            } else {
+                                                $error = array('error' => $this->upload->display_errors());
+                                                $this->session->set_flashdata('error', $error['error']);
+                                                redirect('employee_request/index', 'refresh');
+                                            }
                                         }
                                     }
                                 }
                             }
+                            $x_load++;
                         }
-                        $x_con++;
+                        $i_load++;
                     }
-                    $i_con++;
                 }
-            }
-            /* ----- 04-09-2017 stop ------ */
-//            po();
-            if (isset($_FILES['other_attachment']['name']) && $_FILES['other_attachment']['name'] != null) {
-                $other_attachment = $_FILES['other_attachment']['name'];
-                foreach ($other_attachment as $key => $value) {
-                    if (!empty($value)) {
-                        $_FILES['other_attach']['name'] = $value;
-                        $_FILES['other_attach']['type'] = $_FILES['other_attachment']['type'][$key];
-                        $_FILES['other_attach']['tmp_name'] = $_FILES['other_attachment']['tmp_name'][$key];
-                        $_FILES['other_attach']['error'] = $_FILES['other_attachment']['error'][$key];
-                        $_FILES['other_attach']['size'] = $_FILES['other_attachment']['size'][$key];
-                        $file_name = $_FILES['other_attach']['name'];
-                        $enc_filename = $this->GenerateRandomFilename($file_name);
-                        $config['upload_path'] = $this->config->item('upload_booking_attch_path');
-                        $config['allowed_types'] = '*';
-                        $config['file_name'] = $enc_filename;
-                        $config['max_size'] = 2048;
+                $con_from = $this->input->post('con_from');
+                $con_reference_id = $this->input->post('con_reference_id');
+                $i_con = 1;
+                $x_con = 1;
+                if (!empty($con_reference_id)) {
+                    while ($x_con <= count($con_reference_id)) {
+                        $file_upload_name = "con_attachment_" . $i_con;
 
-                        $this->upload->initialize($config);
-                        if ($this->upload->do_upload('other_attach')) {
-                            $upload_data = $this->upload->data();
+                        $j_con = $x_con;
+                        $j_con--;
+                        $ref_id = $con_reference_id[$j_con];
+
+                        if (isset($_FILES[$file_upload_name])) {
+
+                            if (isset($_FILES[$file_upload_name]['name']) && $_FILES[$file_upload_name]['name'] != null) {
+                                $other_attachment = $_FILES[$file_upload_name]['name'];
+                                foreach ($other_attachment as $key => $value) {
+                                    if (!empty($value)) {
+                                        $_FILES['con_attach']['name'] = $value;
+                                        $_FILES['con_attach']['type'] = $_FILES[$file_upload_name]['type'][$key];
+                                        $_FILES['con_attach']['tmp_name'] = $_FILES[$file_upload_name]['tmp_name'][$key];
+                                        $_FILES['con_attach']['error'] = $_FILES[$file_upload_name]['error'][$key];
+                                        $_FILES['con_attach']['size'] = $_FILES[$file_upload_name]['size'][$key];
+
+                                        $file_name = $_FILES['con_attach']['name'];
+                                        $enc_filename = $this->GenerateRandomFilename($file_name);
+                                        $config['upload_path'] = $this->config->item('upload_booking_attch_path');
+                                        $config['allowed_types'] = '*';
+                                        $config['file_name'] = $enc_filename;
+                                        $config['max_size'] = 2048;
+                                        $this->upload->initialize($config);
+                                        if ($this->upload->do_upload('con_attach')) {
+                                            $upload_data = $this->upload->data();
+                                            $data_array = array(
+                                                'request_id' => $request_id,
+                                                'reference_id' => $ref_id,
+                                                'file_name' => $upload_data['file_name'],
+                                            );
+                                            if (!$this->common->insert_data($data_array, 'claim_expense_attachment')) {
+                                                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                                redirect(base_url() . employee_request);
+                                            }
+                                        } else {
+                                            $this->db->where('request_id', $request_id);
+                                            $this->db->delete('claim_expense_attachment');
+
+                                            if ($this->db->affected_rows() > 0) {
+                                                $error = array('error' => $this->upload->display_errors());
+                                                $this->session->set_flashdata('error', $error['error']);
+                                                redirect('employee_request/index', 'refresh');
+                                            } else {
+                                                $error = array('error' => $this->upload->display_errors());
+                                                $this->session->set_flashdata('error', $error['error']);
+                                                redirect('employee_request/index', 'refresh');
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $x_con++;
+                        }
+                        $i_con++;
+                    }
+                }
+                /* ----- 04-09-2017 stop ------ */
+                if (isset($_FILES['other_attachment']['name']) && $_FILES['other_attachment']['name'] != null) {
+                    $other_attachment = $_FILES['other_attachment']['name'];
+                    foreach ($other_attachment as $key => $value) {
+                        if (!empty($value)) {
+                            $_FILES['other_attach']['name'] = $value;
+                            $_FILES['other_attach']['type'] = $_FILES['other_attachment']['type'][$key];
+                            $_FILES['other_attach']['tmp_name'] = $_FILES['other_attachment']['tmp_name'][$key];
+                            $_FILES['other_attach']['error'] = $_FILES['other_attachment']['error'][$key];
+                            $_FILES['other_attach']['size'] = $_FILES['other_attachment']['size'][$key];
+                            $file_name = $_FILES['other_attach']['name'];
+                            $enc_filename = $this->GenerateRandomFilename($file_name);
+                            $config['upload_path'] = $this->config->item('upload_booking_attch_path');
+                            $config['allowed_types'] = '*';
+                            $config['file_name'] = $enc_filename;
+                            $config['max_size'] = 2048;
+
+                            $this->upload->initialize($config);
+                            if ($this->upload->do_upload('other_attach')) {
+                                $upload_data = $this->upload->data();
+                                $data_array = array(
+                                    'request_id' => $request_id,
+                                    'file_name' => $upload_data['file_name'],
+                                );
+                                if (!$this->common->insert_data($data_array, 'expense_attachment')) {
+                                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                    redirect(base_url() . employee_request);
+                                }
+                            } else {
+                                $this->db->where('request_id', $request_id);
+                                $this->db->delete('expense_attachment');
+
+                                if ($this->db->affected_rows() > 0) {
+                                    $error = array('error' => $this->upload->display_errors());
+                                    $this->session->set_flashdata('error', $error['error']);
+                                    redirect('employee_request/index', 'refresh');
+                                } else {
+                                    $error = array('error' => $this->upload->display_errors());
+                                    $this->session->set_flashdata('error', $error['error']);
+                                    redirect('employee_request/index', 'refresh');
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $trip_date = $this->input->post('trip_date');
+                $trip_book_by = $this->input->post('trip_book_by');
+                $trip_arrange_by = $this->input->post('trip_arrange_by');
+
+                $trip_from = $this->input->post('trip_from');
+                $trip_to = $this->input->post('trip_to');
+                $total_trip = $this->input->post('total_trip_no');
+                if ($trip_from != '') {
+                    $this->db->where('request_id', $request_id);
+                    $this->db->delete('other_trip_booking');
+                }
+                foreach ($trip_from as $key => $value) {
+                    if ($trip_from[$key] != '' && $trip_to[$key] != '' && $total_trip != '' && $trip_date[$key] != '' && $trip_book_by != '' && $trip_arrange_by != '') {
+                        $data_array = array(
+                            'request_id' => $request_id,
+                            'reference_id' => $reference_id[$key],
+                            'trip_from' => $trip_from[$key],
+                            'trip_to' => $trip_to[$key],
+                            'total' => $total_trip[$key],
+                            'trip_date' => date(DATEMYSQL, strtotime($trip_date[$key])),
+                            'trip_book_by' => $trip_book_by[$key],
+                            'trip_arrange_by' => $trip_arrange_by[$key],
+                        );
+
+                        if (!$this->common->insert_data($data_array, 'other_trip_booking')) {
+                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                            redirect(base_url() . employee_request);
+                        }
+                    }
+                }
+
+                $con_date = $this->input->post('con_date');
+                $con_from = $this->input->post('con_from');
+                $con_to = $this->input->post('con_to');
+                $con_book_by = $this->input->post('con_book_by');
+                $con_arrange_by = $this->input->post('con_arrange_by');
+                $total_con = $this->input->post('total_con_no');
+                if ($con_from != '') {
+                    $this->db->where('request_id', $request_id);
+                    $this->db->delete('other_con_booking');
+                }
+                foreach ($con_from as $key => $value) {
+                    if ($con_from[$key] != '' && $con_to[$key] != '' && $total_con != '') {
+                        $data_array = array(
+                            'request_id' => $request_id,
+                            'reference_id' => $con_reference_id[$key],
+                            'con_date' => date(DATEMYSQL, strtotime($con_date[$key])),
+                            'con_from' => $con_from[$key],
+                            'con_to' => $con_to[$key],
+                            'con_book_by' => $con_book_by[$key],
+                            'con_arrange_by' => $con_arrange_by[$key],
+                            'total' => $total_con[$key],
+                        );
+
+                        if (!$this->common->insert_data($data_array, 'other_con_booking')) {
+                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                            redirect(base_url() . employee_request);
+                        }
+                    }
+                }
+
+                $loading_departure = $this->input->post('loading_departure');
+                $loading_return = $this->input->post('loading_return');
+                $load_location = $this->input->post('load_location');
+                $load_room_no = $this->input->post('load_room_no');
+				$hotal_name = $this->input->post('hotel_name');
+                $load_bill_no = $this->input->post('load_bill_no');
+                $loading_expense = $this->input->post('loading_expense');
+                $other_expense = $this->input->post('other_expense');
+
+                $load_arrange_by = $this->input->post('load_arrange_by');
+
+                if ($loading_total != '') {
+                    $this->db->where('request_id', $request_id);
+                    $this->db->delete('other_loading_booking');
+                }
+                foreach ($loading_total as $key => $value) {
+                    if ($loading_total[$key] != '' && $loading_expense[$key] != '' && $other_expense != '') {
+                        $data_array = array(
+                            'request_id' => $request_id,
+                            'reference_id' => $load_reference_id[$key],
+                            'loading_departure' => date(DATEMYSQL, strtotime($loading_departure[$key])),
+                            'loading_return' => date(DATEMYSQL, strtotime($loading_return[$key])),
+                            'location' => $load_location[$key],
+                            'hotal_name' => $hotal_name[$key],
+							'room_no' => $load_room_no[$key],
+                            'bill_no' => $load_bill_no[$key],
+                            'loading_expense' => $loading_expense[$key],
+                            'other_expense' => $other_expense[$key],
+                            'loading_total' => $loading_total[$key],
+                            'arrange_by' => $load_arrange_by[$key],
+                        );
+
+                        if (!$this->common->insert_data($data_array, 'other_loading_booking')) {
+                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                            redirect(base_url() . employee_request);
+                        }
+                    }
+                }
+
+                $da_actual = $this->input->post('da_actual');
+                if ($da_actual == "1") {
+                    $da_allowance = $this->input->post('da_allowance');
+                    $data_array = array(
+                        'DA_allowance' => $da_allowance,
+                    );
+                    if (!$this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_0_arrange_by_1')) {
+                    $arrange_by = $this->input->post('ticket_0_arrange_by_1');
+                    $data_array = array(
+                        'arrange_by' => $arrange_by,
+                    );
+                    if ($this->input->post('ticket_cost_1')) {
+                        $data_array['cost'] = $this->input->post('ticket_cost_1');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '0',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array, 'flight_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_1_arrange_by_1')) {
+                    $arrange_by = $this->input->post('ticket_1_arrange_by_1');
+                    $data_array = array(
+                        'arrange_by' => $arrange_by,
+                    );
+                    if ($this->input->post('ticket_cost_2')) {
+                        $data_array['cost'] = $this->input->post('ticket_cost_2');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '1',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array, 'flight_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_0_arrange_by_2')) {
+                    $arrange_by2 = $this->input->post('ticket_0_arrange_by_2');
+                    $data_array2 = array(
+                        'arrange_by' => $arrange_by2,
+                    );
+                    if ($this->input->post('ticket_cost_1')) {
+                        $data_array2['cost'] = $this->input->post('ticket_cost_1');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '0',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array2, 'train_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_1_arrange_by_2')) {
+                    $arrange_by2 = $this->input->post('ticket_1_arrange_by_2');
+                    $data_array2 = array(
+                        'arrange_by' => $arrange_by2,
+                    );
+                    if ($this->input->post('ticket_cost_2')) {
+                        $data_array2['cost'] = $this->input->post('ticket_cost_2');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '1',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array2, 'train_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_0_arrange_by_3')) {
+                    $arrange_by2 = $this->input->post('ticket_0_arrange_by_3');
+                    $data_array2 = array(
+                        'arrange_by' => $arrange_by2,
+                    );
+                    if ($this->input->post('ticket_cost_1')) {
+                        $data_array2['cost'] = $this->input->post('ticket_cost_1');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '0',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array2, 'car_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_1_arrange_by_3')) {
+                    $arrange_by2 = $this->input->post('ticket_1_arrange_by_3');
+                    $data_array2 = array(
+                        'arrange_by' => $arrange_by2,
+                    );
+                    if ($this->input->post('ticket_cost_2')) {
+                        $data_array2['cost'] = $this->input->post('ticket_cost_2');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '1',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array2, 'car_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_0_arrange_by_4')) {
+                    $arrange_by2 = $this->input->post('ticket_0_arrange_by_4');
+                    $data_array2 = array(
+                        'arrange_by' => $arrange_by2,
+                    );
+                    if ($this->input->post('ticket_cost_1')) {
+                        $data_array2['cost'] = $this->input->post('ticket_cost_1');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '0',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array2, 'bus_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_1_arrange_by_4')) {
+                    $arrange_by2 = $this->input->post('ticket_1_arrange_by_4');
+                    $data_array2 = array(
+                        'arrange_by' => $arrange_by2,
+                    );
+                    if ($this->input->post('ticket_cost_2')) {
+                        $data_array2['cost'] = $this->input->post('ticket_cost_2');
+                    }
+                    $condition_array = array(
+                        'request_id' => $request_id,
+                        'trip_mode' => '1',
+                    );
+                    if (!$this->common->update_data_by_conditions($data_array2, 'bus_ticket_booking', $condition_array)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                if ($this->input->post('ticket_arrange_by_5')) {
+                    $arrange_by = $this->input->post('ticket_arrange_by_5');
+                    $data_array = array(
+                        'arrange_by' => $arrange_by,
+                    );
+                    if (!$this->common->update_data($data_array, 'car_booking', 'request_id', $request_id)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+                $data_array = array(
+                    'bill_no_1' => $this->input->post('bill_no_1'),
+                    'cost' => $this->input->post('hotel_cost'),
+                    'loading_expense_1' => $this->input->post('loading_expense_1'),
+                    'other_expense_1' => $this->input->post('other_expense_1'),
+                );
+                if ($this->input->post('date_from_1')) {
+                    $data_array['check_in_date'] = date(DATEMYSQL, strtotime($this->input->post('date_from_1')));
+                }
+                if ($this->input->post('date_to_1')) {
+                    $data_array['check_out_date'] = date(DATEMYSQL, strtotime($this->input->post('date_to_1')));
+                }
+                if ($this->input->post('load_arrange_by_1')) {
+                    $data_array['arrange_by'] = $this->input->post('load_arrange_by_1');
+                }
+                if ($this->input->post('bill_no')) {
+                    $data_array['bill_no'] = $this->input->post('bill_no');
+                }
+                if ($this->input->post('bill_no_1')) {
+                    $data_array['bill_no_1'] = $this->input->post('bill_no_1');
+                }
+
+                if (!$this->common->update_data($data_array, 'hotel_booking', 'request_id', $request_id)) {
+                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                    redirect(base_url() . employee_request);
+                }
+
+                if ($this->input->post('con_total_1')) {
+                    $data_array = array();
+                    $data_array['cost'] = $this->input->post('con_total_1');
+                    $data_array['pick_up_date'] = date(DATEMYSQL, strtotime($this->input->post('con_date_1')));
+                    if (!$this->common->update_data($data_array, 'car_booking', 'request_id', $request_id)) {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
+                    }
+                }
+
+
+
+                $other_row = $this->input->post('other_row');
+
+                $other_date = $this->input->post('other_date');
+                $other_arrange_by = $this->input->post('other_arrange_by');
+
+                $other_expense_id = $this->input->post('other_expense_id');
+                $expense_name = $this->input->post('expense_name');
+                $expense_type = $this->input->post('expense_type');
+                $bill_no = $this->input->post('expense_bill_no');
+				$remarks = $this->input->post('other_expense_remarks');
+                $total_no = $this->input->post('total_no');
+
+//            if ($expense_id != '') {
+//                $this->db->where('request_id', $request_id);
+//                $this->db->delete('other_expense');
+//            }
+//                po($expense_name);
+                $sql = "SELECT id FROM `other_expense` WHERE request_id=" . $request_id;
+                $result = $this->db->query($sql);
+                $other_expense_data = $result->result_array();
+                $oth_expense_data = array();
+                foreach ($other_expense_data as $val) {
+                    $oth_expense_data[$val['id']] = $val['id'];
+                }
+
+                foreach ($expense_name as $key => $value) {
+                    if ($expense_name[$key] != '' && $total_no[$key] != '') {
+                        $sql = "SELECT * FROM `other_expense` WHERE id=" . $other_expense_id[$key];
+                        $result = $this->db->query($sql);
+                        $result = $result->result_array();
+                        if (empty($result)) {
                             $data_array = array(
+                                'employees_id' => $employee_id,
                                 'request_id' => $request_id,
-                                'file_name' => $upload_data['file_name'],
+                                'reference_id' => $other_reference_id[$key],
+                                'date' => date(DATEMYSQL, strtotime($other_date[$key])),
+                                'arrange_by' => $other_arrange_by[$key],
+                                'expense_name' => $expense_name[$key],
+                                'expense_type' => $expense_type[$key],
+                                'bill_no' => $bill_no[$key],
+                                'amount' => $total_no[$key],
+								'remarks' => $remarks[$key],
+                                'status' => "active",
                             );
-                            if (!$this->common->insert_data($data_array, 'expense_attachment')) {
+
+                            if (!$this->common->insert_data($data_array, 'other_expense')) {
                                 $this->session->set_flashdata('error', 'Error occurred. Try Again!');
                                 redirect(base_url() . employee_request);
                             }
                         } else {
-                            $this->db->where('request_id', $request_id);
-                            $this->db->delete('expense_attachment');
-
-                            if ($this->db->affected_rows() > 0) {
-                                $error = array('error' => $this->upload->display_errors());
-                                $this->session->set_flashdata('error', $error['error']);
-                                redirect('employee_request/index', 'refresh');
-                            } else {
-                                $error = array('error' => $this->upload->display_errors());
-                                $this->session->set_flashdata('error', $error['error']);
-                                redirect('employee_request/index', 'refresh');
-                            }
-                        }
-                    }
-                }
-            }
-
-            $trip_date = $this->input->post('trip_date');
-            $trip_book_by = $this->input->post('trip_book_by');
-            $trip_arrange_by = $this->input->post('trip_arrange_by');
-
-            $trip_from = $this->input->post('trip_from');
-            $trip_to = $this->input->post('trip_to');
-            $total_trip = $this->input->post('total_trip_no');
-            if ($trip_from != '') {
-                $this->db->where('request_id', $request_id);
-                $this->db->delete('other_trip_booking');
-            }
-            foreach ($trip_from as $key => $value) {
-                if ($trip_from[$key] != '' && $trip_to[$key] != '' && $total_trip != '' && $trip_date[$key] != '' && $trip_book_by != '' && $trip_arrange_by != '') {
-                    $data_array = array(
-                        'request_id' => $request_id,
-                        'reference_id' => $reference_id[$key],
-                        'trip_from' => $trip_from[$key],
-                        'trip_to' => $trip_to[$key],
-                        'total' => $total_trip[$key],
-                        'trip_date' => date(DATEMYSQL, strtotime($trip_date[$key])),
-                        'trip_book_by' => $trip_book_by[$key],
-                        'trip_arrange_by' => $trip_arrange_by[$key],
-                    );
-
-                    if (!$this->common->insert_data($data_array, 'other_trip_booking')) {
-                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                        redirect(base_url() . employee_request);
-                    }
-                }
-            }
-
-            $con_date = $this->input->post('con_date');
-            $con_from = $this->input->post('con_from');
-            $con_to = $this->input->post('con_to');
-            $con_book_by = $this->input->post('con_book_by');
-            $con_arrange_by = $this->input->post('con_arrange_by');
-            $total_con = $this->input->post('total_con_no');
-            if ($con_from != '') {
-                $this->db->where('request_id', $request_id);
-                $this->db->delete('other_con_booking');
-            }
-            foreach ($con_from as $key => $value) {
-                if ($con_from[$key] != '' && $con_to[$key] != '' && $total_con != '') {
-                    $data_array = array(
-                        'request_id' => $request_id,
-                        'reference_id' => $con_reference_id[$key],
-                        'con_date' => date(DATEMYSQL, strtotime($con_date[$key])),
-                        'con_from' => $con_from[$key],
-                        'con_to' => $con_to[$key],
-                        'con_book_by' => $con_book_by[$key],
-                        'con_arrange_by' => $con_arrange_by[$key],
-                        'total' => $total_con[$key],
-                    );
-
-                    if (!$this->common->insert_data($data_array, 'other_con_booking')) {
-                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                        redirect(base_url() . employee_request);
-                    }
-                }
-            }
-
-            $loading_departure = $this->input->post('loading_departure');
-            $loading_return = $this->input->post('loading_return');
-            $load_location = $this->input->post('load_location');
-            $load_room_no = $this->input->post('load_room_no');
-            $load_bill_no = $this->input->post('load_bill_no');
-            $loading_expense = $this->input->post('loading_expense');
-            $other_expense = $this->input->post('other_expense');
-
-            $load_arrange_by = $this->input->post('load_arrange_by');
-
-            if ($loading_total != '') {
-                $this->db->where('request_id', $request_id);
-                $this->db->delete('other_loading_booking');
-            }
-            foreach ($loading_total as $key => $value) {
-                if ($loading_total[$key] != '' && $loading_expense[$key] != '' && $other_expense != '') {
-                    $data_array = array(
-                        'request_id' => $request_id,
-                        'reference_id' => $load_reference_id[$key],
-                        'loading_departure' => date(DATEMYSQL, strtotime($loading_departure[$key])),
-                        'loading_return' => date(DATEMYSQL, strtotime($loading_return[$key])),
-                        'location' => $load_location[$key],
-                        'room_no' => $load_room_no[$key],
-                        'bill_no' => $load_bill_no[$key],
-                        'loading_expense' => $loading_expense[$key],
-                        'other_expense' => $other_expense[$key],
-                        'loading_total' => $loading_total[$key],
-                        'arrange_by' => $load_arrange_by[$key],
-                    );
-
-                    if (!$this->common->insert_data($data_array, 'other_loading_booking')) {
-                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                        redirect(base_url() . employee_request);
-                    }
-                }
-            }
-
-            $da_actual = $this->input->post('da_actual');
-            if ($da_actual == "1") {
-                $da_allowance = $this->input->post('da_allowance');
-                $data_array = array(
-                    'DA_allowance' => $da_allowance,
-                );
-                if (!$this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_0_arrange_by_1')) {
-                $arrange_by = $this->input->post('ticket_0_arrange_by_1');
-                $data_array = array(
-                    'arrange_by' => $arrange_by,
-                );
-                if ($this->input->post('ticket_cost_1')) {
-                    $data_array['cost'] = $this->input->post('ticket_cost_1');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '0',
-                );
-                if (!$this->common->update_data_by_conditions($data_array, 'flight_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_1_arrange_by_1')) {
-                $arrange_by = $this->input->post('ticket_1_arrange_by_1');
-                $data_array = array(
-                    'arrange_by' => $arrange_by,
-                );
-                if ($this->input->post('ticket_cost_2')) {
-                    $data_array['cost'] = $this->input->post('ticket_cost_2');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '1',
-                );
-                if (!$this->common->update_data_by_conditions($data_array, 'flight_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_0_arrange_by_2')) {
-                $arrange_by2 = $this->input->post('ticket_0_arrange_by_2');
-                $data_array2 = array(
-                    'arrange_by' => $arrange_by2,
-                );
-                if ($this->input->post('ticket_cost_1')) {
-                    $data_array2['cost'] = $this->input->post('ticket_cost_1');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '0',
-                );
-                if (!$this->common->update_data_by_conditions($data_array2, 'train_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_1_arrange_by_2')) {
-                $arrange_by2 = $this->input->post('ticket_1_arrange_by_2');
-                $data_array2 = array(
-                    'arrange_by' => $arrange_by2,
-                );
-                if ($this->input->post('ticket_cost_2')) {
-                    $data_array2['cost'] = $this->input->post('ticket_cost_2');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '1',
-                );
-                if (!$this->common->update_data_by_conditions($data_array2, 'train_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_0_arrange_by_3')) {
-                $arrange_by2 = $this->input->post('ticket_0_arrange_by_3');
-                $data_array2 = array(
-                    'arrange_by' => $arrange_by2,
-                );
-                if ($this->input->post('ticket_cost_1')) {
-                    $data_array2['cost'] = $this->input->post('ticket_cost_1');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '0',
-                );
-                if (!$this->common->update_data_by_conditions($data_array2, 'car_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_1_arrange_by_3')) {
-                $arrange_by2 = $this->input->post('ticket_1_arrange_by_3');
-                $data_array2 = array(
-                    'arrange_by' => $arrange_by2,
-                );
-                if ($this->input->post('ticket_cost_2')) {
-                    $data_array2['cost'] = $this->input->post('ticket_cost_2');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '1',
-                );
-                if (!$this->common->update_data_by_conditions($data_array2, 'car_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_0_arrange_by_4')) {
-                $arrange_by2 = $this->input->post('ticket_0_arrange_by_4');
-                $data_array2 = array(
-                    'arrange_by' => $arrange_by2,
-                );
-                if ($this->input->post('ticket_cost_1')) {
-                    $data_array2['cost'] = $this->input->post('ticket_cost_1');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '0',
-                );
-                if (!$this->common->update_data_by_conditions($data_array2, 'bus_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_1_arrange_by_4')) {
-                $arrange_by2 = $this->input->post('ticket_1_arrange_by_4');
-                $data_array2 = array(
-                    'arrange_by' => $arrange_by2,
-                );
-                if ($this->input->post('ticket_cost_2')) {
-                    $data_array2['cost'] = $this->input->post('ticket_cost_2');
-                }
-                $condition_array = array(
-                    'request_id' => $request_id,
-                    'trip_mode' => '1',
-                );
-                if (!$this->common->update_data_by_conditions($data_array2, 'bus_ticket_booking', $condition_array)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            if ($this->input->post('ticket_arrange_by_5')) {
-                $arrange_by = $this->input->post('ticket_arrange_by_5');
-                $data_array = array(
-                    'arrange_by' => $arrange_by,
-                );
-                if (!$this->common->update_data($data_array, 'car_booking', 'request_id', $request_id)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-            $data_array = array(
-                'bill_no_1' => $this->input->post('bill_no_1'),
-                'cost' => $this->input->post('hotel_cost'),
-                'loading_expense_1' => $this->input->post('loading_expense_1'),
-                'other_expense_1' => $this->input->post('other_expense_1'),
-            );
-            if ($this->input->post('date_from_1')) {
-                $data_array['check_in_date'] = date(DATEMYSQL, strtotime($this->input->post('date_from_1')));
-            }
-            if ($this->input->post('date_to_1')) {
-                $data_array['check_out_date'] = date(DATEMYSQL, strtotime($this->input->post('date_to_1')));
-            }
-            if ($this->input->post('load_arrange_by_1')) {
-                $data_array['arrange_by'] = $this->input->post('load_arrange_by_1');
-            }
-            if ($this->input->post('bill_no')) {
-                $data_array['bill_no'] = $this->input->post('bill_no');
-            }
-            if ($this->input->post('bill_no_1')) {
-                $data_array['bill_no_1'] = $this->input->post('bill_no_1');
-            }
-
-//            po($data_array);
-            if (!$this->common->update_data($data_array, 'hotel_booking', 'request_id', $request_id)) {
-                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                redirect(base_url() . employee_request);
-            }
-
-            if ($this->input->post('con_total_1')) {
-                $data_array = array();
-                $data_array['cost'] = $this->input->post('con_total_1');
-                $data_array['pick_up_date'] = date(DATEMYSQL, strtotime($this->input->post('con_date_1')));
-                if (!$this->common->update_data($data_array, 'car_booking', 'request_id', $request_id)) {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            }
-
-
-
-            $other_row = $this->input->post('other_row');
-
-            $other_date = $this->input->post('other_date');
-            $other_arrange_by = $this->input->post('other_arrange_by');
-
-            $expense_name = $this->input->post('expense_name');
-            $expense_type = $this->input->post('expense_type');
-            $bill_no = $this->input->post('expense_bill_no');
-            $total_no = $this->input->post('total_no');
-
-
-            if ($expense_id != '') {
-                $this->db->where('request_id', $request_id);
-                $this->db->delete('other_expense');
-            }
-
-            foreach ($expense_name as $key => $value) {
-                if ($expense_name[$key] != '' && $total_no[$key] != '') {
-                    $data_array = array(
-                        'employees_id' => $employee_id,
-                        'request_id' => $request_id,
-                        'date' => date(DATEMYSQL, strtotime($other_date[$key])),
-                        'arrange_by' => $other_arrange_by[$key],
-                        'expense_name' => $expense_name[$key],
-                        'expense_type' => $expense_type[$key],
-                        'bill_no' => $bill_no[$key],
-                        'amount' => $total_no[$key],
-                    );
-
-                    if (!$this->common->insert_data($data_array, 'other_expense')) {
-                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                        redirect(base_url() . employee_request);
-                    }
-                }
-            }
-
-            $this->load->library('encryption');
-            $this->encryption->initialize(array('driver' => 'mcrypt'));
-            $this->encryption->initialize(array('driver' => 'openssl'));
-
-            $credit_card_number = $this->input->post('credit_card_number');
-            $enc_credit_card_number = $this->encryption->encrypt($credit_card_number);
-
-            $bank_name = $this->input->post('bank_name');
-            $enc_bank_name = $this->encryption->encrypt($bank_name);
-
-            $allowances_item_array = array(
-                'employees_id' => $employee_id,
-                'request_id' => $request_id,
-                'credit_card_number' => $enc_credit_card_number,
-                'bank_name' => $enc_bank_name,
-                'expense_da' => $expense_da,
-                'expense_con' => $expense_con,
-                'policy_meet' => $policy_meet,
-                'reimbursement_arrangment' => $this->input->post('arrange_by'),
-                'final_total_claim' => $this->input->post('final_total_claim'),
-                'total_claim' => $this->input->post('total_claim'),
-                'less_advance' => $this->input->post('les_advance'),
-                'recevied_amount' => $this->input->post('your_recived_hidd'),
-            );
-            if ($expense_id == '') {
-                if ($this->common->insert_data($allowances_item_array, 'expense')) {
-                    if ($request['approval_level'] == '0') {
-                        $data_array = array(
-                            'request_status' => "6",
-                        );
-
-                        if ($this->input->post('return_date')) {
-                            $return_date = $this->input->post('return_date');
-                            $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
-                        }
-
-                        if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
                             $data_array = array(
-                                'expense_status' => "Approved",
+                                'employees_id' => $employee_id,
+                                'request_id' => $request_id,
+                                'date' => date(DATEMYSQL, strtotime($other_date[$key])),
+                                'arrange_by' => $other_arrange_by[$key],
+                                'expense_name' => $expense_name[$key],
+                                'expense_type' => $expense_type[$key],
+                                'bill_no' => $bill_no[$key],
+								'remarks' => $remarks[$key],
+                                'amount' => $total_no[$key],
+                                'status' => "active",
                             );
-                            if ($this->common->update_data($data_array, 'expense', 'request_id', $request_id)) {
 
-                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
-                                $to_city_id = $request['to_city_id'];
-                                $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                            if (!$this->common->update_data($data_array, 'other_expense', 'id', $other_expense_id[$key])) {
+                                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                redirect(base_url() . employee_request);
+                            }
+                            unset($oth_expense_data[$other_expense_id[$key]]);
+                        }
+                    }
+                }
+
+                foreach ($oth_expense_data as $key => $value) {
+                    $data_array = array(
+                        'status' => "inactive",
+                    );
+                    $this->common->update_data($data_array, 'other_expense', 'id', $key);
+                }
+
+                $this->load->library('encryption');
+                $this->encryption->initialize(array('driver' => 'mcrypt'));
+                $this->encryption->initialize(array('driver' => 'openssl'));
+
+                $credit_card_number = $this->input->post('credit_card_number');
+                $enc_credit_card_number = $this->encryption->encrypt($credit_card_number);
+
+                $bank_name = $this->input->post('bank_name');
+                $enc_bank_name = $this->encryption->encrypt($bank_name);
+
+                $allowances_item_array = array(
+                    'employees_id' => $employee_id,
+                    'request_id' => $request_id,
+                    'credit_card_number' => $enc_credit_card_number,
+                    'bank_name' => $enc_bank_name,
+                    'expense_ticket' => $expense_ticket,
+                    'expense_hotel' => $expense_hotel,
+                    'expense_da' => $expense_da,
+                    'expense_con' => $expense_con,
+                    'expense_oth' => $expense_oth,
+                    'policy_meet' => $policy_meet,
+                    'reimbursement_arrangment' => $this->input->post('arrange_by'),
+                    'final_total_claim' => $this->input->post('final_total_claim'),
+                    'total_claim' => $this->input->post('total_claim'),
+                    'less_advance' => $this->input->post('les_advance'),
+                    'recevied_amount' => $this->input->post('your_recived_hidd'),
+                );
+                if ($expense_id == '') {
+                    if ($this->common->insert_data($allowances_item_array, 'expense')) {
+                        if ($request['approval_level'] == '0') {
+                            $data_array = array(
+                                'request_status' => "6",
+                            );
+
+                            if ($this->input->post('return_date')) {
+                                $return_date = $this->input->post('return_date');
+                                $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
+                            }
+
+                            if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
+                                $data_array = array(
+                                    'expense_status' => "Approved",
+                                );
+                                if ($this->common->update_data($data_array, 'expense', 'request_id', $request_id)) {
+
+                                    $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                    $to_city_id = $request['to_city_id'];
+                                    $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-e9f5-3477-0b66-360dfc70264d'><span background-color:='' color:='' font-weight:='' style='font-size: 10pt; font-family: ' trebuchet='' vertical-align:='' white-space:=''>Hi <name of='' requester=''>" . $request_data['employee_name'] . ",</name></span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
@@ -2126,59 +2358,59 @@ class Employee_request extends Admin_Controller {
 <div>
 	&nbsp;</div>
 ";
-                                $to = $request_data['employee_email'];
-                                $subject = $request_data['reference_id'] . ", Claim Raised";
-                                $this->sendEmail($to, $subject, $message);
+                                    $to = $request_data['employee_email'];
+                                    $subject = $request_data['reference_id'] . ", Claim Raised";
+                                    $this->sendEmail($to, $subject, $message);
 
-                                $this->session->set_flashdata('success', 'New Expense claimed successfully.');
-                                redirect(base_url() . employee_request);
+                                    $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                    redirect(base_url() . employee_request);
+                                } else {
+                                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                    redirect(base_url() . employee_request);
+                                }
                             } else {
                                 $this->session->set_flashdata('error', 'Error occurred. Try Again!');
                                 redirect(base_url() . employee_request);
                             }
                         } else {
-                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                            redirect(base_url() . employee_request);
-                        }
-                    } else {
-                        $data_array = array(
-                            'request_status' => "5",
-                        );
+                            $data_array = array(
+                                'request_status' => "5",
+                            );
 
 //                    if ($request['trip_type'] == '1') {
-                        if ($this->input->post('return_date')) {
-                            $return_date = $this->input->post('return_date');
-                            $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
+                            if ($this->input->post('return_date')) {
+                                $return_date = $this->input->post('return_date');
+                                $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
 //                        $data_array['trip_type'] = "0";
 //                    }
-                        }
-                        if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
-
-                            $request_data = $this->travel_request->get_request_details_by_id($request_id);
-                            $to_city_id = $request['to_city_id'];
-
-
-                            if ($request['travel_type'] == "1") {
-                                $travel_mode = "Flight";
-                            } else if ($request['travel_type'] == "2") {
-                                $travel_mode = "Train";
-                            } else if ($request['travel_type'] == "3") {
-                                $travel_mode = "Car";
-                            } else if ($request['travel_type'] == "4") {
-                                $travel_mode = "Bus";
                             }
-                            if ($request['trip_type'] == "0") {
-                                $now = strtotime(date(DATEMYSQL, strtotime($request['departure_date'])));
-                                $your_date = strtotime(date(DATEMYSQL, strtotime($request['return_date'])));
-                                $datediff = $your_date - $now;
-                                $travel_day = floor($datediff / (60 * 60 * 24));
-                                $travel_date = $request['departure_date'] . " To " . $request['return_date'];
-                            } else {
-                                $travel_day = "1";
-                                $travel_date = $request['departure_date'];
-                            }
+                            if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
 
-                            $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                $to_city_id = $request['to_city_id'];
+
+
+                                if ($request['travel_type'] == "1") {
+                                    $travel_mode = "Flight";
+                                } else if ($request['travel_type'] == "2") {
+                                    $travel_mode = "Train";
+                                } else if ($request['travel_type'] == "3") {
+                                    $travel_mode = "Car";
+                                } else if ($request['travel_type'] == "4") {
+                                    $travel_mode = "Bus";
+                                }
+                                if ($request['trip_type'] == "0") {
+                                    $now = strtotime(date(DATEMYSQL, strtotime($request['departure_date'])));
+                                    $your_date = strtotime(date(DATEMYSQL, strtotime($request['return_date'])));
+                                    $datediff = $your_date - $now;
+                                    $travel_day = floor($datediff / (60 * 60 * 24));
+                                    $travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                                } else {
+                                    $travel_day = "1";
+                                    $travel_date = $request['departure_date'];
+                                }
+
+                                $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-e9df-f82d-9215-776a388c604e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>Hi " . $request_data['manager_name'] . ",</span></span></p><br>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-e9df-f82d-9215-776a388c604e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Your team member, </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['employee_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> has raised a claim request to </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> . </span></span></p>
@@ -2201,43 +2433,43 @@ class Employee_request extends Admin_Controller {
 	&nbsp;</div>
 ";
 
-                            $to = $request_data['manager_email'];
-                            $subject = $request_data['reference_id'] . ", Claim Approval " . $request_data['employee_name'];
-                            $this->sendEmail($to, $subject, $message, $cc);
+                                $to = $request_data['manager_email'];
+                                $subject = $request_data['reference_id'] . ", Claim Approval " . $request_data['employee_name'];
+                                $this->sendEmail($to, $subject, $message, $cc);
 
-                            $this->session->set_flashdata('success', 'New Expense claimed successfully.');
-                            redirect(base_url() . employee_request);
-                        } else {
-                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                            redirect(base_url() . employee_request);
+                                $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                redirect(base_url() . employee_request);
+                            } else {
+                                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                redirect(base_url() . employee_request);
+                            }
                         }
+                    } else {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
                     }
                 } else {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
-                }
-            } else {
-                $allowances_item_array['expense_status'] = "Pending";
-                if ($this->common->update_data($allowances_item_array, 'expense', 'request_id', $request_id)) {
-                    if ($request['approval_level'] == '0') {
-                        $data_array = array(
-                            'request_status' => "6",
-                        );
-                        if ($this->input->post('return_date')) {
-                            $return_date = $this->input->post('return_date');
-                            $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
-                        }
-
-                        if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
-
+                    $allowances_item_array['expense_status'] = "Pending";
+                    if ($this->common->update_data($allowances_item_array, 'expense', 'request_id', $request_id)) {
+                        if ($request['approval_level'] == '0') {
                             $data_array = array(
-                                'expense_status' => "Approved",
+                                'request_status' => "6",
                             );
-                            if ($this->common->update_data($data_array, 'expense', 'request_id', $request_id)) {
+                            if ($this->input->post('return_date')) {
+                                $return_date = $this->input->post('return_date');
+                                $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
+                            }
 
-                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
-                                $to_city_id = $request['to_city_id'];
-                                $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                            if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
+
+                                $data_array = array(
+                                    'expense_status' => "Approved",
+                                );
+                                if ($this->common->update_data($data_array, 'expense', 'request_id', $request_id)) {
+
+                                    $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                    $to_city_id = $request['to_city_id'];
+                                    $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-e9f5-3477-0b66-360dfc70264d'><span background-color:='' color:='' font-weight:='' style='font-size: 10pt; font-family: ' trebuchet='' vertical-align:='' white-space:=''>Hi <name of='' requester=''>" . $request_data['employee_name'] . ",</name></span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
@@ -2262,59 +2494,59 @@ class Employee_request extends Admin_Controller {
 <div>
 	&nbsp;</div>
 ";
-                                $to = $request_data['employee_email'];
-                                $subject = $request_data['reference_id'] . ", Claim Raised";
-                                $this->sendEmail($to, $subject, $message);
+                                    $to = $request_data['employee_email'];
+                                    $subject = $request_data['reference_id'] . ", Claim Raised";
+                                    $this->sendEmail($to, $subject, $message);
 
-                                $this->session->set_flashdata('success', 'New Expense claimed successfully.');
-                                redirect(base_url() . employee_request);
+                                    $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                    redirect(base_url() . employee_request);
+                                } else {
+                                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                    redirect(base_url() . employee_request);
+                                }
                             } else {
                                 $this->session->set_flashdata('error', 'Error occurred. Try Again!');
                                 redirect(base_url() . employee_request);
                             }
                         } else {
-                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                            redirect(base_url() . employee_request);
-                        }
-                    } else {
-                        $data_array = array(
-                            'request_status' => "5",
-                        );
+                            $data_array = array(
+                                'request_status' => "5",
+                            );
 //                    if ($request['trip_type'] == '1') {
-                        if ($this->input->post('return_date')) {
-                            $return_date = $this->input->post('return_date');
-                            $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
-                            ;
+                            if ($this->input->post('return_date')) {
+                                $return_date = $this->input->post('return_date');
+                                $data_array['return_date'] = date(DATEMYSQL, strtotime($return_date));
+                                ;
 //                        $data_array['trip_type'] = "0";
 //                    }
-                        }
-                        if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
-
-                            $request_data = $this->travel_request->get_request_details_by_id($request_id);
-                            $to_city_id = $request['to_city_id'];
-
-
-                            if ($request['travel_type'] == "1") {
-                                $travel_mode = "Flight";
-                            } else if ($request['travel_type'] == "2") {
-                                $travel_mode = "Train";
-                            } else if ($request['travel_type'] == "3") {
-                                $travel_mode = "Car";
-                            } else if ($request['travel_type'] == "4") {
-                                $travel_mode = "Bus";
                             }
-                            if ($request['trip_type'] == "0") {
-                                $now = strtotime(date('Y-m-d', strtotime($request['departure_date'])));
-                                $your_date = strtotime(date('Y-m-d', strtotime($request['return_date'])));
-                                $datediff = $your_date - $now;
-                                $travel_day = floor($datediff / (60 * 60 * 24));
-                                $travel_date = $request['departure_date'] . " To " . $request['return_date'];
-                            } else {
-                                $travel_day = "1";
-                                $travel_date = $request['departure_date'];
-                            }
+                            if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
 
-                            $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                                $request_data = $this->travel_request->get_request_details_by_id($request_id);
+                                $to_city_id = $request['to_city_id'];
+
+
+                                if ($request['travel_type'] == "1") {
+                                    $travel_mode = "Flight";
+                                } else if ($request['travel_type'] == "2") {
+                                    $travel_mode = "Train";
+                                } else if ($request['travel_type'] == "3") {
+                                    $travel_mode = "Car";
+                                } else if ($request['travel_type'] == "4") {
+                                    $travel_mode = "Bus";
+                                }
+                                if ($request['trip_type'] == "0") {
+                                    $now = strtotime(date('Y-m-d', strtotime($request['departure_date'])));
+                                    $your_date = strtotime(date('Y-m-d', strtotime($request['return_date'])));
+                                    $datediff = $your_date - $now;
+                                    $travel_day = floor($datediff / (60 * 60 * 24));
+                                    $travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                                } else {
+                                    $travel_day = "1";
+                                    $travel_date = $request['departure_date'];
+                                }
+
+                                $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-e9df-f82d-9215-776a388c604e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>Hi " . $request_data['manager_name'] . ",</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-e9df-f82d-9215-776a388c604e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Your team member, </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['employee_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> has raised a claim request to </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> . </span></span></p>
@@ -2337,26 +2569,57 @@ class Employee_request extends Admin_Controller {
 	&nbsp;</div>
 ";
 
-                            $to = $request_data['manager_email'];
-                            $subject = $request_data['reference_id'] . ", Claim Approval " . $request_data['employee_name'];
-                            $this->sendEmail($to, $subject, $message, $cc);
+                                $to = $request_data['manager_email'];
+                                $subject = $request_data['reference_id'] . ", Claim Approval " . $request_data['employee_name'];
+                                $this->sendEmail($to, $subject, $message, $cc);
 
-                            $this->session->set_flashdata('success', 'New Expense claimed successfully.');
-                            redirect(base_url() . employee_request);
-                        } else {
-                            $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                            redirect(base_url() . employee_request);
+                                $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                redirect(base_url() . employee_request);
+                            } else {
+                                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                                redirect(base_url() . employee_request);
+                            }
                         }
+                    } else {
+                        $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                        redirect(base_url() . employee_request);
                     }
-                } else {
-                    $this->session->set_flashdata('error', 'Error occurred. Try Again!');
-                    redirect(base_url() . employee_request);
                 }
+            } else {
+                $this->session->set_flashdata('error', 'Error occurred. Try Again!');
+                redirect(base_url() . employee_request);
             }
         }
-
-        $this->template->write_view('content', 'expense/claim_expense', $view_request);
+//echo '<pre>'; print_r($view_request); exit;
+		$this->template->write_view('content', 'expense/claim_expense', $view_request);
         $this->template->render();
+    }
+
+	function get_days_hours_S() {
+        $primID = $this->input->post('primID');
+		$departure_date = $this->input->post('departure_date');
+        $return_date = $this->input->post('return_date');
+        $a= explode(' ', $return_date);
+		$dateFrag= explode('-', $a[0]);
+		$return_date2= $dateFrag[2].'-'.$dateFrag[1].'-'.$dateFrag[0].' '.$a[1].':00';
+		
+		//08-09-2017 11:00
+		//2017-08-23 08:00:00
+		
+		$data_array= array('return_date'=>$return_date2);
+		$this->common->update_data($data_array, 'travel_request', 'id', $primID);
+		
+		$first_date = new DateTime($departure_date);
+        $second_date = new DateTime($return_date);
+        $interval = $first_date->diff($second_date);
+        $day = $interval->format("%d");
+        $hours = $interval->format("%h");
+        $arr = array();
+        $arr['day'] = $day;
+        $arr['hours'] = $hours;
+        $arr['departure_date'] = date(DATETIME_FORMAT, strtotime($departure_date));
+        $arr['return_date'] = date(DATETIME_FORMAT, strtotime($return_date));
+        echo json_encode($arr);
     }
 
     function get_days_hours() {
@@ -2379,6 +2642,7 @@ class Employee_request extends Admin_Controller {
         $total_travel_claim = 0;
         $employee_id = $this->session->userdata('employee_id');
         $request = $this->expense->get_expense_pending_request_by_id($request_id, $employee_id);
+
         if (empty($request)) {
             $this->session->set_flashdata('error', "Something went wrong!");
             redirect(base_url() . dashboard);
@@ -2399,9 +2663,10 @@ class Employee_request extends Admin_Controller {
         } else {
             $project_id = $request['project_id'];
             $this->load->model("projects_model");
-            $project = $this->projects_model->get_project($project_id);
+            $project = $view_request['project'] = $this->projects_model->get_project($project_id);
             $view_request['budget'] = $project;
         }
+
 
         $other_manager_expense = $this->expense->get_other_manager_expense($request_id);
         if (!empty($other_manager_expense)) {
@@ -2411,7 +2676,6 @@ class Employee_request extends Admin_Controller {
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
             $total_travel_claim = $total_travel_claim + $other_manager_expense_total;
-			
         }
 
         $this->load->model('employee_model');
@@ -2457,129 +2721,123 @@ class Employee_request extends Admin_Controller {
                 if ($request['travel_type'] == '1') {
                     $flight_booking = $this->travel_desk->get_flight_ticket_booking($request_id);
                     $view_request['flight_booking'] = $flight_booking;
-                    if ($request['trip_type'] != "1") {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
-                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
-                        $data_array['location_from'] = $request['to_city_name'];
-                        $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[1]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[1]['cost'];
-                        $data_array['attachment'] = $flight_booking[1]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
-                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-                    }
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '1';
+                    $data_array['type'] = '1';
+                    $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
+                    $data_array['cost'] = $flight_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
+                    $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
+                    $ticket_details[] = $data_array;
                 }
 
                 if ($request['travel_type'] == '2') {
                     $train_booking = $this->travel_desk->get_train_ticket_booking($request_id);
                     $view_request['train_booking'] = $train_booking;
 
-                    if ($request['trip_type'] != "1") {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
-                        $data_array['cost'] = $train_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
-                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
-                        $data_array['location_from'] = $request['to_city_name'];
-                        $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[1]['arrange_by'];
-                        $data_array['cost'] = $train_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[1]['cost'];
-                        $data_array['attachment'] = $train_booking[1]['train_attachment'];
-                        $ticket_details[] = $data_array;
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
-                        $data_array['cost'] = $train_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
-                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
-                        $ticket_details[] = $data_array;
-                    }
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '2';
+                    $data_array['type'] = '2';
+                    $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
+                    $data_array['cost'] = $train_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
+                    $data_array['attachment'] = $train_booking[0]['train_attachment'];
+                    $ticket_details[] = $data_array;
                 }
 
                 if ($request['travel_type'] == '3') {
                     $car_booking = $this->travel_desk->get_car_ticket_booking($request_id);
                     $view_request['car_booking'] = $car_booking;
 
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '3';
+                    $data_array['type'] = '3';
+                    $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $car_booking[0]['arrange_by'];
+                    $data_array['cost'] = $car_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $car_booking[0]['cost'];
+                    $data_array['attachment'] = $car_booking[0]['car_attachment'];
+                    $ticket_details[] = $data_array;
+                }
+                if ($request['travel_type'] == '4') {
+                    $bus_booking = $this->travel_desk->get_bus_ticket_booking($request_id);
+                    $view_request['bus_booking'] = $bus_booking;
+
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '4';
+                    $data_array['type'] = '4';
+                    $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $bus_booking[0]['arrange_by'];
+                    $data_array['cost'] = $bus_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $bus_booking[0]['cost'];
+                    $data_array['attachment'] = $bus_booking[0]['bus_attachment'];
+                    $ticket_details[] = $data_array;
+                }
+            }
+
+            if ($request['trip_ticket_return'] == '1') {
+                if ($request['return_travel_type'] == '1') {
+                    $flight_booking = $this->travel_desk->get_flight_ticket_booking($request_id);
+                    $view_request['flight_booking'] = $flight_booking;
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '3';
-                        $data_array['type'] = '3';
-                        $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $car_booking[0]['arrange_by'];
-                        $data_array['cost'] = $car_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $car_booking[0]['cost'];
-                        $data_array['attachment'] = $car_booking[0]['car_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '3';
-                        $data_array['type'] = '3';
-                        $data_array['trip_mode'] = $car_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $car_booking[1]['arrange_by'];
-                        $data_array['cost'] = $car_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $car_booking[1]['cost'];
-                        $data_array['attachment'] = $car_booking[1]['car_attachment'];
+                        $data_array['travel_type'] = '1';
+                        $data_array['type'] = '1';
+                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
+                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
+                        $data_array['cost'] = $flight_booking[0]['cost'];
+                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
+                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
                         $ticket_details[] = $data_array;
-                    } else {
+                    }
+                }
+
+                if ($request['return_travel_type'] == '2') {
+                    $train_booking = $this->travel_desk->get_train_ticket_booking($request_id);
+                    $view_request['train_booking'] = $train_booking;
+
+                    if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
+                        $data_array['location_from'] = $request['to_city_name'];
+                        $data_array['location_to'] = $request['from_city_name'];
+                        $data_array['travel_type'] = '2';
+                        $data_array['type'] = '2';
+                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
+                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
+                        $data_array['cost'] = $train_booking[0]['cost'];
+                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
+                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
+                        $ticket_details[] = $data_array;
+                    }
+                }
+
+                if ($request['return_travel_type'] == '3') {
+                    $car_booking = $this->travel_desk->get_car_ticket_booking($request_id);
+                    $view_request['car_booking'] = $car_booking;
+
+                    if ($request['trip_type'] != "1") {
+                        $data_array = array();
+                        $data_array['date'] = $request['departure_date'];
+                        $data_array['location_from'] = $request['to_city_name'];
+                        $data_array['location_to'] = $request['from_city_name'];
                         $data_array['travel_type'] = '3';
                         $data_array['type'] = '3';
                         $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
@@ -2590,41 +2848,16 @@ class Employee_request extends Admin_Controller {
                         $ticket_details[] = $data_array;
                     }
                 }
-                if ($request['travel_type'] == '4') {
+
+                if ($request['return_travel_type'] == '4') {
                     $bus_booking = $this->travel_desk->get_bus_ticket_booking($request_id);
                     $view_request['bus_booking'] = $bus_booking;
 
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '4';
-                        $data_array['type'] = '4';
-                        $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $bus_booking[0]['arrange_by'];
-                        $data_array['cost'] = $bus_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $bus_booking[0]['cost'];
-                        $data_array['attachment'] = $bus_booking[0]['bus_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '4';
-                        $data_array['type'] = '4';
-                        $data_array['trip_mode'] = $bus_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $bus_booking[1]['arrange_by'];
-                        $data_array['cost'] = $bus_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $bus_booking[1]['cost'];
-                        $data_array['attachment'] = $bus_booking[1]['bus_attachment'];
-                        $ticket_details[] = $data_array;
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
                         $data_array['travel_type'] = '4';
                         $data_array['type'] = '4';
                         $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
@@ -2645,6 +2878,7 @@ class Employee_request extends Admin_Controller {
                 $data_array['date_to'] = $hotel_booking['check_out_date'];
                 $data_array['location'] = $hotel_booking['from_city_name'];
                 $data_array['bill_no'] = $hotel_booking['bill_no'];
+				$data_array['hotel_provider_name'] = $hotel_booking['hotel_provider_name'];
                 $data_array['bill_no_1'] = $hotel_booking['bill_no_1'];
                 $data_array['loading_expense_1'] = $hotel_booking['loading_expense_1'];
                 $data_array['other_expense_1'] = $hotel_booking['other_expense_1'];
@@ -2673,10 +2907,19 @@ class Employee_request extends Admin_Controller {
         }
 
 
-        $other_expense = $this->expense->get_other_expense($request_id);
-        $view_request['other_expense'] = $other_expense;
+
 
         /* ----- 04-09-2017 start ------ */
+        $other_expense = $this->expense->get_other_expense($request_id);
+        $other_oth_with_attach = array();
+        foreach ($other_expense as $key => $value) {
+            $reference_id = $value['reference_id'];
+            $other_claim_expense = $this->expense->get_other_claim_attachment($reference_id, 'file_name');
+            $value['attachment'] = $other_claim_expense;
+            $other_oth_with_attach[$key] = $value;
+        }
+        $view_request['other_expense'] = $other_oth_with_attach;
+
         $other_trip_expense = $this->expense->get_other_trip_expense($request_id);
         $other_trip_with_attach = array();
         foreach ($other_trip_expense as $key => $value) {
@@ -2696,7 +2939,7 @@ class Employee_request extends Admin_Controller {
             $other_load_with_attach[$key] = $value;
         }
         $view_request['other_loading_booking'] = $other_load_with_attach;
-        
+
         $other_con_booking = $this->expense->get_other_con_booking($request_id);
         $other_con_with_attach = array();
         foreach ($other_con_booking as $key => $value) {
@@ -2708,7 +2951,7 @@ class Employee_request extends Admin_Controller {
         $view_request['other_con_booking'] = $other_con_with_attach;
         /* ----- 04-09-2017 stop ------ */
 
-        
+
 
         $get_other_attachment = $this->expense->get_other_attachment($request_id);
         $view_request['get_other_attachment'] = $get_other_attachment;
@@ -2749,36 +2992,40 @@ class Employee_request extends Admin_Controller {
         } else {
             $view_request['sel_traverl_class'] = "";
         }
-        $this->load->model('travel_policy_model');
-        $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
+        //        $this->load->model('travel_policy_model');
+//        $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
 
         $convince_allowance = '';
         $hotel_allowance = '';
         $DA_allowance = '';
-        foreach ($policy_data as $key => $value) {
-            if ($value['service_type'] == "5") {
-                if ($value['actual'] == "0") {
-                    $hotel_allowance = $value['amount'];
-                } else {
-                    $hotel_allowance = "Actual";
-                }
-            } else if ($value['service_type'] == "6") {
-                if ($value['actual'] == "0") {
-                    $DA_allowance = $value['amount'];
-                } else {
-                    $DA_allowance = "Actual";
-                }
-            } else if ($value['service_type'] == "7") {
-                if ($value['actual'] == "0") {
-                    $convince_allowance = $value['amount'];
-                } else {
-                    $convince_allowance = "Actual";
-                }
-            }
-        }
-        $view_request['DA_allowance'] = $DA_allowance;
-        $view_request['convince_allowance'] = $convince_allowance;
-        $view_request['hotel_allowance'] = $hotel_allowance;
+//        foreach ($policy_data as $key => $value) {
+//            if ($value['service_type'] == "5") {
+//                if ($value['actual'] == "0") {
+//                    $hotel_allowance = $value['amount'];
+//                } else {
+//                    $hotel_allowance = "Actual";
+//                }
+//            } else if ($value['service_type'] == "6") {
+//                if ($value['actual'] == "0") {
+//                    $DA_allowance = $value['amount'];
+//                } else {
+//                    $DA_allowance = "Actual";
+//                }
+//            } else if ($value['service_type'] == "7") {
+//                if ($value['actual'] == "0") {
+//                    $convince_allowance = $value['amount'];
+//                } else {
+//                    $convince_allowance = "Actual";
+//                }
+//            }
+//        }
+//        $view_request['DA_allowance'] = $DA_allowance;
+//        $view_request['convince_allowance'] = $convince_allowance;
+//        $view_request['hotel_allowance'] = $hotel_allowance;
+
+        $view_request['DA_allowance'] = $request['DA_allowance'];
+        $view_request['convince_allowance'] = $request['convince_allowance'];
+        $view_request['hotel_allowance'] = $request['hotel_allowance'];
         if ($this->input->post()) {
             $allowances_item_array = array(
                 'employees_id' => $request['employee_id'],
@@ -2806,7 +3053,6 @@ class Employee_request extends Admin_Controller {
                 redirect(base_url() . expense);
             }
         }
-
 
         $this->template->write_view('content', 'expense/expense_pending', $view_request);
         $this->template->render();
@@ -3003,6 +3249,13 @@ class Employee_request extends Admin_Controller {
         $expense_pending['bank_name'] = $this->encryption->decrypt($expense_pending['bank_name']);
         $view_request['expense_pending'] = $expense_pending;
 
+        if ($request['travel_reason_id'] == "Projects") {
+            $project_id = $request['project_id'];
+            $this->load->model("projects_model");
+            $project = $view_request['project'] = $this->projects_model->get_project($project_id);
+            $view_request['budget'] = $project;
+        }
+
         $other_expense = $this->expense->get_other_expense($request_id);
         $view_request['other_expense'] = $other_expense;
 
@@ -3035,132 +3288,126 @@ class Employee_request extends Admin_Controller {
             if ($request['trip_ticket'] == '1') {
                 if ($request['travel_type'] == '1') {
                     $flight_booking = $this->travel_request->get_flight_ticket_booking($request_id);
+//                    po($flight_booking);
                     $view_request['flight_booking'] = $flight_booking;
-
-                    $flight_booking = $this->travel_desk->get_flight_ticket_booking($request_id);
-                    $view_request['flight_booking'] = $flight_booking;
-                    if ($request['trip_type'] != "1") {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
-                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
-                        $data_array['location_from'] = $request['to_city_name'];
-                        $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[1]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[1]['cost'];
-                        $data_array['attachment'] = $flight_booking[1]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '1';
-                        $data_array['type'] = '1';
-                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
-                        $data_array['cost'] = $flight_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
-                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
-                        $ticket_details[] = $data_array;
-                    }
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '1';
+                    $data_array['type'] = '1';
+                    $data_array['trip_mode'] = $flight_booking['trip_mode'];
+                    $data_array['arrange_by'] = $flight_booking['arrange_by'];
+                    $data_array['cost'] = $flight_booking['cost'];
+                    $total_travel_claim = $total_travel_claim + $flight_booking['cost'];
+                    $data_array['attachment'] = $flight_booking['flight_attachment'];
+                    $ticket_details[] = $data_array;
                 }
+
                 if ($request['travel_type'] == '2') {
                     $train_booking = $this->travel_desk->get_train_ticket_booking($request_id);
                     $view_request['train_booking'] = $train_booking;
 
-                    if ($request['trip_type'] != "1") {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
-                        $data_array['cost'] = $train_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
-                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
-                        $data_array['location_from'] = $request['to_city_name'];
-                        $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[1]['arrange_by'];
-                        $data_array['cost'] = $train_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[1]['cost'];
-                        $data_array['attachment'] = $train_booking[1]['train_attachment'];
-                        $ticket_details[] = $data_array;
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '2';
-                        $data_array['type'] = '2';
-                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
-                        $data_array['cost'] = $train_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
-                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
-                        $ticket_details[] = $data_array;
-                    }
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '2';
+                    $data_array['type'] = '2';
+                    $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
+                    $data_array['cost'] = $train_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
+                    $data_array['attachment'] = $train_booking[0]['train_attachment'];
+                    $ticket_details[] = $data_array;
                 }
 
                 if ($request['travel_type'] == '3') {
                     $car_booking = $this->travel_desk->get_car_ticket_booking($request_id);
                     $view_request['car_booking'] = $car_booking;
 
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '3';
+                    $data_array['type'] = '3';
+                    $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $car_booking[0]['arrange_by'];
+                    $data_array['cost'] = $car_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $car_booking[0]['cost'];
+                    $data_array['attachment'] = $car_booking[0]['car_attachment'];
+                    $ticket_details[] = $data_array;
+                }
+
+                if ($request['travel_type'] == '4') {
+                    $bus_booking = $this->travel_desk->get_bus_ticket_booking($request_id);
+                    $view_request['bus_booking'] = $bus_booking;
+
+                    $data_array = array();
+                    $data_array['date'] = $request['departure_date'];
+                    $data_array['location_from'] = $request['from_city_name'];
+                    $data_array['location_to'] = $request['to_city_name'];
+                    $data_array['travel_type'] = '4';
+                    $data_array['type'] = '4';
+                    $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
+                    $data_array['arrange_by'] = $bus_booking[0]['arrange_by'];
+                    $data_array['cost'] = $bus_booking[0]['cost'];
+                    $total_travel_claim = $total_travel_claim + $bus_booking[0]['cost'];
+                    $data_array['attachment'] = $bus_booking[0]['bus_attachment'];
+                    $ticket_details[] = $data_array;
+                }
+            }
+
+            if ($request['trip_ticket_return'] == '1') {
+                if ($request['return_travel_type'] == '1') {
+                    $flight_booking = $this->travel_desk->get_flight_ticket_booking($request_id);
+                    $view_request['flight_booking'] = $flight_booking;
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '3';
-                        $data_array['type'] = '3';
-                        $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $car_booking[0]['arrange_by'];
-                        $data_array['cost'] = $car_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $car_booking[0]['cost'];
-                        $data_array['attachment'] = $car_booking[0]['car_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '3';
-                        $data_array['type'] = '3';
-                        $data_array['trip_mode'] = $car_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $car_booking[1]['arrange_by'];
-                        $data_array['cost'] = $car_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $car_booking[1]['cost'];
-                        $data_array['attachment'] = $car_booking[1]['car_attachment'];
+                        $data_array['travel_type'] = '1';
+                        $data_array['type'] = '1';
+                        $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
+                        $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
+                        $data_array['cost'] = $flight_booking[0]['cost'];
+                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
+                        $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
                         $ticket_details[] = $data_array;
-                    } else {
+                    }
+                }
+
+                if ($request['return_travel_type'] == '2') {
+                    $train_booking = $this->travel_desk->get_train_ticket_booking($request_id);
+                    $view_request['train_booking'] = $train_booking;
+
+                    if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
+                        $data_array['location_from'] = $request['to_city_name'];
+                        $data_array['location_to'] = $request['from_city_name'];
+                        $data_array['travel_type'] = '2';
+                        $data_array['type'] = '2';
+                        $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
+                        $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
+                        $data_array['cost'] = $train_booking[0]['cost'];
+                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
+                        $data_array['attachment'] = $train_booking[0]['train_attachment'];
+                        $ticket_details[] = $data_array;
+                    }
+                }
+
+                if ($request['return_travel_type'] == '3') {
+                    $car_booking = $this->travel_desk->get_car_ticket_booking($request_id);
+                    $view_request['car_booking'] = $car_booking;
+
+                    if ($request['trip_type'] != "1") {
+                        $data_array = array();
+                        $data_array['date'] = $request['departure_date'];
+                        $data_array['location_from'] = $request['to_city_name'];
+                        $data_array['location_to'] = $request['from_city_name'];
                         $data_array['travel_type'] = '3';
                         $data_array['type'] = '3';
                         $data_array['trip_mode'] = $car_booking[0]['trip_mode'];
@@ -3171,41 +3418,16 @@ class Employee_request extends Admin_Controller {
                         $ticket_details[] = $data_array;
                     }
                 }
-                if ($request['travel_type'] == '4') {
+
+                if ($request['return_travel_type'] == '4') {
                     $bus_booking = $this->travel_desk->get_bus_ticket_booking($request_id);
                     $view_request['bus_booking'] = $bus_booking;
 
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
                         $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
-                        $data_array['travel_type'] = '4';
-                        $data_array['type'] = '4';
-                        $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
-                        $data_array['arrange_by'] = $bus_booking[0]['arrange_by'];
-                        $data_array['cost'] = $bus_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $bus_booking[0]['cost'];
-                        $data_array['attachment'] = $bus_booking[0]['bus_attachment'];
-                        $ticket_details[] = $data_array;
-
-                        $data_array = array();
-                        $data_array['date'] = $request['return_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
-                        $data_array['travel_type'] = '4';
-                        $data_array['type'] = '4';
-                        $data_array['trip_mode'] = $bus_booking[1]['trip_mode'];
-                        $data_array['arrange_by'] = $bus_booking[1]['arrange_by'];
-                        $data_array['cost'] = $bus_booking[1]['cost'];
-                        $total_travel_claim = $total_travel_claim + $bus_booking[1]['cost'];
-                        $data_array['attachment'] = $bus_booking[1]['bus_attachment'];
-                        $ticket_details[] = $data_array;
-                    } else {
-                        $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
-                        $data_array['location_from'] = $request['from_city_name'];
-                        $data_array['location_to'] = $request['to_city_name'];
                         $data_array['travel_type'] = '4';
                         $data_array['type'] = '4';
                         $data_array['trip_mode'] = $bus_booking[0]['trip_mode'];
@@ -3226,6 +3448,7 @@ class Employee_request extends Admin_Controller {
                 $data_array['date_to'] = $hotel_booking['check_out_date'];
                 $data_array['location'] = $hotel_booking['from_city_name'];
                 $data_array['bill_no'] = $hotel_booking['bill_no'];
+				$data_array['hotel_provider_name'] = $hotel_booking['hotel_provider_name'];
                 $data_array['bill_no_1'] = $hotel_booking['bill_no_1'];
                 $data_array['loading_expense_1'] = $hotel_booking['loading_expense_1'];
                 $data_array['other_expense_1'] = $hotel_booking['other_expense_1'];
@@ -3254,11 +3477,11 @@ class Employee_request extends Admin_Controller {
         }
 
 
-
         $view_request['ticket_details'] = $ticket_details;
         $view_request['hotel_details'] = $hotel_details;
         $view_request['car_details'] = $car_details;
         $view_request['total_travel_claim'] = $total_travel_claim;
+
         if ($this->input->post()) {
             $allowances_item_array = array(
                 'employees_id' => $request['employee_id'],
@@ -3351,6 +3574,7 @@ class Employee_request extends Admin_Controller {
             } else {
 
                 $request = $this->travel_desk->get_travel_request_by_id($request_id);
+
                 $trip_ticket = $request['trip_ticket'];
                 $hotel_booking = $request['hotel_booking'];
 
@@ -3378,6 +3602,7 @@ class Employee_request extends Admin_Controller {
                 $drop_off_date = date(DATEMYSQL, strtotime($this->input->post('drop_off_date')));
                 $data_array['pick_up_date'] = $pick_up_date;
                 $data_array['drop_off_date'] = $drop_off_date;
+                $data_array['booking_city_id'] = $request['from_city_id'];
                 if (isset($_FILES['car_attchment']['name']) && $_FILES['car_attchment']['name'] != null) {
                     $file_name = $_FILES['car_attchment']['name'];
                     $enc_filename = $this->GenerateRandomFilename($file_name);
@@ -3472,6 +3697,7 @@ class Employee_request extends Admin_Controller {
 
                 $data_array['check_in_date'] = $check_in_date;
                 $data_array['check_out_date'] = $check_out_date;
+                $data_array['booking_city_id'] = $request['from_city_id'];
                 if (isset($_FILES['hotel_attchment']['name']) && $_FILES['hotel_attchment']['name'] != null) {
                     $file_name = $_FILES['hotel_attchment']['name'];
                     $enc_filename = $this->GenerateRandomFilename($file_name);
@@ -3532,7 +3758,6 @@ class Employee_request extends Admin_Controller {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
                 redirect('employee_request/self_booking/' . $request_id, 'refresh');
             } else {
-
                 if (isset($_FILES['flight_attachment']['name']) && $_FILES['flight_attachment']['name'] != null) {
                     $request = $this->travel_desk->get_travel_request_by_id($request_id);
                     $car_booking = $request['car_booking'];
@@ -3567,7 +3792,8 @@ class Employee_request extends Admin_Controller {
                             redirect('employee_request/index', 'refresh');
                         }
                     }
-
+                    $data_array['arrange_by'] = "Own";
+                    $data_array['booking_city_id'] = $request['from_city_id'];
                     if ($this->common->insert_data($data_array, 'flight_ticket_booking')) {
                         $data_array = array();
                         $trip_mode = $this->input->post('trip_mode');
@@ -3671,7 +3897,8 @@ class Employee_request extends Admin_Controller {
                         }
                     }
 
-
+                    $data_array['arrange_by'] = "Own";
+                $data_array['booking_city_id'] = $request['from_city_id'];
                     if ($this->common->insert_data($data_array, 'train_ticket_booking')) {
                         $data_array = array();
                         $trip_mode = $this->input->post('trip_mode');
@@ -3770,7 +3997,8 @@ class Employee_request extends Admin_Controller {
                         }
                     }
 
-
+                    $data_array['arrange_by'] = "Own";
+                $data_array['booking_city_id'] = $request['from_city_id'];
                     if ($this->common->insert_data($data_array, 'car_ticket_booking')) {
                         $data_array = array();
                         $trip_mode = $this->input->post('trip_mode');
@@ -3869,7 +4097,8 @@ class Employee_request extends Admin_Controller {
                         }
                     }
 
-
+                    $data_array['arrange_by'] = "Own";
+                $data_array['booking_city_id'] = $request['from_city_id'];
                     if ($this->common->insert_data($data_array, 'bus_ticket_booking')) {
                         $data_array = array();
                         $trip_mode = $this->input->post('trip_mode');
@@ -3946,6 +4175,11 @@ class Employee_request extends Admin_Controller {
         $request = $this->travel_request->get_request_id($request_id, 'departure_date,return_date,trip_type');
         $view_request['request'] = $request;
 
+		$sql = "SELECT * FROM travel_category t WHERE type = '1' and travel_type = '5' and status='active'";
+        $result = $this->db->query($sql);
+        $hotel_category = $result->result_array();
+        $view_request['hotel'] = $hotel_category;
+		
         $this->load->view('add_row/new_add_loading_row', $view_request);
     }
 

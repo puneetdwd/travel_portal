@@ -21,7 +21,7 @@ class City extends Admin_Controller {
     public function index() {
         $city = $this->city_model->get_all_city();        
         $view_city = array('city' => $city);
-		//po($view_city);
+//        po($view_city);
         $this->template->write_view('content', 'city/index_city', $view_city);
         $this->template->render();
     }
@@ -41,7 +41,7 @@ class City extends Admin_Controller {
         }
         if ($this->input->post()) {
             $post_data = $this->input->post();            
-            $comb_id = $this->city_model->get_city_combination($post_data['name'], $post_data['state_id'], $post_data['class'], $post_data['cost_center_id'], $post_data['guest_house'], $post_data['officenumber'], $post_data['officeaddress'], $post_data['gsaddress'], $post_data['caretakername'], $post_data['mobile_number']);            
+            $comb_id = $this->city_model->get_city_combination($post_data['name'], $post_data['state_id'], $post_data['class'], $post_data['cost_center_id'], $post_data['guest_house'], $post_data['officenumber'], $post_data['officeaddress'], $post_data['gsaddress'], $post_data['caretakername'], $post_data['mobile_number'], $post_data['airport']);            
             if (empty($comb_id)) {
                 $data = $this->city_model->update_city($post_data, $city_id);
                 if ($data) {

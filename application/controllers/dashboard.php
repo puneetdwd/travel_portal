@@ -30,17 +30,16 @@ class Dashboard extends Admin_Controller {
 //        $sql = "INSERT INTO `menu` (`id`, `menu_id`, `name`, `label`, `module`, `action`, `url`, `logo`, `is_active`, `is_visible`, `sort_order`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES (NULL, '5', 'Travel Policy', 'Travel Policy', 'finance_desk', 'travel_policy', 'finance_desk/travel_policy', '', '1', '1', NULL, NULL, NULL, NULL, NULL);";
 //        $sql = "DROP TABLE `email_format`;";
 //        $result = $this->db->query($sql);
-//        $sql = "SELECT * FROM `travel_portal`.`menu` WHERE `menu_id` LIKE '4'";
-//        $result = $this->db->query($sql);
-//        $result->result_array();
-//        po($result);
+        $sql = "SELECT * FROM `travel_portal`.`menu` WHERE `menu_id` LIKE '4'";
+        $result = $this->db->query($sql);
+        $result->result_array();
+        po($result);
         
         
     }
 
     public function index() {
-        
-		$view_data = array();
+        $view_data = array();
         $employee_id = $this->session->userdata('employee_id');
 
         $total_request = $this->travel_request->get_all_total_count_request($employee_id);
@@ -53,8 +52,7 @@ class Dashboard extends Admin_Controller {
         $view_data['pending_request'] = $pending_request[0]['pending_request'];
 
         $last_few_request = $this->travel_request->get_last_few_request($employee_id);
-        //echo '<pre>'; print_r($last_few_request); exit;
-		$view_data['last_few_request'] = $last_few_request;
+        $view_data['last_few_request'] = $last_few_request;
 
         $last_few_expense = $this->travel_request->get_pending_expense_count_request($employee_id);
         $view_data['pending_expense'] = $last_few_expense;
@@ -94,6 +92,7 @@ class Dashboard extends Admin_Controller {
 
         $last_few_inbox = $this->travel_request->get_last_few_task($employee_id);
         $view_data['last_few_task'] = $last_few_inbox;
+
 
         $this->template->write_view('content', 'dashboard', $view_data);
         $this->template->render();

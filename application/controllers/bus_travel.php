@@ -283,6 +283,7 @@ class Bus_travel extends Admin_Controller {
                             $post_data = array(
                                 'request_id' => $request_id,
                                 'travel_ticket' => '1',
+                                'return_travel_ticket' => '1',
                                 'accommodation' => '1',
                                 'car_hire' => '1',
                                 'bookbyself' => '0',

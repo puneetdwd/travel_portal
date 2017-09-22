@@ -92,7 +92,6 @@ class Train_travel extends Admin_Controller {
 
             /* ----------------- POST DATA---------------------- */
             if ($this->input->post()) {
-
                 $this->load->library('form_validation');
                 $this->form_validation->set_rules('departure_date', 'Departure Date', 'required');
                 $this->form_validation->set_rules('return_date', 'return_date', 'required');
@@ -278,6 +277,7 @@ class Train_travel extends Admin_Controller {
                             $post_data = array(
                                 'request_id' => $request_id,
                                 'travel_ticket' => '1',
+                                'return_travel_ticket' => '1',
                                 'accommodation' => '1',
                                 'car_hire' => '1',
                                 'bookbyself' => '0',
