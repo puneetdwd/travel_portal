@@ -79,6 +79,7 @@ class Audit_desk extends Admin_Controller {
             $travel = $view_request['other_manager_expense_travel'] = $other_manager_expense['travel'];
             $other = $view_request['other_manager_expense_other'] = $other_manager_expense['other'];
             $view_request['other_manager_expense_location'] = $other_manager_expense['expense_location'];
+			$DA_50 = $view_request['DA_50'] = $other_manager_expense['DA_50'];
 
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;

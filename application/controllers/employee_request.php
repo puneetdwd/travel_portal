@@ -1162,6 +1162,7 @@ class Employee_request extends Admin_Controller {
             $foods = $view_request['other_manager_expense_food'] = $other_manager_expense['foods'];
             $travel = $view_request['other_manager_expense_travel'] = $other_manager_expense['travel'];
             $other = $view_request['other_manager_expense_other'] = $other_manager_expense['other'];
+			$DA_50 = $view_request['DA_50'] = $other_manager_expense['DA_50'];
             $view_request['other_manager_expense_location'] = $other_manager_expense['expense_location'];
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
@@ -2590,7 +2591,6 @@ class Employee_request extends Admin_Controller {
                 redirect(base_url() . employee_request);
             }
         }
-//echo '<pre>'; print_r($view_request); exit;
 		$this->template->write_view('content', 'expense/claim_expense', $view_request);
         $this->template->render();
     }
@@ -2673,6 +2673,7 @@ class Employee_request extends Admin_Controller {
             $foods = $view_request['other_manager_expense_food'] = $other_manager_expense['foods'];
             $travel = $view_request['other_manager_expense_travel'] = $other_manager_expense['travel'];
             $other = $view_request['other_manager_expense_other'] = $other_manager_expense['other'];
+			$DA_50 = $view_request['DA_50'] = $other_manager_expense['DA_50'];
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
             $total_travel_claim = $total_travel_claim + $other_manager_expense_total;
@@ -3227,6 +3228,7 @@ class Employee_request extends Admin_Controller {
             $foods = $view_request['other_manager_expense_food'] = $other_manager_expense['foods'];
             $travel = $view_request['other_manager_expense_travel'] = $other_manager_expense['travel'];
             $other = $view_request['other_manager_expense_other'] = $other_manager_expense['other'];
+			$DA_50 = $view_request['DA_50'] = $other_manager_expense['DA_50'];
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
             $total_travel_claim = $total_travel_claim + $other_manager_expense_total;
@@ -3275,7 +3277,8 @@ class Employee_request extends Admin_Controller {
             $hours = $view_request['hours'] = "0";
         }
 
-        $da_total = $request['DA_allowance'] * $day;
+        $view_request['DA_allowance']=$request['DA_allowance'];
+		$da_total = $request['DA_allowance'] * $day;
 
         $total_travel_claim = $total_travel_claim + $da_total;
 

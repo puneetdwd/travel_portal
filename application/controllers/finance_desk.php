@@ -162,6 +162,7 @@ class Finance_desk extends Admin_Controller {
             $travel = $view_request['other_manager_expense_travel'] = $other_manager_expense['travel'];
             $other = $view_request['other_manager_expense_other'] = $other_manager_expense['other'];
             $view_request['other_manager_expense_location'] = $other_manager_expense['expense_location'];
+			$DA_50 = $view_request['DA_50'] = $other_manager_expense['DA_50'];
             $other_manager_expense_total = $foods + $travel + $other;
             $view_request['other_manager_expense'] = $other_manager_expense_total;
             $total_travel_claim = $total_travel_claim + $other_manager_expense_total;
@@ -561,8 +562,7 @@ class Finance_desk extends Admin_Controller {
                 redirect(base_url() . expense);
             }
         }
-
-
+//echo '<pre>'; print_r($view_request); exit;
         $this->template->write_view('content', 'finance_desk/expense_pending', $view_request);
         $this->template->render();
     }
