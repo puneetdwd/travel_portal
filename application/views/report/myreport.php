@@ -37,14 +37,14 @@
                             <th>From - To</th>
                             <th>Approved</th>
                             
-							<th>Ticket(₹)</th>
+							<!----<th>Ticket(₹)</th>
 							<th>Hotel(₹)</th>
 							<th>D.A(₹)</th>
 							<th>Conveyance(₹)</th>
-							<th>Other Expense(₹)</th>
+							<th>Other Expense(₹)</th>---->
+							
 							<th>Net Pay(₹)</th>
 							<th>TOT Cost(₹)</th>
-							
 							<th>Status</th>
                         </tr>
                         <tr>
@@ -56,20 +56,22 @@
                             <td>From - To</td>
                             <td>Approved</td>
                             
-							<td>Ticket</td>
+							<!--<td>Ticket</td>
 							<td>Hotel</td>
 							<td>D.A</td>
 							<td>Conveyance</td>
-							<td>Other Expense</td>
+							<td>Other Expense</td>--->
+							
 							<td>Net Pay</td>
 							<td>TOT Cost</td>
-							
 							<td>Status</td>
                         </tr>                        
                     </thead>
                     </tbody>
-                        <?php foreach ($request as $data) { ?>
-                            <tr>
+                        <?php foreach ($request as $data) {
+							
+							
+							 ?><tr>
                                 <td><?php echo $data['reference_id']; ?></td>
                                 <td><?php echo $data['reason']; ?></td>
                                 <td><?php echo $data['departure_date']; ?></td>
@@ -98,11 +100,12 @@
                                 <td><?php echo $data['reporting_manager_name']; ?></td>
 								
 								
+								<!--<td>₹</td>
 								<td>₹</td>
 								<td>₹</td>
 								<td>₹</td>
-								<td>₹</td>
-								<td>₹</td>
+								<td>₹</td>-->
+								
 								<td><?php echo $data['recevied_amount']; ?></td>
 								<td><?php echo $data['final_total_claim']; ?></td>
 								
@@ -135,22 +138,16 @@
                                         }
                                     }
                                     ?></td>
-                            </tr>
-                        <?php } ?>
+								</tr><?php
+							} ?>
                     </tbody>
                 </table>
-
-
                 <!--</div>-->
             </div>
-
         </div>
     </div>
     <!-- END PAGE CONTENT-->
 </div>
-
-
-
 
 <script type="text/javascript">
 

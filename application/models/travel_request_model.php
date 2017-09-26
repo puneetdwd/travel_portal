@@ -46,18 +46,19 @@ class Travel_request_model extends CI_Model {
         if ($employee_id != '') {
             $sql .= " travel_request.employee_id =" . $employee_id . " ";
         }
-        
+
         if ($cancel_status != '') {
             $sql .= "and (travel_request.status = 'active' or travel_request.status = 'cancel')";
         } else {
             $sql .= "and travel_request.status = 'active'";
         }
+        $sql .= " ORDER BY travel_request.id desc";
 //        $sql .= " GROUP BY travel_request.id";
 
         $result = $this->db->query($sql);
         return $result->result_array();
     }
-    
+
     public function get_my_employee_request($employee_id = '', $cancel_status = '') {
 
         $sql = "SELECT CONCAT(uu.first_name,' ',uu.last_name) as employee_name,p.name as project_name,b.*,x.*,travel_request.*,b.bookbyself,CONCAT(u.first_name,' ',u.last_name) as reporting_manager_name,f.name as from_city_name,d.name as to_city_name,r.reason,c.name as travel_class from travel_request "
@@ -75,7 +76,7 @@ class Travel_request_model extends CI_Model {
         if ($employee_id != '') {
             $sql .= " ee.ea_manager_id =" . $employee_id . " ";
         }
-        
+
         if ($cancel_status != '') {
             $sql .= "and (travel_request.status = 'active' or travel_request.status = 'cancel')";
         } else {
@@ -154,8 +155,8 @@ class Travel_request_model extends CI_Model {
         }
     }
 
-    public function get_request_id($id,$data = '*') {
-        $sql = "SELECT ".$data." from travel_request WHERE id=?";
+    public function get_request_id($id, $data = '*') {
+        $sql = "SELECT " . $data . " from travel_request WHERE id=?";
         $result = $this->db->query($sql, array($id));
         return $result->row_array();
     }
@@ -222,7 +223,7 @@ class Travel_request_model extends CI_Model {
 
         return $result->row_array();
     }
-    
+
     public function get_emp_request_by_ea_id($request_id, $employee_id) {
 
         $sql = "SELECT u.email,t.*,CONCAT(u.first_name,' ',u.last_name) as employee_name,CONCAT(uu.first_name,' ',uu.last_name) as reporting_manager_name,f.name as from_city_name,d.name as to_city_name,r.reason,c.name as travel_class,tp.amount from travel_request t "
@@ -542,9 +543,9 @@ class Travel_request_model extends CI_Model {
     public function update_travel_request($data, $request_number) {
         if (!empty($request_number)) {
             if ($data['approval_level'] == 0) {
-                $needed_array = array('employee_id', 'reference_id', 'group_travel', 'trip_type', 'project_id', 'status', 'travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
+                $needed_array = array('employee_id', 'reference_id', 'group_travel', 'trip_type', 'project_id', 'status', 'travel_type', 'return_travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
             } else {
-                $needed_array = array('employee_id', 'reference_id', 'group_travel', 'trip_type', 'project_id', 'status', 'travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
+                $needed_array = array('employee_id', 'reference_id', 'group_travel', 'trip_type', 'project_id', 'status', 'travel_type', 'return_travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
             }
             $data = array_intersect_key($data, array_flip($needed_array));
             $this->db->where('request_number', $request_number);
@@ -556,9 +557,9 @@ class Travel_request_model extends CI_Model {
             }
         } else {
             if ($data['approval_level'] == 0) {
-                $needed_array = array('employee_id', 'request_number', 'group_travel', 'trip_type', 'reference_id', 'project_id', 'status', 'travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
+                $needed_array = array('employee_id', 'request_number', 'group_travel', 'trip_type', 'reference_id', 'project_id', 'status', 'travel_type', 'return_travel_type','departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
             } else {
-                $needed_array = array('employee_id', 'request_number', 'group_travel', 'trip_type', 'reference_id', 'project_id', 'status', 'travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
+                $needed_array = array('employee_id', 'request_number', 'group_travel', 'trip_type', 'reference_id', 'project_id', 'status', 'travel_type', 'return_travel_type','departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'hotel_allowance', 'hotel_allowance_actual', 'DA_allowance', 'DA_allowance_actual', 'convince_allowance', 'convince_allowance_actual');
             }
             $data = array_intersect_key($data, array_flip($needed_array));
             $result = $this->db->insert('travel_request', $data);
@@ -573,9 +574,9 @@ class Travel_request_model extends CI_Model {
     public function update_travel_request_to_draft($data, $request_number) {
         if (!empty($request_number)) {
             if ($data['approval_level'] == 0) {
-                $needed_array = array('employee_id', 'status', 'travel_type', 'project_id', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status');
+                $needed_array = array('employee_id', 'status', 'travel_type', 'return_travel_type', 'project_id', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status');
             } else {
-                $needed_array = array('employee_id', 'status', 'travel_type', 'project_id', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment');
+                $needed_array = array('employee_id', 'status', 'travel_type', 'return_travel_type', 'project_id', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment');
             }
             $data = array_intersect_key($data, array_flip($needed_array));
             $this->db->where('request_number', $request_number);
@@ -587,9 +588,9 @@ class Travel_request_model extends CI_Model {
             }
         } else {
             if ($data['approval_level'] == 0) {
-                $needed_array = array('employee_id', 'status', 'request_number', 'travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status');
+                $needed_array = array('employee_id', 'status', 'request_number', 'travel_type', 'return_travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment', 'approval_status', 'request_status');
             } else {
-                $needed_array = array('employee_id', 'status', 'request_number', 'travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment');
+                $needed_array = array('employee_id', 'status', 'request_number', 'travel_type', 'return_travel_type', 'departure_date', 'return_date', 'request_date', 'approval_level', 'reporting_manager_id', 'travel_reason_id', 'travel_class_id', 'from_city_id', 'to_city_id', 'comment');
             }
             $data = array_intersect_key($data, array_flip($needed_array));
             $result = $this->db->insert('travel_request', $data);
@@ -609,7 +610,7 @@ class Travel_request_model extends CI_Model {
     }
 
     public function update_travel_booking($data, $travel_booking_id = '') {
-        $needed_array = array('request_id', 'travel_ticket', 'accommodation', 'car_hire', 'bookbyself', 'bookbymanager');
+        $needed_array = array('request_id', 'travel_ticket', 'return_travel_ticket','accommodation', 'car_hire', 'bookbyself', 'bookbymanager');
         $data = array_intersect_key($data, array_flip($needed_array));
         if (!empty($travel_booking_id)) {
             $this->db->where('id', $travel_booking_id);
@@ -671,7 +672,7 @@ class Travel_request_model extends CI_Model {
         $result = $this->db->query($sql, array($cost_center_id));
         return $result->result_array();
     }
-    
+
     public function delete_request_other_member($req_id) {
         if (!empty($req_id)) {
             $this->db->where('request_id', $req_id);
@@ -680,8 +681,8 @@ class Travel_request_model extends CI_Model {
             $this->db->delete('travel_request_member_others');
         }
     }
-    
-     public function get_all_other_expences_data($TableName) {
+
+    public function get_all_other_expences_data($TableName) {
         $sql = "select id,expense_name from " . $TableName . " where status='active';";
         $result = $this->db->query($sql);
         return $result->result_array();

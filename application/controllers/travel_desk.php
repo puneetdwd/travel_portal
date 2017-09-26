@@ -1,5 +1,4 @@
 <?php
-
 class Travel_desk extends Admin_Controller {
 
     public function __construct() {
@@ -790,12 +789,23 @@ class Travel_desk extends Admin_Controller {
                     if ($check_out_date == '') {
                         $data_array['check_out_date'] = null;
                     }
-                    $cost = $this->input->post('cost');
-                    if ($cost == '') {
-                        $data_array['cost'] = 0;
+                    
+					//$cost = $this->input->post('cost');
+                    //if ($cost == '') {
+                        //$data_array['cost'] = 0;
+                    //}
+
+					$cost = $this->input->post('cost');
+                    if ($cost != '') {
+                        $data_array['loading_expense_1'] = $cost;
                     }
-
-
+					else{$data_array['loading_expense_1'] = 0;}
+					
+                    $other_expense_1 = $this->input->post('other_expense_1');
+                    if ($other_expense_1 != '') {
+                        $data_array['other_expense_1'] = $other_expense_1;
+                    }
+					else{$data_array['other_expense_1'] = 0;}
 
                     $data_array['hotel_attchment'] = '';
                     if (isset($_FILES['hotel_attchment']['name']) && $_FILES['hotel_attchment']['name'] != null) {
@@ -816,7 +826,9 @@ class Travel_desk extends Admin_Controller {
                         }
                     }
 
-                    unset($data_array['occupancy']);
+                    $data_array['cost']=0;
+					unset($data_array['occupancy']);
+					//echo '<pre>'; print_r($data_array); exit;
                     if ($this->common->insert_data($data_array, 'hotel_booking')) {
                         $data_array = array();
                         $redirect_flag = 0;
@@ -1158,7 +1170,6 @@ class Travel_desk extends Admin_Controller {
     function train_booking() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-
             $this->form_validation->set_rules('train_provider_id', 'train_provider_id', 'required');
             $this->form_validation->set_rules('pnr_number', 'pnr_number', 'required');
             $this->form_validation->set_rules('cost', 'cost', 'required');
@@ -1239,9 +1250,7 @@ class Travel_desk extends Admin_Controller {
                         $data_array['ticket_type'] = $ticket_type;
                         $data_array['vendor_commission'] = $vendor_commission;
                         $data_array['arrange_by'] = "Company";
-                        
-						//echo '<pre>'; print_r($data_array); exit;
-						
+                        //echo '<pre>'; print_r($data_array); exit;
 						if ($this->common->insert_data($data_array, 'train_ticket_booking')) {
                             $booking_mode = 0;
                             $redirect_flag = 0;

@@ -4,24 +4,23 @@
     .modal-lg {
         width: 1300px;
     }
+	.pull-left {float: left !important;text-align: left;}
 </style>
 <div class="page-content">
     <!-- BEGIN PAGE HEADER-->
     <div class="breadcrumbs">
-        <legend class="border-bottom-none">Train Request</legend>
-        <div class="pull-mob">
-            <span id="alert_msg" class="col-xs-12" style="padding: 0;"></span>
-            <span id="success_msg" class="col-xs-12" style="color:green; padding: 0;"></span>
-            <span id="error_msg" class="col-xs-12" style="color:red; padding: 0;"></span><div class="hidden-md hidden-lg hidden-xs"><br></div>
+
+		<div class="pull-left"><img src="assets/images/train-icon" /></div>
+		<div class="pull-mob" style="margin-top:15px">
+            <a title="Hotel Search" class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#hotel_modal"><i class="fa fa-bed"></i></a>
             <a title="Flight Travel" class="btn btn_blue" href="<?php echo base_url('flight_travel/index') ?>"><i class="fa fa-plane"></i></a>
             <a title="Car Travel" class="btn btn_blue" href="<?php echo base_url('car_travel/index') ?>"><i class="fa fa-car"></i></a>
             <a title="Bus Travel" class="btn btn_blue" href="<?php echo base_url('bus_travel/index') ?>"><i class="fa fa-bus"></i></a>
-            <a title="Hotel Search" class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#hotel_modal"><i class="fa fa-bed"></i></a>
         </div>
+		
     </div>
-    <!-- END PAGE HEADER-->
-
-    <div class="row">
+	<!-- END PAGE HEADER-->
+	<div class="row">
         <div class="col-md-12">
             <?php if ($this->session->flashdata('error')) { ?>
                 <div class="alert alert-danger">
@@ -107,6 +106,7 @@
                                                         <?php echo $data['reason']; ?>
                                             </option>
                                         <?php } ?>
+                                        <option value='Other'>Other</option>    
                                     </select>
                                 </div>
                             </div>
@@ -254,6 +254,7 @@
                                 <div class="form-actions">
                                     <br>
                                     <input type="hidden" id="travel_type" name="travel_type" value="2">                        
+                                    <input type="hidden" id="return_travel_type" name="return_travel_type" value="2">                        
                                     <input type="hidden" id="request_number" name="request_number" value="<?php echo $request_number; ?>">
                                     <input type="hidden" id="reporting_manager_id" name="reporting_manager_id" value="<?php echo $reporting_manager_id; ?>">
                                     <input type="hidden" id="approval_level" name="approval_level" value="<?php echo $approval_level; ?>">
@@ -429,7 +430,6 @@
 <script type="text/javascript">
                             $(document).ready(function () {
                                 check_hangout_suggestion();
-
                                 $('.form_datetime').datetimepicker({
                                     weekStart: 1,
                                     todayBtn: 1,
@@ -442,11 +442,18 @@
                                     minView: 1,
                                     format: "<?php echo DATETIME_FORMAT_DATEPICKER; ?>"
                                 });
-
                                 $('#travel_reason_id').on('change', function () {
                                     $("#project_div").css('display', (this.value == 'Projects') ? 'block' : 'none');
-                                });
+//                                    if (this.value == 'Other') {
+//                                        $("#comment").addClass('required');
+//                                    } else {
+//                                        $("#comment").removeClass('required');
+//                                        $("#comment").removeClass('has-error');
+//                                        $("#comment").attr('aria-invalid', 'false');
+//                                        $("#comment-error").css('display', 'none');
+//                                    }
 
+                                });
                                 var isAfterStartDate = function (startDateStr, endDateStr) {
                                     var startDateStr = new Date(startDateStr),
                                             endDateStr = new Date(endDateStr);
@@ -464,11 +471,9 @@
                                 $.validator.addMethod("isAfterStartDate", function (value, element) {
                                     return isAfterStartDate($('#departure_date').val(), value);
                                 }, "Return Date should be after Departure Date");
-
                                 $("#departure_date,#return_date").change(function () {
                                     var startDate = document.getElementById("departure_date").value;
                                     var endDate = document.getElementById("return_date").value;
-
                                     if ((Date.parse(endDate) == Date.parse(startDate))) {
                                         alert("Departure date and Return date should not be same");
                                         document.getElementById("return_date").value = "";
@@ -479,11 +484,9 @@
                                         }
                                     }
                                 });
-
                                 $("#travel_reason_id").change(function () {
                                     check_hangout_suggestion();
                                 });
-
                                 function check_hangout_suggestion() {
                                     var travel_reason_id = $("#travel_reason_id").val();
                                     $.ajax({
@@ -507,20 +510,43 @@
                                 $("#from_city_id").change(function () {
                                     var from = document.getElementById("from_city_id").value;
                                     var to = document.getElementById("to_city_id").value;
-
                                     if (from == to) {
                                         alert("To and From Location can not be same..!!");
                                         document.getElementById("from_city_id").value = "";
                                     }
                                 });
-
                                 $("#to_city_id").change(function () {
                                     var from = document.getElementById("from_city_id").value;
                                     var to = document.getElementById("to_city_id").value;
-
                                     if (from == to) {
                                         alert("To and From Location can not be same..!!");
                                         document.getElementById("to_city_id").value = "";
+                                    }
+                                });
+//                                jQuery.validator.addMethod("check_comment", function (value, element, params) {
+//                                    var travel_reason_id = $('#travel_reason_id').val();
+//                                    var comment = $('#comment').val();
+//                                    if ($('#travel_reason_id').val() == "Other") {
+//                                        if (comment == "") {
+//                                            return false;
+//                                        } else {
+//                                            return true;
+//                                        }
+//                                    } else {
+//                                        return true;
+//                                    }
+//                                }, jQuery.validator.format("Please add comment"));
+
+                                $("#travel_reason_id").change(function () {
+                                    if ($('#travel_reason_id').val() == "Other") {
+                                        $("#comment").rules("add", {
+                                            required: true,
+                                            messages: {
+                                                required: "Please add comment",
+                                            }
+                                        });
+                                    } else {
+                                        $("#comment").rules("remove");
                                     }
                                 });
 
@@ -560,6 +586,7 @@
                                         },
                                         travel_reason_id: {
                                             required: true,
+//                                            check_comment: true,
                                         },
                                         travel_class_id: {
                                             required: true,
@@ -573,6 +600,9 @@
                                         to_city_id: {
                                             required: true,
                                         },
+//                                        comment: {
+//                                            check_comment: true,
+//                                        },
                                     },
                                     messages: {
                                         departure_date: {
@@ -603,15 +633,12 @@
                                         $(element)
                                                 .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
                                     },
-
                                     unhighlight: function (element) { // revert the change done by hightlight
                                         $(element)
                                                 .closest('.form-group').removeClass('has-error'); // set error class to the control group
                                     },
-
                                 });
                             });
-
                             function add_guest_row_trf() {
                                 var other_row = $("#other_row").val();
                                 var html = "<tr id='row_id_" + other_row + "'><td class='col-md-1'><a  onclick='remove_row(" + other_row + ")' class='btn-xs btn_red'><i class='fa fa-trash-o'></i></a></td>";
@@ -654,10 +681,12 @@
                             }
 </script>
 <script type="text/javascript">
-    function check_date() {
+
+function check_date() {
+		var flag;
+		flag = 'false';
         var departure_date = new Date($("#departure_date").val());
         var return_date = new Date($("#return_date").val());
-        var flag;
         if (Number(return_date) > Number(departure_date)) {
             flag = 'true';
         } else {
@@ -672,7 +701,6 @@
     window.setInterval(function () {
         save_request();
     }, 20000);
-
     function save_request() {
         $('#success_msg').html('');
         $('#alert_msg').html('Saving..');
@@ -683,6 +711,7 @@
                 url: '<?php echo site_url('flight_travel/save_to_draft'); ?>',
                 data: {
                     'travel_type': $('#travel_type').val(),
+                    'return_travel_type': $('#return_travel_type').val(),
                     'request_number': $('#request_number').val(),
                     'approval_level': $('#approval_level').val(),
                     'reporting_manager_id': $('#reporting_manager_id').val(),
@@ -732,9 +761,7 @@
                 $(".ui-autocomplete").css("z-index", 1000);
             }
         });
-
     });
-
     function put_employee() {
         $("#dd_user_input").attr("disabled", "disabled");
         var sel_emp = $("#sel_emp").val();
@@ -802,12 +829,10 @@
             minView: 2,
             format: "<?php echo DATETIME_FORMAT_DATEPICKER_API; ?>"
         });
-
         $('#hotel_search_table').DataTable({
             "paging": false,
             "info": false
         });
-
         //get vcid for hotel search city list
         $.getJSON("<?php echo base_url(); ?>/assets/data/hotel_city_list.json", function (data) {
             var items = [];
@@ -815,10 +840,8 @@
             $.each(data, function (key, val) {
                 html = html + "<option value='" + val.city_id + "'>" + val.city_name + "</option>"
             });
-
             $("#hotel_city_id_j").append(html);
         });
-
         var formData;
         hotel_search_table_paginate_current_j = 1;
         $("#hotel_search_table_paginate_current_j").html(hotel_search_table_paginate_current_j);
@@ -835,7 +858,6 @@
             departure_flight_table.destroy();
             $('#hotel_search_table tbody').empty();
             hotel_search_table_paginate_current_j = 1;
-
             $('#hotels_found').empty();
             $('.form-group').removeClass('has-error'); // remove the error class
             $('.help-block').remove(); // remove the error text
@@ -844,10 +866,8 @@
             // there are many ways to get this data using jQuery (you can use the class or id also)
             check_in_j = $('#check_in_j').val();
             check_out_j = $('#check_out_j').val();
-
             check_in_j = check_in_j.replace("-", "");
             check_out_j = check_out_j.replace("-", "");
-
             var formDataHotel = {
                 'check_in_j': check_in_j.replace("-", ""),
                 'check_out_j': check_out_j.replace("-", ""),
@@ -860,7 +880,6 @@
             $.ajax({
                 type: 'GET', // define the type of HTTP verb we want to use (POST for our form)
                 url: "http://www.goibibo.com/hotels/search-data/?app_id=b6384641&app_key=3143607bd1279532978d34d05ce585ac&vcid=" + formDataHotel['hotel_city_id_j'] + "&ci=" + formDataHotel['check_in_j'] + "&co=" + formDataHotel['check_out_j'] + "&r=" + formDataHotel['hotel_room_j'] + "-1_0&pid=" + hotel_search_table_paginate_current_j,
-
                 data: formDataHotel, // our data object
                 dataType: 'json', // what type of data do we expect back from the server
                 encode: true,
@@ -911,12 +930,9 @@
                     .fail(function (data) {
                         console.log(data);
                     });
-
             // stop the form from submitting the normal way and refreshing the page
 //            event.preventDefault();
         });
-
-
         function nextHotel() {
             hotel_search_table_paginate_current_j++;
             $("#hotel_search_table_paginate_current_j").html(hotel_search_table_paginate_current_j);
@@ -948,7 +964,6 @@
             $.ajax({
                 type: 'GET', // define the type of HTTP verb we want to use (POST for our form)
                 url: "http://www.goibibo.com/hotels/search-data/?app_id=b6384641&app_key=3143607bd1279532978d34d05ce585ac&vcid=" + formDataHotel['hotel_city_id_j'] + "&ci=" + formDataHotel['check_in_j'] + "&co=" + formDataHotel['check_out_j'] + "&r=" + formDataHotel['hotel_room_j'] + "-1_0&pid=" + hotel_search_table_paginate_current_j,
-
                 data: formDataHotel, // our data object
                 dataType: 'json', // what type of data do we expect back from the server
                 encode: true,
@@ -1000,7 +1015,6 @@
                     .fail(function (data) {
                         console.log(data);
                     });
-
             // stop the form from submitting the normal way and refreshing the page
 //            event.preventDefault();
         }

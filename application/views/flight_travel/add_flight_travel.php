@@ -1,24 +1,25 @@
 <link href="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" ?>" rel="stylesheet" media="screen">
 <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
 <style>
-.modal-lg {
-width: 1300px;
-}
+.modal-lg {width: 1300px;}
+.pull-left {float: left !important;text-align: left;}
 </style>
 
 <div class="page-content">
 <!-- BEGIN PAGE HEADER-->
 <div class="breadcrumbs">
-<legend class="border-bottom-none">Flight Request</legend>
-<div class="pull-mob">            
+
+<div class="pull-left"><img src="../flight-icon.png" /></div>
+
+<div class="pull-mob" style="margin-top:15px">            
 <span id="alert_msg" class="col-xs-12" style="padding: 0;"></span>
 <span id="success_msg" class="col-xs-12" style="color:green; padding: 0;"></span>
 <span id="error_msg" class="col-xs-12" style="color:red; padding: 0;"></span><div class="hidden-md hidden-lg hidden-xs"><br></div>
+<a title="Flight Travel" class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#flight_modal"><i class="fa fa-plane"></i></a>
+<a title="Hotel Search" class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#hotel_modal"><i class="fa fa-bed"></i></a>
 <a title="Train Travel" class="btn btn_blue" href="<?php echo base_url('train_travel/index') ?>"><i class="fa fa-train"></i></a>
 <a title="Bus Travel" class="btn btn_blue" href="<?php echo base_url('bus_travel/index') ?>"><i class="fa fa-bus"></i></a>
 <a title="Car Travel" class="btn btn_blue" href="<?php echo base_url('car_travel/index') ?>"><i class="fa fa-car"></i></a>
-<a title="Flight Travel" class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#flight_modal"><i class="fa fa-plane"></i></a>
-<a title="Hotel Search" class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#hotel_modal"><i class="fa fa-bed"></i></a>
 </div>
 </div>
 <!-- END PAGE HEADER-->
@@ -109,6 +110,7 @@ data-placeholder="Select a Travel Reason">
 <?php echo $data['reason']; ?>
 </option>
 <?php } ?>
+<option value='Other'>Other</option>     
 </select>                                    
 </div>
 </div>
@@ -162,7 +164,7 @@ data-placeholder="Select a Travel Class">
 <div class ="form-group">
 <label class="control-label">From Location                                               
 <span class="required"> * </span></label>
-<select id="from_city_id" name="from_city_id" class="form-control required select2me"
+<select id="from_city_id"  name="from_city_id" class="form-control required select2me"
 data-placeholder="Select a From Location">
 <option value=''></option>
 <?php $from_city_id = !empty($flight_request['from_city_id']) ? $flight_request['from_city_id'] : ''; ?>
@@ -188,7 +190,7 @@ $from_city_id = $employee['city_id'];
 <div class ="form-group">
 <label class="control-label">To Location                                               
 <span class="required"> * </span></label>
-<select id="to_city_id" name="to_city_id" class="form-control required select2me"
+<select id="to_city_id"  name="to_city_id" class="form-control required select2me"
 data-placeholder="Select a To Location">
 <option value=''></option>
 <?php $to_city_id = !empty($flight_request['to_city_id']) ? $flight_request['to_city_id'] : ''; ?>
@@ -211,11 +213,6 @@ data-placeholder="Select a To Location">
 </div>                                
 </div>
 </div>
-
-
-<div class="row"><a id="checkHotelAvailability" title="Check Availability" href="javascript:void(0)">Check</a></div>
-
-
 <div class="row marginZero">
 <br>
 <fieldset>
@@ -259,6 +256,7 @@ this.value = '';" placeholder="Select Travelling Colleague" />
 <div class="form-actions">
 <br>
 <input type="hidden" id="travel_type" name="travel_type" value="1">                        
+<input type="hidden" id="return_travel_type" name="return_travel_type" value="1">                        
 <input type="hidden" id="request_number" name="request_number" value="<?php echo $request_number; ?>">
 <input type="hidden" id="reporting_manager_id" name="reporting_manager_id" value="<?php echo $reporting_manager_id; ?>">
 <input type="hidden" id="approval_level" name="approval_level" value="<?php echo $approval_level; ?>">
@@ -436,7 +434,7 @@ Loading...
 <div class="modal-body">
 <div class="row">
 <div class="col-md-12">
-<div class="portlet light bordered" id="hotel_search_formHOLDER">
+<div class="portlet light bordered">
 <!--<div class="portlet-body form">-->
 <form role="form" class="" method="post" id="hotel_search_form" novalidate="novalidate">
 <div class="form-body">                
@@ -509,6 +507,7 @@ Loading...
 <div class="alert alert-info">
 Loading...
 </div>
+<!--                    <img src="assets/images/loading.gif" title="Loader" alt="Loader" />-->
 </div>
 
 <div class="table-responsive" id="display">
@@ -673,7 +672,18 @@ alert("To and From Location can not be same..!!");
 document.getElementById("to_city_id").value = "";
 }
 });
-
+$("#travel_reason_id").change(function () {
+if ($('#travel_reason_id').val() == "Other") {
+$("#comment").rules("add", {
+required: true,
+messages: {
+required: "Please add comment",
+}
+});
+} else {
+$("#comment").rules("remove");
+}
+});
 $('#trf_form').validate({
 rules: {
 departure_date: {
@@ -834,6 +844,7 @@ $.ajax({
 url: '<?php echo site_url('flight_travel/save_to_draft'); ?>',
 data: {
 'travel_type': $('#travel_type').val(),
+'return_travel_type': $('#return_travel_type').val(),
 'request_number': $('#request_number').val(),
 'approval_level': $('#approval_level').val(),
 'reporting_manager_id': $('#reporting_manager_id').val(),
@@ -1131,109 +1142,11 @@ console.log(data);
 });
 
 
-
-
-
-$("#checkHotelAvailability").click(function () {
-//from_city_id//to_city_id//return_date//departure_date//
-$('#hotel_modal').modal('show');
-ShowAvailable(from_city_id, to_city_id, return_date, departure_date);
-});
-
-
-
-
-function ShowAvailable(){
-//$('#hotel_search_formHOLDER').hide();
-departure_flight_table = $('#hotel_search_table').DataTable();
-departure_flight_table.destroy();
-$('#hotel_search_table tbody').empty();
-hotel_search_table_paginate_current_j = 1;
-
-$('#hotels_found').empty();
-$('.form-group').removeClass('has-error');
-$('.help-block').remove();
-
-var d1= $('#departure_date').val().split(' ');
-var d2= $('#return_date').val().split(' ');
-
-check_in_j = d1[0];
-check_out_j = d2[0];
-
-check_in_j = check_in_j.replace("-", "");
-check_out_j = check_out_j.replace("-", "");
-
-var formDataHotel = {
-'check_in_j': check_in_j.replace("-", ""),
-'check_out_j': check_out_j.replace("-", ""),
-'hotel_city_id_j': $("#to_city_id option:selected").val(),
-'hotel_room_j': 1
-};
-
-$.ajax({
-type: 'GET',
-url: "http://www.goibibo.com/hotels/search-data/?app_id=b6384641&app_key=3143607bd1279532978d34d05ce585ac&vcid=" + formDataHotel['hotel_city_id_j'] + "&ci=" + formDataHotel['check_in_j'] + "&co=" + formDataHotel['check_out_j'] + "&r=" + formDataHotel['hotel_room_j'] + "-1_0&pid=" + hotel_search_table_paginate_current_j,
-
-data: formDataHotel,
-dataType: 'json',
-encode: true,
-beforeSend: function () {
-$("#ajaxwaiting").show();
-},
-})
-
-.done(function (data) {
-$("#ajaxwaiting").fadeOut(2000);
-if (!data.success) {
-$.each(data, function (key, value) {
-console.log(value);
-var row = '';
-var record = 'Total Hotels Found <b>' + value.length + '</b>';
-$.each(value, function (k, v) {
-row += '<tr>';
-row += '<td><img src="' + v.t + '" alt="thumb" width="100px"></td>';
-row += '<td>' + v.hn + '</td>';
-row += '<td>' + v.hr + '</td>';
-row += '<td>' + v.tp_alltax + '</td>';
-row += '</tr>';
-});
-$('#hotel_search_table tbody').append(row);
-$('#hotels_found').html(record);
-$('#hotel_search_table').DataTable({
-"paging": false,
-"info": false
-});
-});
-} else {
-$('form').append('<div class="alert alert-success">' + data.message + '</div>');
-}
-})
-.fail(function (data) {
-console.log(data);
-}); 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 var formData;
 hotel_search_table_paginate_current_j = 1;
 $("#hotel_search_table_paginate_current_j").html(hotel_search_table_paginate_current_j);
 //hotel search form submit
 $("#search_hotel").click(function () {
-//$('#hotel_search_formHOLDER').slideDown();
 //            var event = $('#hotel_search_form');
 //        $('#hotel_search_form').submit(function (event) {
 
@@ -1325,6 +1238,7 @@ console.log(data);
 // stop the form from submitting the normal way and refreshing the page
 //            event.preventDefault();
 });
+
 
 function nextHotel() {
 hotel_search_table_paginate_current_j++;

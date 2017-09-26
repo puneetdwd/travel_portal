@@ -71,7 +71,7 @@
                             <th>Ticket</th>
                             <th>Hotel</th>
                             <th>Car</th>
-                            <th>Other Expenses</th>
+                            <th>Travel Expenses</th>
                             <th class="no_sort" style="width:150px;"></th>
                         </tr>
                     </thead>
@@ -107,9 +107,9 @@
                                 $car_booking = 1;
                             }
                             
-                            if ($trip_ticket == 1 && $hotel_booking == 1 && $car_booking == 1 && $other_manager_expense == '1') {
-                                
-                            } else {
+//                            if ($trip_ticket == 1 && $hotel_booking == 1 && $car_booking == 1 && $other_manager_expense == '1') {
+//                                
+//                            } else {
                                 ?>
                                 <tr>
                                     <th><?php echo $data['reference_id']; ?></th>
@@ -129,8 +129,8 @@
                                     <th><?php if ($data['trip_ticket'] == 1) { ?><span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span><?php } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php } ?></th>
                                     <th><?php if ($data['hotel_booking'] == 1) { ?><span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span><?php } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php } ?></th>
                                     <th><?php if ($data['car_booking'] == 1) { ?><span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span><?php } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php } ?></th>
-                                    <th><?php if(isset($data['others'])) { if ($data['others'] == 1) { ?><span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span><?php } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php } } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php } ?></th>
-
+                                    <th><?php if ($data['other_manager_expense'] == "1") { ?><span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span><?php } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php  } ?></th>
+                                    <!--<th><?php if(isset($data['others'])) { if ($data['others'] == 1) { ?><span class="glyphicon glyphicon-ok" style="color:green" aria-hidden="true"></span><?php } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php } } else { ?><span class="glyphicon glyphicon-remove" style="color:red" aria-hidden="true"></span><?php } ?></th>-->
                                     <td nowrap>
                                         <?php
                                         if ($data['request_status'] == "3") {
@@ -148,7 +148,7 @@
                                     </td>
                                 </tr>
                                 <?php
-                            }
+//                            }
                         }
                         ?>
                     </tbody>

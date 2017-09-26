@@ -30,7 +30,7 @@ class Travel_desk_model extends CI_Model {
 		left join travel_reasons on travel_request.travel_reason_id = travel_reasons.id
 		left join travel_category on travel_request.travel_class_id = travel_category.id
 		left join indian_cities fromCity on travel_request.from_city_id = fromCity.id
-		left join indian_cities toCity on travel_request.to_city_id = toCity.id where travel_request.status='active' and travel_request.approval_status='Approved' and request_status >= '3' and (fromCity.cost_center_id = ? or toCity.cost_center_id = ?)";
+		left join indian_cities toCity on travel_request.to_city_id = toCity.id where travel_request.status='active' and travel_request.approval_status='Approved' and request_status >= '3' and (fromCity.cost_center_id = ? or toCity.cost_center_id = ?) order by request_status asc limit 100";
         $result = $this->db->query($sql,array($cost_center_id,$cost_center_id));
         return $result->result_array();
     }
@@ -92,10 +92,10 @@ class Travel_desk_model extends CI_Model {
 
     function get_hotel_category_by_location($city, $type = '') {                
         if ($type == '') {
-            $sql = "SELECT * FROM travel_category t WHERE t.city_id = ? and travel_type = '5'";
+            $sql = "SELECT * FROM travel_category t WHERE t.city_id = ? and travel_type = '5' and status='active'";
             $result = $this->db->query($sql, array($city));
         } else {
-            $sql = "SELECT * FROM travel_category t WHERE t.city_id = ?  and type = ? and travel_type = '5'";
+            $sql = "SELECT * FROM travel_category t WHERE t.city_id = ?  and type = ? and travel_type = '5' and status='active'";
             $result = $this->db->query($sql, array($city, $type));
         }
         return $result->result_array();

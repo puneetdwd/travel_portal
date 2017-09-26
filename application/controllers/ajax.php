@@ -56,6 +56,10 @@ class Ajax extends Admin_Controller {
                 $this->load->view('expense/check_booking', $this->data);
 //        $this->template->write_view('content', 'expense/check_booking', $this->data);
 //        $this->template->render();
+
+
+//echo '<pre>'; print_r($this->data); exit;
+
             }
         }
     }

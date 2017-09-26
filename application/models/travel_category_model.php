@@ -3,42 +3,33 @@
 class Travel_category_model extends CI_Model {
 
     public function get_all_flight_category() {
-        
-		$sql = "SELECT * from travel_category t WHERE t.travel_type = '1'";
-		//$sql = "SELECT * from travel_category t WHERE t.travel_type = '1' and t.status = 'active'";
+        $sql = "SELECT * from travel_category t WHERE t.travel_type = '1' and t.status = 'active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }
 
     public function get_all_train_category() {
-        
-		$sql = "SELECT * from travel_category t WHERE t.travel_type = '2'";
-		//$sql = "SELECT * from travel_category t WHERE t.travel_type = '2' and t.status = 'active'";
+        $sql = "SELECT * from travel_category t WHERE t.travel_type = '2' and t.status = 'active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }
 
     public function get_all_car_category() {
-        
-		$sql = "SELECT t.*,c.name as city_name from travel_category t LEFT JOIN indian_cities c ON c.id = t.city_id WHERE t.travel_type = '3'";
-		//$sql = "SELECT t.*,c.name as city_name from travel_category t LEFT JOIN indian_cities c ON c.id = t.city_id WHERE t.travel_type = '3' and t.status = 'active'";
+        $sql = "SELECT t.*,c.name as city_name from travel_category t LEFT JOIN indian_cities c ON c.id = t.city_id WHERE t.travel_type = '3' and t.status = 'active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }
 
     public function get_all_bus_category() {
-        
-		//$sql = "SELECT * from travel_category t WHERE t.travel_type = '4' and t.status = 'active'";
-		$sql = "SELECT * from travel_category t WHERE t.travel_type = '4'";
+        $sql = "SELECT * from travel_category t WHERE t.travel_type = '4' and t.status = 'active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }
 
     public function get_all_hotel_category($state_id = '') {
-
-		$sql = "SELECT t.*,c.name as city_name from travel_category t LEFT JOIN indian_cities c ON c.id = t.city_id WHERE t.travel_type = '5' ";
-
-		//$sql = "SELECT t.*,c.name as city_name from travel_category t LEFT JOIN indian_cities c ON c.id = t.city_id WHERE t.travel_type = '5' and t.status = 'active'";
+        $sql = "SELECT t.*,c.name as city_name from travel_category t "
+                . "LEFT JOIN indian_cities c ON c.id = t.city_id "
+                . "WHERE t.travel_type = '5' and t.status = 'active'";
         if ($state_id != '') {
             $sql .= " and state_id = '".$state_id."'";
         }

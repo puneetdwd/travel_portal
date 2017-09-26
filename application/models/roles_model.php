@@ -4,8 +4,7 @@ class roles_model extends CI_Model {
 
     public function get_all_roles() {
 
-        $sql = "SELECT * from roles";
-		//$sql = "SELECT * from roles t WHERE t.status='active'";
+        $sql = "SELECT * from roles t WHERE t.status='active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

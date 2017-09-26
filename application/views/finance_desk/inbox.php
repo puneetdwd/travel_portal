@@ -10,7 +10,7 @@
 <div class="page-content">
     <div class="breadcrumbs">
         <h1>
-            FInance Inbox
+            Finance Inbox
         </h1>
     </div>
     <div class="row">

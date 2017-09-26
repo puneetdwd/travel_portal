@@ -98,82 +98,93 @@ class Flight_travel extends Admin_Controller {
                 $this->form_validation->set_rules('travel_class_id', 'travel_class_id', 'required');
                 $this->form_validation->set_rules('from_city_id', 'from_city_id', 'required');
                 $this->form_validation->set_rules('to_city_id', 'to_city_id', 'required');
-                if ($this->form_validation->run() == FALSE) {
-                    $this->session->set_flashdata('error', 'Please follow validation rules!');
+                if ($this->form_validation->run() == FALSE)
+				 {
+                  $this->session->set_flashdata('error', 'Please follow validation rules!');
+                  redirect('flight_travel', 'refresh');
+                 }
+				else
+				 {
+                  if(!empty($travel_request_id))
+				   {
+                    $this->travel_request->delete_request_other_member($travel_request_id);
+                   }
+
+                  $emp_list = $this->session->userdata('emp_list');
+                  $member_list = array();
+                  if(!empty($emp_list))
+				   {
+                    foreach($emp_list as $key=>$value)
+					 {
+                      $member_list[] = $key;
+                     }
+                   }
+
+                  $from_city_id = $this->input->post('from_city_id');
+                  $to_city_id = $this->input->post('to_city_id');
+                  if($from_city_id == $to_city_id)
+				   {
+                    $this->session->set_flashdata('error', 'To and From Location can not be same..!!');
                     redirect('flight_travel', 'refresh');
-                } else {
+                   }
 
-                    if (!empty($travel_request_id)) {
-                        $this->travel_request->delete_request_other_member($travel_request_id);
-                    }
+                  $departure_date = date(DATEMYSQL, strtotime($this->input->post('departure_date')));
+                  $return_date = date(DATEMYSQL, strtotime($this->input->post('return_date')));
+                  if($return_date != '')
+				   {
+                    if($departure_date>$return_date)
+					 {
+                      $this->session->set_flashdata('error', 'Return date must be greater then the departure date');
+                      redirect('flight_travel', 'refresh');
+                     }
+                   }
+                  $post_data = $this->input->post();
 
-                    $emp_list = $this->session->userdata('emp_list');
-                    $member_list = array();
-                    if (!empty($emp_list)) {
-                        foreach ($emp_list as $key => $value) {
-                            $member_list[] = $key;
-                        }
-                    }
+                  $post_data['departure_date'] = date(DATEMYSQL, strtotime($post_data['departure_date']));
+                  $post_data['return_date'] = date(DATEMYSQL, strtotime($post_data['return_date']));
 
-                    $from_city_id = $this->input->post('from_city_id');
-                    $to_city_id = $this->input->post('to_city_id');
-                    if ($from_city_id == $to_city_id) {
-                        $this->session->set_flashdata('error', 'To and From Location can not be same..!!');
-                        redirect('flight_travel', 'refresh');
-                    }
+                  $request_number = $this->input->post('request_number');
+                  $reference_id = $this->travel_request->generate_reference_id();
+                  $post_data['reference_id'] = $reference_id;
+                  $post_data['employee_id'] = $employee_id;
+                  $post_data['request_date'] = date('Y-m-d');
+                  $post_data['status'] = 'active';
 
+                  $project_id = $this->input->post('project_id');
+                  if($project_id=='')
+				   {
+                    $post_data['project_id'] = null;
+                   }
 
+                  $return_date = $this->input->post('return_date');
+                  if($return_date=='')
+				   {
+                    $travel_date = $departure_date;
+                    $travel_day = "1";
+                    $post_data['trip_type'] = '1';
+                    $post_data['return_date'] = null;
+                   }
+				  else
+				   {
+                    $now = strtotime(date('Y-m-d', strtotime($this->input->post('departure_date'))));
+                    $your_date = strtotime(date('Y-m-d', strtotime($this->input->post('return_date'))));
+                    $datediff = $your_date - $now;
+                    $travel_day = floor($datediff / (60 * 60 * 24));
+                    $travel_date = $departure_date . " To " . $return_date;
+                   }
 
-                    $departure_date = date(DATEMYSQL, strtotime($this->input->post('departure_date')));
-                    $return_date = date(DATEMYSQL, strtotime($this->input->post('return_date')));
-                    if ($return_date != '') {
-                        if ($departure_date > $return_date) {
-                            $this->session->set_flashdata('error', 'Return date must be greater then the departure date');
-                            redirect('flight_travel', 'refresh');
-                        }
-                    }
-                    $post_data = $this->input->post();
+                  if($post_data['approval_level']==0)
+				   {
+                    $post_data['approval_status'] = 'Approved';
+                    $post_data['request_status'] = '2';
+                   }
 
-                    $post_data['departure_date'] = date(DATEMYSQL, strtotime($post_data['departure_date']));
-                    $post_data['return_date'] = date(DATEMYSQL, strtotime($post_data['return_date']));
+                  $to_city_id = $this->input->post('to_city_id');
+                  $to_city = $this->city_model->get_city($to_city_id);
+                  $to_class = $to_city['class'];
 
-                    $request_number = $this->input->post('request_number');
-                    $reference_id = $this->travel_request->generate_reference_id();
-                    $post_data['reference_id'] = $reference_id;
-                    $post_data['employee_id'] = $employee_id;
-                    $post_data['request_date'] = date('Y-m-d');
-                    $post_data['status'] = 'active';
-
-                    $project_id = $this->input->post('project_id');
-                    if ($project_id == '') {
-                        $post_data['project_id'] = null;
-                    }
-
-                    $return_date = $this->input->post('return_date');
-                    if ($return_date == '') {
-                        $travel_date = $departure_date;
-                        $travel_day = "1";
-                        $post_data['trip_type'] = '1';
-                        $post_data['return_date'] = null;
-                    } else {
-                        $now = strtotime(date('Y-m-d', strtotime($this->input->post('departure_date'))));
-                        $your_date = strtotime(date('Y-m-d', strtotime($this->input->post('return_date'))));
-                        $datediff = $your_date - $now;
-                        $travel_day = floor($datediff / (60 * 60 * 24));
-                        $travel_date = $departure_date . " To " . $return_date;
-                    }
-
-                    if ($post_data['approval_level'] == 0) {
-                        $post_data['approval_status'] = 'Approved';
-                        $post_data['request_status'] = '2';
-                    }
-
-                    $to_city_id = $this->input->post('to_city_id');
-                    $to_city = $this->city_model->get_city($to_city_id);
-                    $to_class = $to_city['class'];
-
-                    $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
-                    foreach ($policy_data as $key => $value) {
+                  $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
+                  foreach($policy_data as $key => $value) {
                         if ($value['service_type'] == "5") {
                             if ($value['actual'] == "0") {
                                 $hotel_allowance = $value['amount'];

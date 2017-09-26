@@ -30,10 +30,11 @@ class Finance_desk_model extends CI_Model {
         $result = $this->db->query($sql);
         return $result->result_array();
     }
-    
+
     public function get_travel_requests_unaudit() {
 
         $sql = "select basicDetail.employee_id as emp_id,travel_request.*,
+                expense.policy_meet,
                 expense.total_claim,
                 expense.less_advance,
                 expense.recevied_amount,
@@ -62,6 +63,7 @@ class Finance_desk_model extends CI_Model {
     public function get_total_requests() {
 
         $sql = "select travel_request.*,
+                expense.policy_meet,
                 expense.total_claim,
                 expense.expense_status,
                 expense.less_advance,
@@ -83,7 +85,7 @@ class Finance_desk_model extends CI_Model {
 		left join travel_category on travel_request.travel_class_id = travel_category.id
 		left join indian_cities fromCity on travel_request.from_city_id = fromCity.id
 		left join expense on expense.request_id = travel_request.id
-		left join indian_cities toCity on travel_request.to_city_id = toCity.id  where travel_request.status='active' and expense.expense_status != 'Rejected' and travel_request.approval_status='Approved' and travel_request.request_status >= '6'";
+		left join indian_cities toCity on travel_request.to_city_id = toCity.id  where travel_request.status='active' and expense.expense_status != 'Rejected' and travel_request.approval_status='Approved' and travel_request.request_status >= '6' limit 100";
         $result = $this->db->query($sql);
         return $result->result_array();
     }
@@ -115,7 +117,7 @@ class Finance_desk_model extends CI_Model {
         $result = $this->db->query($sql);
         return $result->result_array();
     }
-    
+
     public function get_approved_requests() {
 
         $sql = "select travel_request.*,

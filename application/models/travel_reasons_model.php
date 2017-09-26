@@ -4,8 +4,7 @@ class Travel_reasons_model extends CI_Model {
 
     public function get_all_travel_reasons() {
 
-        $sql = "SELECT * from travel_reasons";
-		//$sql = "SELECT * from travel_reasons t WHERE t.status = 'active'";
+        $sql = "SELECT * from travel_reasons t WHERE t.status = 'active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

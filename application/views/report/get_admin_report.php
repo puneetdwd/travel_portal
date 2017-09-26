@@ -20,14 +20,14 @@
             <th>From - To</th>
             <th>Approved</th>
             
-			<th>Ticket(₹)</th>
+			<!----<th>Ticket(₹)</th>
 			<th>Hotel(₹)</th>
 			<th>D.A(₹)</th>
 			<th>Conveyance(₹)</th>
-			<th>Other Expense(₹)</th>
+			<th>Other Expense(₹)</th>--->
+			
 			<th>Net Pay(₹)</th>
 			<th>TOT Cost(₹)</th>
-			
 			<th>Status</th>
         </tr>
         <tr>
@@ -40,20 +40,22 @@
             <td>From - To</td>
             <td>Approved</td>
             
-			<td>Ticket</td>
+			<!----<td>Ticket</td>
 			<td>Hotel</td>
 			<td>D.A</td>
 			<td>Conveyance</td>
-			<td>Other Expense</td>
+			<td>Other Expense</td>--->
+			
 			<td>Net Pay</td>
 			<td>TOT Cost</td>
-			
 			<td>Status</td>
         </tr>                        
     </thead>
-</tbody>
-<?php foreach ($request as $data) { ?>
-    <tr>
+</tbody><?php
+foreach ($request as $data) {
+	if($data['request_status']>5)
+	 {
+	  ?><tr>
         <td><?php echo $data['reference_id']; ?></td>
         <td><?php echo $data['employee_name']; ?></td>
         <td><?php echo $data['reason']; ?></td>
@@ -82,11 +84,12 @@
         <td><?php echo $data['from_city_name'] . " - " . $data['to_city_name']; ?></td>
         <td><?php echo $data['reporting_manager_name']; ?></td>
         
+		<!----<td>₹</td>
 		<td>₹</td>
 		<td>₹</td>
 		<td>₹</td>
-		<td>₹</td>
-		<td>₹</td>
+		<td>₹</td>---->
+		
 		<td><?php echo $data['recevied_amount']; ?></td>
 		<td><?php echo $data['final_total_claim']; ?></td>
 		
@@ -119,8 +122,9 @@
                 }
             }
             ?></td>
-    </tr>
-<?php } ?>
+    </tr><?php
+	 }
+	} ?>
 </tbody>
 </table>
 <script type="text/javascript">

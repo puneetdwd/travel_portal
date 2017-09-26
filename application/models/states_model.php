@@ -4,8 +4,7 @@ class states_model extends CI_Model {
 
     public function get_all_states() {
 
-        $sql = "SELECT * from state_list";
-		//$sql = "SELECT * from state_list t WHERE t.status = 'active' ";
+        $sql = "SELECT * from state_list t WHERE t.status = 'active' ";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

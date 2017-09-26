@@ -23,7 +23,7 @@ class Travel_booking_model extends CI_Model {
 //    }
 
     public function update_travel_booking($data, $travel_booking_id) {
-        $needed_array = array('request_id', 'travel_ticket', 'accommodation', 'car_hire','bookbyself','bookbymanager');
+        $needed_array = array('request_id', 'travel_ticket', 'return_travel_ticket', 'accommodation', 'car_hire', 'bookbyself', 'bookbymanager');
         $data = array_intersect_key($data, array_flip($needed_array));
         if (!empty($travel_booking_id)) {
             $this->db->where('id', $travel_booking_id);
@@ -58,7 +58,7 @@ class Travel_booking_model extends CI_Model {
             return FALSE;
         }
     }
-    
+
     public function update_travel_request_cancel($data, $request_id) {
         $needed_array = array('cancel_status');
         $data = array_intersect_key($data, array_flip($needed_array));

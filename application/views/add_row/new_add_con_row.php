@@ -4,7 +4,7 @@
     <td><?php echo $count ?></td>
     <td>
         <div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-            <input style="width:150px !important;" name="con_date[]" id="con_date"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime("+1 day")); ?>" readonly>
+            <input name="con_date[]" id="con_date" style="width:140px !important;" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime("+1 day")); ?>" readonly>
             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
         </div>
     </td>
@@ -20,7 +20,7 @@
     <td>
         <select id="<?php echo 'con_arrange_by_' . $count ?>" name="con_arrange_by[]" onchange='received_total()' class="form-control">
             <option value="Company">Company</option>
-            <option value="Own">Own</option>
+            <option value="Own" selected="">Own</option>
         </select>
     </td>
     <td>

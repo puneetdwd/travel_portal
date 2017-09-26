@@ -3,9 +3,7 @@
 class grades_model extends CI_Model {
 
     public function get_all_grades() {
-        
-		//$sql = "SELECT t.*,c.name as car_type,tc.name as travel_class from grades t LEFT JOIN travel_category c ON c.id = t.car_id LEFT JOIN travel_category tc ON tc.id = t.travel_class WHERE t.status='active'";
-		$sql = "SELECT t.*,c.name as car_type,tc.name as travel_class from grades t LEFT JOIN travel_category c ON c.id = t.car_id LEFT JOIN travel_category tc ON tc.id = t.travel_class";
+        $sql = "SELECT t.*,c.name as car_type,tc.name as travel_class from grades t LEFT JOIN travel_category c ON c.id = t.car_id LEFT JOIN travel_category tc ON tc.id = t.travel_class WHERE t.status='active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

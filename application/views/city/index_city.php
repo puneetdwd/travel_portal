@@ -44,6 +44,7 @@
                             <th>Class</th>
                             <th>Cost Center</th>
                             <th>Guest House</th>
+                            <th>Airport</th>
                             <th class="no_sort" style="width:150px;"></th>
                         </tr>
                     </thead>
@@ -59,7 +60,14 @@
                                         echo "Yes";
                                     } else if ($data['guest_house'] == "2") {
                                         echo "No";
-                                    };
+                                    }
+                                    ?></td>
+                                <td><?php
+                                    if ($data['airport'] == "1") {
+                                        echo "Yes";
+                                    } else if ($data['airport'] == "2") {
+                                        echo "No";
+                                    }
                                     ?></td>
 
 

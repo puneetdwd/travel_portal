@@ -4,8 +4,7 @@ class Department_model extends CI_Model {
 
     public function get_all_department() {
 
-        //$sql = "SELECT * from departments t WHERE t.status='active'";
-		$sql = "SELECT * from departments";
+        $sql = "SELECT * from departments t WHERE t.status='active'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }

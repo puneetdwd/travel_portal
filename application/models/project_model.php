@@ -9,9 +9,9 @@ class Project_model extends CI_Model {
         INNER JOIN sub_departments sd ON p.sub_dept_id = sd.id
         INNER JOIN customers c ON c.id = p.customer_id
         WHERE p.status = 'Active' ";
-    
-	$result = $this->db->query($sql);
-    return $result->result_array();
+        
+        $result = $this->db->query($sql);
+        return $result->result_array();
     }
     
     public function get_all_projects_for_index(){

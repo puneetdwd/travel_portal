@@ -24,10 +24,11 @@ function find_all_dates_between_2_dates($fromd, $tod)
    {
     $allDates[]= $date->format("d-m-Y");
    }
+  $allDates[]= $tod;
   return $allDates;
  }
 
-function find_DA_rows($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:00
+function find_DA_rows_OLD_BACKUP($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:00
  {
   $allDatesWithMutiplicationFactor= array();
   $Begin= explode(' ', $fromDate);
@@ -74,6 +75,45 @@ function find_DA_rows($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:
   $allDatesWithMutiplicationFactor[$tt]['HRS']= $hrCount;
   $da_mul= find_da_multiple($hrCount);
   $allDatesWithMutiplicationFactor[$tt]['multiple']= $da_mul;
+  return $allDatesWithMutiplicationFactor;
+ }
+
+
+
+function find_DA_rows($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:00
+ {
+  $allDatesWithMutiplicationFactor= array();
+  $Begin= explode(' ', $fromDate);
+  $Finish= explode(' ', $toDate);
+  $ff= $Begin[0];
+  $tt= $Finish[0];
+  $allDuringDates= find_all_dates_between_2_dates($ff, $tt);
+  $firstTime= end(explode(' ', $fromDate));
+  $firstTimeStamp= strtotime($fromDate);
+  $lastTime= end(explode(' ', $toDate));
+  $lastTimeStamp= strtotime($toDate);
+  foreach($allDuringDates as $k=>$v)
+  {
+   $thisDateTime= $v.' '.$firstTime;
+   $t1=date_create($thisDateTime);
+   $next24Hr= strtotime($thisDateTime)+86400;
+   if($lastTimeStamp>$next24Hr)
+   {
+	$iterationNext= date('d-m-Y H:i', $next24Hr);
+   }
+   else
+   {
+	$iterationNext= $toDate;
+   }
+   $t2=date_create($iterationNext);
+   $diff=date_diff($t1,$t2);
+   $hrCount= ($diff->days*24)+($diff->h);
+   $allDatesWithMutiplicationFactor[$v]['FROM']= $thisDateTime;
+   $allDatesWithMutiplicationFactor[$v]['TO']= $iterationNext;
+   $allDatesWithMutiplicationFactor[$v]['HRS']= $hrCount;
+   $da_mul= find_da_multiple($hrCount);
+   $allDatesWithMutiplicationFactor[$v]['multiple']= $da_mul;
+  }
   return $allDatesWithMutiplicationFactor;
  }
 
@@ -187,7 +227,10 @@ else
 <th>Paid By</th>
 <th>Mode</th>
 <th>View</th>
-<th>Amount</th>
+<th>Cost</th>
+<th>Tax</th>
+<th>Agency charges</th>
+<th>Total</th>
 </tr>
 </thead>
 <tbody>
@@ -226,13 +269,20 @@ echo "Hotel";
 </a>
 <?php } ?>
 </td>
-<td width="15%">
-<?php $total = $total + $value['cost']; ?>
-<?php echo $value['cost']; ?>
-</td>
-</tr>
-<?php } ?>
-<?php foreach ($other_trip_expense as $key => $value) {
+
+<td width="10%"><?php echo $value['cost']; ?></td>
+<td width="10%"><?php echo $value['tax']; ?></td>
+<td width="10%"><?php echo $value['agency_cost']; ?></td>
+
+<td width="15%"><?php
+
+$value_cost= $value['cost']+$value['tax']+$value['agency_cost'];
+$total = $total + $value_cost;
+echo $value_cost;
+
+?></td>
+</tr><?php }
+foreach ($other_trip_expense as $key => $value) {
 ?>
 <tr>
 <td><?php echo $i++; ?></td>                             
@@ -273,17 +323,19 @@ $view++;
 }
 }
 ?>
-</td>                                               
-<td width="15%">
-<?php $total = $total + $value['total']; ?>
-<?php echo $value['total']; ?>
 </td>
+
+<td width="15%"></td>
+<td width="15%"></td>
+<td width="15%"></td>
+
+<td width="15%"><?php $total = $total + $value['total']; echo $value['total']; ?></td>
 </tr>
 <?php } ?>
 </tbody>
 <tfoot>
 <tr>
-<td colspan="7"></td>
+<td colspan="10"></td>
 <th align="center">Total (&#8377;) </th>
 <td>
 <b id="txt_total_sum">
@@ -334,9 +386,12 @@ foreach ($hotel_details as $key => $value) {
 <td><?php echo $value['arrange_by'] ?></td>
 <td><?php echo $value['loading_expense_1'] ?></td>
 <td><?php echo $value['other_expense_1'] ?></td>
-<td width="15%"><?php $total1 = $total1 + $value['cost']; ?>
-<?php echo $value['cost']; ?>
-<!--<input type="text" id="total" value="<?php echo $value['cost']; ?>" class="form-control">-->
+<td width="15%"><?php $tot=$value['loading_expense_1']+$value['other_expense_1'];
+//$total1 = $total1 + $value['cost'];
+$total1 = $total1 + $tot;
+echo $tot;
+//echo $value['cost'];
+?><!--<input type="text" id="total" value="<?php echo $value['cost']; ?>" class="form-control">-->
 </td></tr><?php }
 foreach ($other_loading_booking as $key => $value) {
 ?><tr><td><?php echo $i++; ?></td>
@@ -443,7 +498,7 @@ $allAmounts= array();
 foreach($allDates as $key=>$val)
 {
  ?><tr><td><?php echo $i; ?></td>
- <td><?php if($i==1){ echo 'From '.$d1; }elseif($i==$totRecordCount){ echo $d2; }else{ echo $key; } ?></td>
+ <td><?php echo $val['FROM'].'-to-'.$val['TO']; ?></td>
  <td><?php echo $request['to_city_name']; ?></td>
  <td><?php echo $request['to_city_class']; ?></td>
  <td><?php if($val['multiple']==1){ echo 'Full DA'; }elseif($val['multiple']==0.5){ echo '1/2 DA'; }elseif($val['multiple']==0){ echo 'N/A'; } ?></td>

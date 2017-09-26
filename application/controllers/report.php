@@ -79,18 +79,14 @@ class Report extends Admin_Controller {
         $end_date = $this->input->post('end_date');
         $request = $this->report_model->get_admin_report($grade_id, $cost_center_id, $city_id, $state_id, $travel_mode, $dept_id, $start_date, $end_date);
 		//echo $this->db->last_query();
-        $view_data = array('request' => $request);
+		$view_data = array('request' => $request);
         $this->load->view('report/get_admin_report', $view_data);
     }
 
     public function myreport() {
         $employee_id = $this->session->userdata('employee_id');
         $request = $this->report_model->get_all_request($employee_id);
-        
-		//echo '<pre>'; print_r($request); exit;
-		
-		
-		$view_data = array('request' => $request);
+        $view_data = array('request' => $request);
         $this->template->write_view('content', 'report/myreport', $view_data);
         $this->template->render();
     }

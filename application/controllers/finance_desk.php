@@ -274,6 +274,10 @@ class Finance_desk extends Admin_Controller {
                     $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
                     $data_array['expense_location'] = $flight_booking[0]['expense_location'];
                     $data_array['cost'] = $flight_booking[0]['cost'];
+					
+					$data_array['tax'] = $flight_booking[0]['tax'];
+					$data_array['agency_cost'] = $flight_booking[0]['agency_cost'];
+					
                     $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
                     $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
                     $ticket_details[] = $data_array;
@@ -292,6 +296,10 @@ class Finance_desk extends Admin_Controller {
                     $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
                     $data_array['expense_location'] = $train_booking[0]['expense_location'];
                     $data_array['cost'] = $train_booking[0]['cost'];
+					
+					$data_array['tax'] = $train_booking[0]['tax'];
+					$data_array['agency_cost'] = $train_booking[0]['agency_cost'];
+					
                     $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
                     $data_array['attachment'] = $train_booking[0]['train_attachment'];
                     $ticket_details[] = $data_array;
@@ -353,6 +361,10 @@ class Finance_desk extends Admin_Controller {
                         $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
                         $data_array['expense_location'] = $flight_booking[0]['expense_location'];
                         $data_array['cost'] = $flight_booking[0]['cost'];
+						
+						$data_array['tax'] = $flight_booking[0]['tax'];
+						$data_array['agency_cost'] = $flight_booking[0]['agency_cost'];
+						
                         $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
                         $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
                         $ticket_details[] = $data_array;
@@ -374,6 +386,10 @@ class Finance_desk extends Admin_Controller {
                         $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
                         $data_array['expense_location'] = $train_booking[0]['expense_location'];
                         $data_array['cost'] = $train_booking[0]['cost'];
+						
+						$data_array['tax'] = $train_booking[0]['tax'];
+						$data_array['agency_cost'] = $train_booking[0]['agency_cost'];
+						
                         $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
                         $data_array['attachment'] = $train_booking[0]['train_attachment'];
                         $ticket_details[] = $data_array;
@@ -562,7 +578,7 @@ class Finance_desk extends Admin_Controller {
                 redirect(base_url() . expense);
             }
         }
-//echo '<pre>'; print_r($view_request); exit;
+		//echo '<pre>'; print_r($view_request); exit;
         $this->template->write_view('content', 'finance_desk/expense_pending', $view_request);
         $this->template->render();
     }
@@ -622,7 +638,7 @@ class Finance_desk extends Admin_Controller {
                         $subject = $request_data['reference_id'] . ", Claim Approval Status";
                         $this->sendEmail($to, $subject, $message);
 
-                        $this->session->set_flashdata('success', 'Expense Sent to Adut Manager.');
+                        $this->session->set_flashdata('success', 'Expense has been sent to Audit Desk.');
                         redirect(base_url() . 'finance_desk/inbox');
                     } else {
                         $this->session->set_flashdata('error', 'Error Occurred. Try Again!');

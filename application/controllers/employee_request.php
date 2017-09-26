@@ -32,7 +32,7 @@ class Employee_request extends Admin_Controller {
         }
 
         $emp_request = $this->travel_request->get_my_employee_request($employee_id, '1');
-//        po($emp_request);
+		//po($emp_request);
         $emp_request_arr = array();
         foreach ($emp_request as $key => $value) {
             $emp_request_arr[$value['id']] = $value;
@@ -504,7 +504,7 @@ class Employee_request extends Admin_Controller {
         $employee_id = $this->session->userdata('employee_id');
 
         $request = $this->travel_request->get_manager_request_by_id($request_id, $employee_id);
-//        po($request);
+		//po($request);
         if (empty($request)) {
             $this->session->set_flashdata('error', "Something went wrong!");
             redirect(base_url() . dashboard);
@@ -1269,6 +1269,10 @@ class Employee_request extends Admin_Controller {
                     $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
                     $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
                     $data_array['cost'] = $flight_booking[0]['cost'];
+					
+					$data_array['tax'] = $flight_booking[0]['tax'];
+					$data_array['agency_cost'] = $flight_booking[0]['agency_cost'];
+					
                     $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
                     $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
                     $ticket_details[] = $data_array;
@@ -1289,6 +1293,10 @@ class Employee_request extends Admin_Controller {
                     $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
                     $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
                     $data_array['cost'] = $train_booking[0]['cost'];
+					
+					$data_array['tax'] = $train_booking[0]['tax'];
+					$data_array['agency_cost'] = $train_booking[0]['agency_cost'];
+					
                     $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
                     $data_array['attachment'] = $train_booking[0]['train_attachment'];
                     $ticket_details[] = $data_array;
@@ -1352,7 +1360,11 @@ class Employee_request extends Admin_Controller {
                         $data_array['trip_mode'] = $flight_booking[0]['trip_mode'];
                         $data_array['arrange_by'] = $flight_booking[0]['arrange_by'];
                         $data_array['cost'] = $flight_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
+                        
+						$data_array['tax'] = $flight_booking[0]['tax'];
+						$data_array['agency_cost'] = $flight_booking[0]['agency_cost'];
+						
+						$total_travel_claim = $total_travel_claim + $flight_booking[0]['cost'];
                         $data_array['attachment'] = $flight_booking[0]['flight_attachment'];
                         $ticket_details[] = $data_array;
                         if ($request['travel_ticket'] == "2") {
@@ -1374,7 +1386,11 @@ class Employee_request extends Admin_Controller {
                         $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
                         $data_array['arrange_by'] = $train_booking[0]['arrange_by'];
                         $data_array['cost'] = $train_booking[0]['cost'];
-                        $total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
+                        
+						$data_array['tax'] = $train_booking[0]['tax'];
+						$data_array['agency_cost'] = $train_booking[0]['agency_cost'];
+						
+						$total_travel_claim = $total_travel_claim + $train_booking[0]['cost'];
                         $data_array['attachment'] = $train_booking[0]['train_attachment'];
                         $ticket_details[] = $data_array;
                         if ($request['travel_ticket'] == "2") {
@@ -1480,7 +1496,6 @@ class Employee_request extends Admin_Controller {
         $view_request['car_details'] = $car_details;
         $view_request['total_travel_claim'] = $total_travel_claim;
         $view_request['total_unpaid_claim'] = $total_unpaid_claim;
-
 
         $employee = $this->employee_model->get_employee_by_id($employee_id);
         $grade_id = $employee['grade_id'];
@@ -4199,13 +4214,19 @@ class Employee_request extends Admin_Controller {
 
     function new_add_trip_row() {
         $count = $this->input->post('count');
-        $view_request['count'] = $count;
-
+		$halts = $this->input->post('halts');
+        $allHalts= array();
+		if($halts and $halts!='')
+		{
+		 $allHalts= explode('__||__', $halts);
+		}
+		$view_request['allHalts'] = $allHalts;
+		$view_request['count'] = $count;
         $request_id = $this->input->post('request_id');
-        $request = $this->travel_request->get_request_id($request_id, 'departure_date,return_date,trip_type');
+        //$request = $this->travel_request->get_request_id($request_id, 'departure_date,return_date,trip_type,from_city_id,to_city_id');
+		$request = $this->travel_request->get_request_id($request_id, 'departure_date,return_date,trip_type');
         $view_request['request'] = $request;
-
-        $this->load->view('add_row/new_add_trip_row', $view_request);
+		$this->load->view('add_row/new_add_trip_row', $view_request);
     }
 
     function new_add_other_row() {

@@ -95,6 +95,7 @@
                                                         <?php echo $data['reason']; ?>
                                             </option>
                                         <?php } ?>
+                                        <option value='Other'>Other</option>
                                     </select>
                                 </div>
                             </div>
@@ -241,6 +242,7 @@
                                 <div class="form-actions">
                                     <br>
                                     <input type="hidden" id="travel_type" name="travel_type" value="4">                        
+                                    <input type="hidden" id="return_travel_type" name="return_travel_type" value="4">                        
                                     <input type="hidden" id="request_number" name="request_number" value="<?php echo $request_number; ?>">
                                     <input type="hidden" id="reporting_manager_id" name="reporting_manager_id" value="<?php echo $reporting_manager_id; ?>">
                                     <input type="hidden" id="approval_level" name="approval_level" value="<?php echo $approval_level; ?>">
@@ -510,7 +512,18 @@
                                         document.getElementById("to_city_id").value = "";
                                     }
                                 });
-
+                                $("#travel_reason_id").change(function () {
+                                    if ($('#travel_reason_id').val() == "Other") {
+                                        $("#comment").rules("add", {
+                                            required: true,
+                                            messages: {
+                                                required: "Please add comment",
+                                            }
+                                        });
+                                    } else {
+                                        $("#comment").rules("remove");
+                                    }
+                                });
                                 $('#trf_form').validate({
                                     rules: {
                                         departure_date: {
@@ -670,6 +683,7 @@
                 url: '<?php echo site_url('flight_travel/save_to_draft'); ?>',
                 data: {
                     'travel_type': $('#travel_type').val(),
+                    'return_travel_type': $('#return_travel_type').val(),
                     'request_number': $('#request_number').val(),
                     'approval_level': $('#approval_level').val(),
                     'reporting_manager_id': $('#reporting_manager_id').val(),

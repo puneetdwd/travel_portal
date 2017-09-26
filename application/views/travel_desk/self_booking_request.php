@@ -605,8 +605,8 @@
 
                         <?php
                         if ($request['trip_type'] != "1") {
-                            if ($request['travel_ticket'] == '2') {
-                                if ($request['travel_type'] == '1') {
+                            if ($request['return_travel_ticket'] == '2') {
+                                if ($request['return_travel_type'] == '1') {
                                     if ($request['trip_ticket_return'] != '1') {
                                         ?>
                                         <div class="col-md-4 portlet light bordered" style="height: 700px;">
@@ -666,8 +666,8 @@
                             }
                             ?>
                             <?php
-                           if ($request['travel_ticket'] == '2') {
-                                if ($request['travel_type'] == '2') {
+                           if ($request['return_travel_ticket'] == '2') {
+                                if ($request['return_travel_type'] == '2') {
                                     if ($request['trip_ticket_return'] != '1') {
                                         ?>
                                         <div class="col-md-4 portlet light bordered" style="height: 700px;">
@@ -726,8 +726,8 @@
                             }
                             ?>
                             <?php
-                            if ($request['travel_ticket'] == '2') {
-                                if ($request['travel_type'] == '3') {
+                            if ($request['return_travel_ticket'] == '2') {
+                                if ($request['return_travel_type'] == '3') {
                                     if ($request['trip_ticket_return'] != '1') {
                                         ?>
                                         <div class="col-md-4 portlet light bordered" style="height: 700px;">
@@ -778,8 +778,8 @@
                             }
                             ?>
                             <?php
-                            if ($request['travel_ticket'] == '2') {
-                                if ($request['travel_type'] == '4') {
+                            if ($request['return_travel_ticket'] == '2') {
+                                if ($request['return_travel_type'] == '4') {
                                     if ($request['trip_ticket_return'] != '1') {
                                         ?>
                                         <div class="col-md-4 portlet light bordered" style="height: 700px;">
@@ -920,6 +920,26 @@ $('.form_datetime').datetimepicker({
     
     <script type="text/javascript">
         $(document).ready(function() {
+                
+            $("#check_in_date,#check_out_date").change(function () {
+                var check_in_date = document.getElementById("check_in_date").value;
+                var check_out_date = document.getElementById("check_out_date").value;
+                if (check_out_date == check_in_date) {
+                    alert("Check-In date and Check-Out date should not be same");
+                    document.getElementById("check_out_date").value = "";
+                }
+            });
+            
+            $("#pick_up_date,#drop_off_date").change(function () {
+                var pick_up_date = document.getElementById("pick_up_date").value;
+                var drop_off_date = document.getElementById("drop_off_date").value;
+                if (pick_up_date == drop_off_date) {
+                    alert("Pick-Up date and Drop-Off date should not be same");
+                    document.getElementById("drop_off_date").value = "";
+                }
+            });
+            
+            
     initialize();
     google.maps.event.addDomListener(window, 'load', initialize);
     

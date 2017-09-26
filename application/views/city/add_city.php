@@ -109,6 +109,20 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="control-label" for="name">Airport:
+                                        <span class="required">*</span></label>
+                                    <?php $airport = !empty($city['airport']) ? $city['airport'] : ''; ?>
+                                    <select id="airport"  name="airport" class="form-control required select2me"
+                                            data-placeholder="Please select">
+                                        <option value='1' <?php if ($airport == "1") echo "selected"; ?>>Yes</option>
+                                        <option value='2' <?php if ($airport == "2") echo "selected"; ?>>No</option>
+                                    </select>
+                                </div>
+                            </div>
+<!--                        </div>
+                        <div class="row">    -->
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="control-label" for="name">Office Number:</label>
                                     <input type="number" class="form-control intonly" minlength="15" name="officenumber"
                                            value="<?php echo isset($city['officenumber']) ? $city['officenumber'] : ''; ?>">
@@ -155,6 +169,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="form-actions">
                         <button class="btn green" type="submit">Submit</button>

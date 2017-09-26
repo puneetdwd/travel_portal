@@ -211,7 +211,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="control-label text-left-imp cutm_text_bold">Flight Provider:</label>                                    
+                                                        <label class="control-label text-left-imp cutm_text_bold">Ticket Provider:</label>                                    
                                                         <label class="control-label text-left-imp">
                                                             <?php echo $flight_booking['flight_provider_name']; ?>
                                                         </label>                                    
@@ -269,7 +269,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="control-label text-left-imp cutm_text_bold">Train Provider:</label>                                    
+                                                        <label class="control-label text-left-imp cutm_text_bold">Ticket Provider:</label>                                    
                                                         <label class="control-label text-left-imp">
                                                             <?php echo $train_booking['train_provider_name']; ?>
                                                         </label> 
@@ -327,7 +327,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="control-label text-left-imp cutm_text_bold">Car Provider:</label>                                    
+                                                        <label class="control-label text-left-imp cutm_text_bold">Ticket Provider:</label>                                    
                                                         <label class="control-label text-left-imp">
                                                             <?php echo $car_booking['car_provider_name']; ?>
                                                         </label>
@@ -372,7 +372,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="control-label text-left-imp cutm_text_bold">Bus Provider:</label>                                    
+                                                        <label class="control-label text-left-imp cutm_text_bold">Ticket Provider:</label>                                    
                                                         <label class="control-label text-left-imp">
                                                             <?php echo $bus_booking['bus_provider_name']; ?>
                                                         </label>

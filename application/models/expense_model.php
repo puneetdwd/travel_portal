@@ -24,7 +24,7 @@ class Expense_model extends CI_Model {
 
     public function get_all_request_by_id($request_id, $cancel_status = '') {
 
-        $sql = "SELECT b.*,t.*,CONCAT(u.first_name,' ',u.last_name) as employee_name,CONCAT(uu.first_name,' ',uu.last_name) as reporting_manager_name,f.name as from_city_name,d.name as to_city_name,r.reason,c.name as travel_class,tp.amount from travel_request t "
+        $sql = "SELECT b.*,t.*,CONCAT(u.first_name,' ',u.last_name) as employee_name,CONCAT(uu.first_name,' ',uu.last_name) as reporting_manager_name,f.name as from_city_name,f.class as from_city_class,d.name as to_city_name,d.class as to_city_class,r.reason,c.name as travel_class,tp.amount from travel_request t "
                 . "LEFT JOIN indian_cities f ON f.id = t.from_city_id "
                 . "LEFT JOIN indian_cities d ON d.id = t.to_city_id "
                 . "LEFT JOIN travel_reasons r ON r.id = t.travel_reason_id "
@@ -50,7 +50,7 @@ class Expense_model extends CI_Model {
 
     public function get_claim_request_by_id($request_id, $employee_id) {
 
-        $sql = "SELECT b.*,t.*,CONCAT(u.first_name,' ',u.last_name) as employee_name,CONCAT(uu.first_name,' ',uu.last_name) as reporting_manager_name,f.name as from_city_name,d.name as to_city_name,r.reason,c.name as travel_class,tp.amount from travel_request t "
+        $sql = "SELECT b.*,t.*,CONCAT(u.first_name,' ',u.last_name) as employee_name,CONCAT(uu.first_name,' ',uu.last_name) as reporting_manager_name,f.name as from_city_name,f.class as from_city_class,d.name as to_city_name,d.class as to_city_class,r.reason,c.name as travel_class,tp.amount from travel_request t "
                 . "LEFT JOIN indian_cities f ON f.id = t.from_city_id "
                 . "LEFT JOIN indian_cities d ON d.id = t.to_city_id "
                 . "LEFT JOIN travel_reasons r ON r.id = t.travel_reason_id "
@@ -71,7 +71,7 @@ class Expense_model extends CI_Model {
 
     public function get_expense_pending_request_by_id($request_id, $employee_id) {
 
-        $sql = "SELECT b.*,t.*,CONCAT(u.first_name,' ',u.last_name) as employee_name,CONCAT(uu.first_name,' ',uu.last_name) as reporting_manager_name,f.name as from_city_name,d.name as to_city_name,r.reason,c.name as travel_class,tp.amount from travel_request t "
+        $sql = "SELECT b.*,t.*,CONCAT(u.first_name,' ',u.last_name) as employee_name,CONCAT(uu.first_name,' ',uu.last_name) as reporting_manager_name,f.name as from_city_name,f.class as from_city_class,d.name as to_city_name,d.class as to_city_class,r.reason,c.name as travel_class,tp.amount from travel_request t "
                 . "LEFT JOIN indian_cities f ON f.id = t.from_city_id "
                 . "LEFT JOIN indian_cities d ON d.id = t.to_city_id "
                 . "LEFT JOIN travel_reasons r ON r.id = t.travel_reason_id "
@@ -105,7 +105,7 @@ class Expense_model extends CI_Model {
     public function get_other_expense($id) {
         $sql = "SELECT other_expense.*,mast_other_expense.id as expense_name_id,mast_other_expense.expense_name from other_expense "
         . "LEFT JOIN mast_other_expense on mast_other_expense.id= other_expense.expense_name "
-        . "WHERE request_id=?";
+        . "WHERE request_id=? and other_expense.status='active'";
         $result = $this->db->query($sql, array($id));
         return $result->result_array();        
     }
@@ -376,8 +376,14 @@ class Expense_model extends CI_Model {
         return $result->result_array();
     }
 
-    public function get_other_loading_booking($id) {
+	public function get_other_loading_booking_BKP($id) {
         $sql = "SELECT * from other_loading_booking WHERE request_id=?";
+        $result = $this->db->query($sql, array($id));
+        return $result->result_array();
+    }
+
+    public function get_other_loading_booking($id) {
+        $sql = "SELECT other_loading_booking.*, travel_category.name as hotel_provider_name from other_loading_booking left join travel_category on other_loading_booking.hotal_name=travel_category.id WHERE other_loading_booking.request_id=?";
         $result = $this->db->query($sql, array($id));
         return $result->result_array();
     }
