@@ -1,4 +1,3 @@
-
 <tr id='<?php echo "row_con_id_" . $count ?>'>
     <td><a  onclick='remove_con_row("<?php echo $count ?>")' class='btn-xs btn_red'><i class='fa fa-trash-o'></i></a></td>
     <td><?php echo $count ?></td>
@@ -8,7 +7,18 @@
             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
         </div>
     </td>
-    <td><input type='text' name='con_from[]' id='<?php echo "con_from_" . $count ?>' class='form-control required'></td>
+    
+	<td><select name="exp_on[]" onChange="received_total();" id="<?php echo "exp_on_" . $count; ?>" class="form-control required"><?php
+	if(isset($allHalts) and count($allHalts))
+	 {
+	  foreach($allHalts as $ke=>$va)
+	  {
+	   ?><option value="<?php echo $va; ?>"><?php echo $va; ?></option><?php
+	  }
+	 }
+	?></select></td>
+	
+	<td><input type='text' name='con_from[]' id='<?php echo "con_from_" . $count ?>' class='form-control required'></td>
     <td><input type='text' name='con_to[]' id='<?php echo "con_to_" . $count ?>' class='form-control'></td>
     <td>
         <select id="<?php echo 'con_book_by_' . $count ?>" name="con_book_by[]" class="form-control">

@@ -78,8 +78,6 @@ function find_DA_rows_OLD_BACKUP($fromDate, $toDate, $cityGrade, $empGrade)//30-
   return $allDatesWithMutiplicationFactor;
  }
 
-
-
 function find_DA_rows($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:00
  {
   $allDatesWithMutiplicationFactor= array();
@@ -117,35 +115,26 @@ function find_DA_rows($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:
   return $allDatesWithMutiplicationFactor;
  }
 
-
-
-?><div class="page-content"> 
-<div class="header text-center">
+?><div class="page-content"><div class="header text-center">
 <h3>DB Corp Ltd.,<?php echo $employee['city_name'] ?></h3></div>
-<div class="row margin-mob-zero">        
-<div class="col-md-12">
+<div class="row margin-mob-zero"><div class="col-md-12">
 <div class="portlet light borderLight">
-<!-- BEGIN FORM-->
 <form role="form" class="validate-form" method="post" id="expense_form" name="expense_form">
-<div class="form-body"> 
-<div class="row">
+<div class="form-body"><div class="row">
 <div class="col-md-12 portlet light borderLight text-center">
 <h4 class="form-section">Traveling Expense Reimbursement form(<?php echo $request['reference_id']; ?>)</h4>
 <div class="row">
 <table id="make-data-table_asd1" class="table table-hover table-bordered table-responsive" style="display:block;">                                        
-<tbody align="left">
-<tr><th width="15%">Name</th>
+<tbody align="left"><tr><th width="15%">Name</th>
 <td width="16%"><?php echo $employee['first_name'] . " " . $employee['last_name'] ?></td>
 <th width="15%">Employee Id</th>
 <td width="16%"><?php echo $employee['employee_id'] ?></td>
 <th width="15%">Designation</th>
 <td width="16%"><?php echo $employee['desg_name'] ?></td></tr>
-<tr><th>Grade</th>
-<td><?php echo $employee['grade_name'] ?></td>
+<tr><th>Grade</th><td><?php echo $employee['grade_name'] ?></td>
 <th>Reporting Manager</th>
 <td><?php echo $employee['reporting_manager'] ?></td>
-<th>Purpose of Travel</th>
-<td><?php
+<th>Purpose of Travel</th><td><?php
 if ($request['project_id'] != "") {
 echo "Project";
 } else {
@@ -160,192 +149,109 @@ echo ', '.$project['name'];
 <td><?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?></td>
 <th>From-To</th>
 <td><?php echo $request['from_city_name'].' - '.$request['to_city_name']; ?></td>
-<th>Credit Card Number</th>
-<td>
-<b>
-<?php
-echo $expense_pending['credit_card_number'];
-?>
-</b>
-</td>
-</tr>
+<th>Credit Card Number</th><td><b><?php echo $expense_pending['credit_card_number'];?></b></td></tr>
 
-<tr>
-<th>Return Date and Time</th>
-<td><?php
-if($request['trip_type'] != "1") {
-echo date(DATETIME_FORMAT, strtotime($request['return_date']));
-}
-?></td>
+<tr><th>Return Date and Time</th><td><?php
+if($request['trip_type']!="1"){echo date(DATETIME_FORMAT, strtotime($request['return_date']));}?></td>
 <th>Travel Type</th>
-<td><?php
-if ($request['group_travel'] == "1") {
-echo "Group Travel";
-} else {
-echo "Single Person";
-}
-?></td>
+<td><?php if($request['group_travel']=="1"){echo "Group Travel";}else {echo "Single Person";}?></td>
 <th>Bank Name</th>
-<td>
-<b>
-<?php
-echo $expense_pending['bank_name'];
-?>
-</b>
-</td>
-</tr>
-</tbody>
-</table> 
-</div>
-</div>                            
-</div>          
+<td><b><?php echo $expense_pending['bank_name']; ?></b></td>
+</tr></tbody></table></div></div></div>
 
-<div class="row">
-<div class="col-md-12 light bordered ">
+<div class="row"><div class="col-md-12 light bordered">
 <h4 class="form-section">Ticket Details (<span style="color:#005982;">Eligibility-<?php
 if($eligibility_mode!='')
  {
-  echo $eligibility_mode . "/" . $eligibility_class;
+  echo $toSetRedFlag1= $eligibility_mode . "/" . $eligibility_class;
  }
 else
  {
   if($sel_traverl_class!='')
    {
-	echo $travel_mode . "/" . $sel_traverl_class;
+	echo $toSetRedFlag1= $travel_mode . "/" . $sel_traverl_class;
    }
   else
    {
-	echo $travel_mode;
+	echo $toSetRedFlag1= $travel_mode;
    }
  }
 ?></span>)</h4>
 <div class="row">
 <table id="ticket_table" class="table table-hover table-bordered text-center">
-<thead>
-<tr class="th_blue">
-<th>Sr.No.</th>
-<th>Date</th>
-<th>Location From</th>
-<th>Location To</th>
-<th>Expense Location</th>
-<th>Paid By</th>
-<th>Mode</th>
-<th>View</th>
-<th>Cost</th>
-<th>Tax</th>
-<th>Agency charges</th>
-<th>Total</th>
-</tr>
-</thead>
-<tbody>
-<?php
+<thead><tr class="th_blue"><th>Sr.No.</th><th>Date</th><th>Location From</th>
+<th>Location To</th><th>Paid By</th><th>Mode/Class</th><th>View</th><th>Cost</th>
+<th>Tax</th><th>Agency charges</th><th>Total</th></tr></thead><tbody><?php
 $i = 1;
 $total = 0;
-foreach ($ticket_details as $key => $value) {
-?>
-<tr>
-<td><?php echo $i++; ?></td>
+foreach($ticket_details as $key => $value) {
+$checkRed='';
+$thisRED= '';
+$service_type = !empty($value['travel_type']) ? $value['travel_type'] : '';
+if($service_type=="1"){$thisRED ="Flight";}
+elseif($service_type=="2"){$thisRED= "Train";}
+elseif($service_type=="3"){$thisRED="Car";}
+else if($service_type=="4"){$thisRED="Bus";}
+else if ($service_type=="5"){$thisRED="Hotel";}
+if(isset($value['travel_class'])){ $thisRED= $thisRED.'/'.$value['travel_class']; }
+if($thisRED!=$toSetRedFlag1){$checkRed='danger';}
+
+?><tr class="<?php echo $checkRed; ?>"><td><?php echo $i++; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
 <td><?php echo $value['location_from'] ?></td>
 <td><?php echo $value['location_to'] ?></td>
-<td><?php echo $value['expense_location'] ?></td>
 <td><?php echo $value['arrange_by'] ?></td>
-<td>
-<?php $service_type = !empty($value['travel_type']) ? $value['travel_type'] : ''; ?>
-<?php
-if ($service_type == "1") {
-echo "Flight";
-} else if ($service_type == "2") {
-echo "Train";
-} else if ($service_type == "3") {
-echo "Car";
-} else if ($service_type == "4") {
-echo "Bus";
-} else if ($service_type == "5") {
-echo "Hotel";
-}
-?>
-</td>
-<td> 
-<?php if ($value['attachment'] != '') { ?>
+<td><?php echo $thisRED; ?></td>
+<td><?php if($value['attachment'] != '') { ?>
 <a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $value['attachment']; ?>">
-<i class="fa fa-eye"></i> View 
-</a>
-<?php } ?>
-</td>
-
+<i class="fa fa-eye"></i> View </a><?php } ?></td>
 <td width="10%"><?php echo $value['cost']; ?></td>
 <td width="10%"><?php echo $value['tax']; ?></td>
 <td width="10%"><?php echo $value['agency_cost']; ?></td>
-
 <td width="15%"><?php
 $value_cost= $value['cost']+$value['tax']+$value['agency_cost'];
 $total = $total + $value_cost;
 echo $value_cost;
-?></td></tr>
-<?php }
-foreach ($other_trip_expense as $key => $value) {
-?><tr><td><?php echo $i++; ?></td>                             
+?></td></tr><?php
+}
+
+foreach($other_trip_expense as $key=>$value){
+$checkRed='';
+$thisRED='';
+$service_type = !empty($value['travel_type']) ? $value['travel_type'] : '';
+if($service_type=="1"){$thisRED ="Flight";}
+elseif($service_type=="2"){$thisRED= "Train";}
+elseif($service_type=="3"){$thisRED="Car";}
+else if($service_type=="4"){$thisRED="Bus";}
+else if ($service_type=="5"){$thisRED="Hotel";}
+if(isset($value['travel_class'])){ $thisRED= $thisRED.'/'.$value['travel_class']; }
+if($thisRED!=$toSetRedFlag1){$checkRed='danger';}
+
+?><tr class="<?php echo $checkRed; ?>"><td><?php echo $i++; ?></td>                             
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['trip_date'])); ?></td>
-<td><?php echo $value['trip_from'] ?></td>
-<td><?php echo $value['trip_to'] ?></td>
-<td><?php // echo $value['trip_arrange_by']                ?></td>
-<td><?php echo $value['trip_arrange_by'] ?></td>
+<td><?php echo $value['trip_from']; ?></td>
+<td><?php echo $value['trip_to']; ?></td>
+<td><?php echo $value['trip_arrange_by']; ?></td>
+<td><?php echo $thisRED; ?></td>
 <td><?php
-if ($value['trip_book_by'] == "1") {
-echo "Flight";
-} else if ($value['trip_book_by'] == "2") {
-echo "Train";
-} else if ($value['trip_book_by'] == "3") {
-echo "Car";
-} else if ($value['trip_book_by'] == "4") {
-echo "Bus";
-} else if ($value['trip_book_by'] == "5") {
-echo "Hotel";
-}
-?></td>
-<td>
-<?php
 $view = 1;
-if (!empty($value['attachment'])) {
+if(!empty($value['attachment'])){
 $attachment = $value['attachment'];
-foreach ($attachment as $key => $val) {
-if ($val['file_name'] != '') {
-?>
-<a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>">
-<i class="fa fa-eye"></i> <?php
-echo "View" . $view;
-$view++;
-?> 
-</a><br>
-<?php
-}
-}
-}
+foreach($attachment as $key=>$val){
+if($val['file_name']!=''){
+?><a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>"><i class="fa fa-eye"></i> <?php echo "View" . $view; $view++; ?></a><br><?php
+}}}
 ?></td>                                               
 
 <td width="15%"></td><td width="15%"></td><td width="15%"></td>
 
-<td width="15%">
-<?php $total = $total + $value['total'];
-echo $value['total']; ?></td></tr>
-<?php } ?>
-</tbody>
-<tfoot>
-<tr>
-<td colspan="10"></td>
-<th align="center">Total (&#8377;) </th>
-<td>
-<b id="txt_total_sum">
-<?php echo $total . '.00'; ?>
-</b>
-</td>
-</tr>
-</tfoot>
-</table> 
-</div>
-</div>
-</div>
+<td width="15%"><?php $total=$total+$value['total']; echo $value['total']; ?></td></tr><?php
+}
+?></tbody><tfoot>
+
+<tr><td colspan="9"></td><th align="center">Total (&#8377;) </th>
+<td><b id="txt_total_sum"><?php echo $total . '.00'; ?></b></td>
+</tr></tfoot></table></div></div></div>
 
 <div class="row"><div class="col-md-12 light bordered">
 <h4 class="form-section">Guest House/Hotel/Own Arrangement(<span style="color:#005982;">Eligibility-&#8377;<?php $GH_act= $hotel_allowance; if($GH_act==0){ echo 'Actual'; }else{ echo $GH_act.'/Day'; } ?></span>)</h4>
@@ -357,10 +263,26 @@ echo $value['total']; ?></td></tr>
 <th>Expense<br> Location</th><th>View</th>
 <th>Paid By</th><th>Hotel Expense</th>
 <th>Tax</th><th>Amount</th></tr></thead><tbody><?php
+$GH_Act= $GH_act;
 $i = 1;
 $total1 = 0;
-foreach ($hotel_details as $key => $value) {
-?><tr><td><?php echo $i; ?></td>
+foreach($hotel_details as $key=>$value){
+
+$trClassHotel1= '';
+$total_loading1= $value['loading_expense_1'] + $value['other_expense_1'];
+$H1= date(DATETIME_FORMAT, strtotime($value['date_from']));
+$H2= date(DATETIME_FORMAT, strtotime($value['date_to']));
+$stays1= 1;
+$stayFrom1=date_create($H1);
+$stayTo1=date_create($H2);
+$haltCounter1=date_diff($stayFrom1,$stayTo1);
+$daysInThisHotel1= $haltCounter1->days;
+if($daysInThisHotel1>0){$stays1=$daysInThisHotel1;}
+$perdayCostOfHotel1= $total_loading1/$stays1;
+$trClassHotel1= '';
+if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel1>$GH_Act){$trClassHotel1= 'danger';}
+
+?><tr class="<?php echo $trClassHotel1; ?>"><td><?php echo $i; ?></td>
 <td><?php echo $value['hotel_provider_name']; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date_from'])); ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date_to'])); ?></td>
@@ -386,9 +308,26 @@ echo $tot;
 //echo $value['cost'];
 ?><!--<input type="text" id="total" value="<?php //echo $value['cost']; ?>" class="form-control">-->
 </td></tr><?php }
-foreach($other_loading_booking as $key => $value) {
-?><tr><td><?php echo $i++; ?></td>
-<td><?php echo $value['hotel_provider_name']; ?></td>
+
+foreach($other_loading_booking as $key=>$value){
+
+$total_loading = $value['loading_total'] + $value['loading_expense'] + $value['other_expense'];
+$total1 = $total1 + $total_loading;
+
+$HD1= date(DATETIME_FORMAT, strtotime($value['loading_departure']));
+$HD2= date(DATETIME_FORMAT, strtotime($value['loading_return']));
+$stays= 1;
+$stayFrom=date_create($HD1);
+$stayTo=date_create($HD2);
+$haltCounter=date_diff($stayFrom,$stayTo);
+$daysInThisHotel= $haltCounter->days;
+if($daysInThisHotel>0){$stays=$daysInThisHotel;}
+$perdayCostOfHotel= $total_loading/$stays;
+$trClassHotel= '';
+if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel>$GH_Act){$trClassHotel= 'danger';}
+
+?><tr class="<?php echo $trClassHotel; ?>"><td><?php echo $i++; ?></td>
+<td><?php echo $value['hotal_name']; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['loading_departure'])); ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['loading_return'])); ?></td>
 <td><?php echo $value['room_no']; ?></td>
@@ -398,19 +337,14 @@ foreach($other_loading_booking as $key => $value) {
 $view = 1;
 if (!empty($value['attachment'])) {
 $attachment = $value['attachment'];
-foreach ($attachment as $key => $val) {
-if ($val['file_name'] != '') {
-?><a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>">
-<i class="fa fa-eye"></i> <?php echo "View" . $view; $view++; ?></a><br><?php
-}
-}
-}
+foreach($attachment as $key=>$val){
+if($val['file_name']!=''){
+?><a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>"><i class="fa fa-eye"></i> <?php echo "View" . $view; $view++; ?></a><br><?php
+}}}
 ?></td><td><?php echo $value['arrange_by'] ?></td>
 <td><?php echo $value['loading_expense'] ?></td>
-<td><?php echo $value['other_expense'] ?></td><td width="15%"><?php
-$total_loading = $value['loading_total'] + $value['loading_expense'] + $value['other_expense'];
-$total1 = $total1 + $total_loading;
-echo $total_loading; ?></td></tr><?php
+<td><?php echo $value['other_expense'] ?></td>
+<td width="15%"><?php echo $total_loading; ?></td></tr><?php
 }
 $eligible= $hotel_allowance * $day;
 $sty= '';
@@ -501,18 +435,18 @@ $diff=date_diff($t87,$t88);
 </tr></tfoot></table></div></div></div>
 
 <div class="row"><div class="col-md-12 light bordered">
-<h4 class="form-section">Conveyance-Car Hire Bills(<span style="color:#005982;">Eligibility- &#8377;<?php echo $con_allo.'/Day'; ?></span>)</h4>
-<div class="row">
-<?php $total3 = 0; ?>
+<h4 class="form-section">Conveyance-Car Hire Bills(<span style="color:#005982;">Eligibility- &#8377;<?php if($con_allo>0){echo $con_allo.'/Day';}else{echo 'Actual';} ?></span>)</h4>
+<div class="row"><?php $total3 = 0; ?>
 <table id="conveyance_car" class="table table-hover table-bordered text-center">
-<thead><tr class="th_blue"><th>Sr.No.</th><th>Date</th>
-<th>Location From</th><th>Location To</th><th>Expense Location</th>
-<th>Book By</th><th>Mode</th><th>View</th><th>Amount</th></tr></thead>
-<tbody><?php
+<thead><tr class="th_blue"><th>Sr.No.</th><th>Date</th><th>Location From</th>
+<th>Location To</th><th>Expense Location</th><th>Book By</th>
+<th>Mode</th><th>View</th><th>Amount</th></tr></thead><tbody><?php
 $i = 1;
 $total3 = 0;
-foreach ($car_details as $key => $value) {
-?><tr><td><?php echo $i; ?></td>
+foreach($car_details as $key => $value) {
+$trClassTX= '';
+if($con_allo>0 and is_numeric($con_allo) and $value['cost']>$con_allo){$trClassTX= 'danger';}
+?><tr class="<?php echo $trClassTX; ?>"><td><?php echo $i; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
 <td><?php echo $value['location_from'] ?></td>
 <td><?php echo $value['location_to'] ?></td>

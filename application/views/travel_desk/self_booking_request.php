@@ -254,10 +254,25 @@
                                                         <label class="control-label text-left-imp">PNR number<span class="required"> * </span>:</label>                                    
                                                         <input type="text" class="form-control required" name="pnr_number">
                                                     </div>
-                                                    <div class="form-group">
+                                                    
+													
+													<div class="form-group">
                                                         <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                         <input type="number" class="form-control required" name="cost">
                                                     </div>
+													
+													
+													<div class="form-group">
+                                                        <label class="control-label text-left-imp">Tax<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="tax">
+                                                    </div>
+													
+													<div class="form-group">
+                                                        <label class="control-label text-left-imp">Agency Cost<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="agency_cost">
+                                                    </div>
+													
+													
                                                     <div class="form-group">
                                                         <label class="control-label text-left-imp">Flight number<span class="required"> * </span>:</label>                                    
                                                         <input type="text" class="form-control required" name="flight_number">
@@ -318,7 +333,18 @@
                                                         <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                         <input type="number" class="form-control required" name="cost">
                                                     </div>
-                                                    <div class="form-group">
+                                                    
+													<div class="form-group">
+                                                        <label class="control-label text-left-imp">Tax<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="tax">
+                                                    </div>
+													
+													<div class="form-group">
+                                                        <label class="control-label text-left-imp">Agency Cost<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="agency_cost">
+                                                    </div>
+													
+													<div class="form-group">
                                                         <label class="control-label text-left-imp">Train number<span class="required"> * </span>:</label>                                    
                                                         <input type="text" class="form-control required" name="train_number">
                                                     </div>
@@ -520,11 +546,18 @@
                                                     <label class="control-label text-left-imp">Room No:</label>                                    
                                                     <input type="text" class="form-control" name="bill_no">
                                                 </div>
-                                                <div class="form-group">
-                                                    <label class="control-label text-left-imp">Total Cost<span class="required"> * </span>:</label>                                    
-                                                    <input type="number" class="form-control required" name="cost">
+                                                
+												<div class="form-group">
+                                                    <label class="control-label text-left-imp">Hotel Expense:</label>                                    
+                                                    <input type="number" class="form-control number" name="loading_expense_1">
                                                 </div>
-                                                <div class="form-group">
+												
+												<div class="form-group">
+                                                    <label class="control-label text-left-imp">Tax:</label>                                    
+                                                    <input type="number" class="form-control number" name="other_expense_1">
+                                                </div>
+												
+												<div class="form-group">
                                                     <label class="control-label text-left-imp">Comment:</label>                                                                            
                                                     <textarea class="form-control" rows="4" name="comment"></textarea>
                                                 </div>
@@ -639,7 +672,18 @@
                                                             <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                             <input type="number" class="form-control required" name="cost">
                                                         </div>
-                                                        <div class="form-group">
+                                                        
+														<div class="form-group">
+                                                        <label class="control-label text-left-imp">Tax<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="tax">
+                                                    </div>
+													
+													<div class="form-group">
+                                                        <label class="control-label text-left-imp">Agency Cost<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="agency_cost">
+                                                    </div>
+														
+														<div class="form-group">
                                                             <label class="control-label text-left-imp">Flight number<span class="required"> * </span>:</label>                                    
                                                             <input type="text" class="form-control required" name="flight_number">
                                                         </div>
@@ -699,7 +743,18 @@
                                                             <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                             <input type="number" class="form-control required" name="cost">
                                                         </div>
-                                                        <div class="form-group">
+                                                        
+														<div class="form-group">
+                                                        <label class="control-label text-left-imp">Tax<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="tax">
+                                                    </div>
+													
+													<div class="form-group">
+                                                        <label class="control-label text-left-imp">Agency Cost<span class="required"> * </span>:</label>                                    
+                                                        <input type="number" class="form-control required" name="agency_cost">
+                                                    </div>
+														
+														<div class="form-group">
                                                             <label class="control-label text-left-imp">Train number<span class="required"> * </span>:</label>                                    
                                                             <input type="text" class="form-control required" name="train_number">
                                                         </div>

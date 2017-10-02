@@ -290,6 +290,7 @@ class Finance_desk extends Admin_Controller {
                     $data_array['date'] = $request['departure_date'];
                     $data_array['location_from'] = $request['from_city_name'];
                     $data_array['location_to'] = $request['to_city_name'];
+					$data_array['travel_class'] = $request['travel_class'];
                     $data_array['travel_type'] = '2';
                     $data_array['type'] = '2';
                     $data_array['trip_mode'] = $train_booking[0]['trip_mode'];
@@ -352,7 +353,8 @@ class Finance_desk extends Admin_Controller {
                     $view_request['flight_booking'] = $flight_booking;
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
+                        $data_array['date'] = $request['return_date'];
+						//$data_array['date'] = $request['departure_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
                         $data_array['travel_type'] = '1';
@@ -377,7 +379,9 @@ class Finance_desk extends Admin_Controller {
 
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
+                        $data_array['date'] = $request['return_date'];
+						//$data_array['date'] = $request['departure_date'];
+						$data_array['travel_class'] = $request['travel_class'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
                         $data_array['travel_type'] = '2';
@@ -402,7 +406,8 @@ class Finance_desk extends Admin_Controller {
 
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
+                        $data_array['date'] = $request['return_date'];
+						//$data_array['date'] = $request['departure_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
                         $data_array['travel_type'] = '3';
@@ -423,7 +428,8 @@ class Finance_desk extends Admin_Controller {
 
                     if ($request['trip_type'] != "1") {
                         $data_array = array();
-                        $data_array['date'] = $request['departure_date'];
+                        $data_array['date'] = $request['return_date'];
+						//$data_array['date'] = $request['departure_date'];
                         $data_array['location_from'] = $request['to_city_name'];
                         $data_array['location_to'] = $request['from_city_name'];
                         $data_array['travel_type'] = '4';

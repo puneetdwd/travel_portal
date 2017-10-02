@@ -1,5 +1,4 @@
 <?php
-
 function find_DA_rows_OLD_BACKUP($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:00
  {
   $allDatesWithMutiplicationFactor= array();
@@ -205,17 +204,17 @@ $expense_oth = 0;
 <h4 class="form-section">Ticket Details</br>(<span style="color:#005982;">Your Eligibility-<?php
 if($eligibility_mode!='')
  {
-  echo $eligibility_mode . "/" . $eligibility_class;
+  echo $toSetRedFlag1= $eligibility_mode . "/" . $eligibility_class;
  }
 else
  {
   if($sel_traverl_class!='')
    {
-	echo $travel_mode . "/" . $sel_traverl_class;
+	echo $toSetRedFlag1= $travel_mode . "/" . $sel_traverl_class;
    }
   else
    {
-	echo $travel_mode;
+	echo $toSetRedFlag1= $travel_mode;
    }
  }
 ?></span>)</h4>
@@ -224,46 +223,43 @@ else
 
 <div class="row"><table id="ticket_table" class="table table-hover table-bordered text-center">
 <thead><tr class="th_blue"><th></th><th>#</th><th>Date</th><th>From</th><th>To</th>
-<th>Paid By</th><th>Mode</th><th>View</th><th>Cost</th><th>Tax</th><th>Agency charges</th>
+<th>Paid By</th><th>Mode/Class</th><th>View</th><th>Cost</th><th>Tax</th><th>Agency charges</th>
 <th>Total</th></tr></thead><tbody id="trip_tbody"><?php
 $i = 1;
 $total = 0;
 $lbltotal = 0;
 $ticket_cost_1 = 0;
 $possible_halts= array();
-foreach($ticket_details as $key => $value){
-$possible_halts[]= $value['location_from'];
-$possible_halts[]= $value['location_to'];
-?><tr><td></td><td><?php echo $i; ?></td>
-<td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
-<td><?php echo $value['location_from']; ?></td>
-<td><?php echo $value['location_to']; ?></td><td><?php
-if($value['arrange_by'] == "Company") {
-$arrange_by_tick = "Company";
-} else {
-$arrange_by_tick = "Own";
-}
-?><select name="<?php echo 'ticket_' . $value['trip_mode'] . '_arrange_by_' . $value['type'] ?>" onchange='received_total()' id="<?php echo "ticket_arrange_by" . $i ?>" class="form-control">
-<option value="Company" <?php if ($arrange_by_tick == "Company") echo "selected"; ?>>Company</option>
-<option value="Own" <?php if ($arrange_by_tick == "Own") echo "selected"; ?>>Own</option>
-</select> 
-<!--<input type="hidden" name="<?php echo 'ticket_' . $value['trip_mode'] . '_arrange_by_' . $value['type'] ?>" id="<?php echo "ticket_arrange_by" . $i ?>" value="<?php // echo $arrange_by_tick;                                                             ?>">-->
-</td><td>
-<?php $service_type = !empty($value['travel_type']) ? $value['travel_type'] : ''; ?>
-<?php
-if ($service_type == "1") {
-echo "Flight";
-} else if ($service_type == "2") {
-echo "Train";
-} else if ($service_type == "3") {
-echo "Car";
-} else if ($service_type == "4") {
-echo "Bus";
-} else if ($service_type == "5") {
-echo "Hotel";
-}
-?></td><td><?php
-if($value['attachment'] != '') { ?>
+foreach($ticket_details as $key => $value)
+ {
+  $checkRed='';
+  $toSetRedFlag1;
+  $thisRED= '';
+  $service_type = !empty($value['travel_type']) ? $value['travel_type'] : '';
+  if($service_type=="1"){$thisRED ="Flight";}
+  elseif($service_type=="2"){$thisRED= "Train";}
+  elseif($service_type=="3"){$thisRED="Car";}
+  else if($service_type=="4"){$thisRED="Bus";}
+  else if ($service_type=="5"){$thisRED="Hotel";}
+  if(isset($value['travel_class'])){ $thisRED= $thisRED.'/'.$value['travel_class']; }
+  if($thisRED!=$toSetRedFlag1){$checkRed='danger';}
+  
+  $possible_halts[]= $value['location_from'];
+  $possible_halts[]= $value['location_to'];
+  ?><tr class="<?php echo $checkRed; ?>"><td></td><td><?php echo $i; ?></td>
+  <td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
+  <td><?php echo $value['location_from']; ?></td>
+  <td><?php echo $value['location_to']; ?></td><td><?php
+  if($value['arrange_by']=="Company"){$arrange_by_tick="Company";}else{$arrange_by_tick="Own";}
+  
+  ?><select name="<?php echo 'ticket_' . $value['trip_mode'] . '_arrange_by_' . $value['type'] ?>" onchange='received_total()' id="<?php echo "ticket_arrange_by" . $i ?>" class="form-control">
+  <option value="Company" <?php if ($arrange_by_tick == "Company") echo "selected"; ?>>Company</option>
+  <option value="Own" <?php if ($arrange_by_tick == "Own") echo "selected"; ?>>Own</option></select>
+  <!--<input type="hidden" name="<?php echo 'ticket_' . $value['trip_mode'] . '_arrange_by_' . $value['type'] ?>" id="<?php echo "ticket_arrange_by" . $i ?>" value="<?php // echo $arrange_by_tick;?>">-->
+  </td><td><?php
+  echo $thisRED;
+  ?></td><td><?php
+  if($value['attachment'] != '') { ?>
 <!--<a class="btn-link" target="_blank" href="<?php echo base_url('employee_request/download_attchment') . '/' . $value['attachment']; ?>">-->
 <a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $value['attachment']; ?>">
 <i class="fa fa-eye"></i> View</a><?php }
@@ -283,11 +279,14 @@ $ticket_cost_1 = $ticket_cost_1 + $value_cost;
 $i++;
 }
 
-if (!empty($expense_details)) {
-$total_travel_claim_hidd = $expense_details['total_claim'];
-} else {
-$total_travel_claim_hidd = 0;
-}
+if(!empty($expense_details))
+ {
+  $total_travel_claim_hidd = $expense_details['total_claim'];
+ }
+else
+ {
+  $total_travel_claim_hidd = 0;
+ }
 if(!empty($other_trip_expense)){
 foreach ($other_trip_expense as $key => $value) {
 ?><tr id="<?php echo "row_trip_id_" . $i ?>">
@@ -344,59 +343,57 @@ $i++;
 </div></div></div><?php
 $possible_halts2= array_unique($possible_halts);
 $valueToPassInAJAX= implode('__||__', $possible_halts2);
+
+
 ?><div class="row"><div class="col-md-12 light bordered">
 <h4 class="form-section">Guest House/Hotel/Own Arrangement</br>(<span style="color:#005982;">Your Eligibility-&#8377;<?php $GH_Act= $hotel_allowance; if($GH_Act==0){ echo 'Actual'; }else{ echo $GH_Act.'/Day'; } ?></span>)</h4>
 <div class="pull-right">
-<a onclick="add_load_row()" class="btn btn-sm blue-chambray">Add New Row</a></div>
+<a onclick="add_load_row();" class="btn btn-sm blue-chambray">Add New Row</a></div>
 
 <div class="row">
 <table id="loading_hotel" class="table table-hover table-bordered text-center">
-<thead><tr class="th_blue"><th>&nbsp;</th><th>#</th><th>Hotel</th>
-<th>Check-In Date</th><th>Check-Out Date</th><th>Room<br> No</th>
-<th>Bill<br> No</th><th>Location</th><th>View</th><th>Paid By</th>
-<th>Hotel<br> Expense</th><th>Tax</th><th>Amount</th><th>Total</th>
-</tr></thead><tbody id="load_tbody"><?php
+<thead><tr class="th_blue"><th>&nbsp;</th><th>#</th><th>Type</th>
+<th>Hotel</th><th>Check-In Date</th><th>Check-Out Date</th>
+<th>Room<br> No</th><th>Bill<br> No</th><th>Location</th><th>View</th>
+<th>Paid By</th><th>Hotel<br>Expense</th><th>Tax</th><th>Other</th>
+<th>Total</th></tr></thead><tbody id="load_tbody"><?php
 $i = 1;
 $total1 = 0;
 $lbltotal1 = 0;
 $load_cost = 0;
 $addded_expense_com = 0;
 $addded_expense_self = 0;
-if (!empty($hotel_details)) {
+if(!empty($hotel_details)){
 foreach ($hotel_details as $key => $value) {
-$load_cost = $value['cost'];
-?><tr><td></td><td><?php echo $i; ?></td>
+$load_cost = $value['loading_expense_1'];
+
+$trClassHotel1= '';
+$total_loading1= $value['loading_expense_1'] + $value['other_expense_1'];
+$H1= date(DATETIME_FORMAT, strtotime($value['date_from']));
+$H2= date(DATETIME_FORMAT, strtotime($value['date_to']));
+$stays1= 1;
+$stayFrom1=date_create($H1);
+$stayTo1=date_create($H2);
+$haltCounter1=date_diff($stayFrom1,$stayTo1);
+$daysInThisHotel1= $haltCounter1->days;
+if($daysInThisHotel1>0){$stays1=$daysInThisHotel1;}
+$perdayCostOfHotel1= $total_loading1/$stays1;
+$trClassHotel1= '';
+if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel1>$GH_Act){$trClassHotel1= 'danger';}
+
+?><tr class="<?php echo $trClassHotel1; ?>"><td></td><td><?php echo $i; ?></td>
+<td><?php if(isset($value['arrangement_type'])){ echo $value['arrangement_type']; } ?></td>
 <td><?php echo $value['hotel_provider_name']; ?></td><td>
 <div class="input-group date form_datetime" data-date="<?php echo isset($value['date_from']) ? $value['date_from'] : date("Y-m-d", strtotime("+1 day")); ?>T018:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
 <input name="date_from_1" id='date_from_1' class="form-control required" size="16" type="text" readonly value="<?php
-if (!empty($value['date_from'])) {
-echo date(DATETIME_FORMAT, strtotime($value['date_from']));
-}
-?>">
-<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-</div>
-<?php // echo $value['date_from']     ?>
-</td>
+if(!empty($value['date_from'])){echo date(DATETIME_FORMAT, strtotime($value['date_from']));}?>">
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
 <td><div class="input-group date form_datetime" data-date="<?php echo isset($value['date_to']) ? $value['date_to'] : date("Y-m-d", strtotime("+1 day")); ?>T018:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-<input name="date_to_1" id='date_to_1' class="form-control required" size="16" type="text" readonly value="<?php
-if (!empty($value['date_to'])) {
-echo date(DATETIME_FORMAT, strtotime($value['date_to']));
-}
-?>">
-<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-</div><?php
-// echo $value['date_to']
-?></td>
-<td><input type="text" class="form-control" id="bill_no" maxlength="15" name="bill_no" value="<?php echo $value['bill_no']; ?>">
-<?php // echo $value['bill_no']
-?></td><td class="col-md-1">
-<input type="text" class="form-control" id="bill_no_1" maxlength="15" name="bill_no_1" value="<?php
-if ($value['bill_no_1'] == '') {
-echo 0;
-} else {
-echo $value['bill_no_1'];
-}
-?>"></td><td><?php echo $value['location'] ?></td><td><?php
+<input name="date_to_1" id='date_to_1' class="form-control required" size="16" type="text" readonly value="<?php if(!empty($value['date_to'])){ echo date(DATETIME_FORMAT, strtotime($value['date_to']));}?>">
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
+<td><input type="text" class="form-control" id="bill_no" maxlength="15" name="bill_no" value="<?php echo $value['bill_no']; ?>"></td>
+<td class="col-md-1"><input type="text" class="form-control" id="bill_no_1" maxlength="15" name="bill_no_1" value="<?php if($value['bill_no_1'] == ''){echo 0;} else {echo $value['bill_no_1'];}?>">
+</td><td><?php echo $value['location'] ?></td><td><?php
 if ($value['attachment'] != '')
  {
   ?><a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $value['attachment']; ?>"><i class="fa fa-eye"></i> View </a><?php
@@ -407,7 +404,7 @@ if ($value['attachment'] != '')
 <!--                                                                <option value="Company" <?php if ($request['accommodation'] == "1") echo "selected" ?>>Company</option>
 <option value="Own" <?php if ($request['accommodation'] == "2") echo "selected" ?>>Own</option>-->
 </select></td><td class="col-md-1">
-<input type="number" class="form-control only_number " min="0" onkeyup="received_total()"  name="loading_expense_1" id="loading_expense_1" value="<?php
+<input type="number" class="form-control only_number " min="0" onkeyup="received_total()" name="loading_expense_1" id="loading_expense_1" value="<?php
 if($value['loading_expense_1'] != '')
  {
   echo $value['loading_expense_1'];
@@ -417,19 +414,14 @@ else
   echo "0";
  }
 ?>"></td>
-<td class="col-md-1"><input type="number" class="form-control only_number " min="0" onkeyup="received_total()"  name="other_expense_1" id="other_expense_1" value="<?php
-if($value['other_expense_1'] != '')
- {
-  echo $value['other_expense_1'];
- }
-else
- {
-  echo "0";
- }
-?>">
-<!--<input type="hidden" class="form-control"  name="loading_cost" id="loading_cost" value="<?php echo $value['cost']; ?>">-->
-</td><?php $total1 = $total1 + $value['cost'] + $value['loading_expense_1'] + $value['other_expense_1'];
-$lbltotal1 = $lbltotal1 + $value['cost'];
+<td class="col-md-1"><input type="number" class="form-control only_number" onkeyup="received_total();" name="other_expense_1" id="other_expense_1" value="<?php if($value['other_expense_1']!=''){echo $value['other_expense_1'];}else{echo "0";}?>">
+
+<!--<input type="hidden" class="form-control"  name="loading_cost" id="loading_cost" value="<?php //echo $value['cost']; ?>">-->
+</td><?php
+//$total1 = $total1 + $value['cost'] + $value['loading_expense_1'] + $value['other_expense_1'];
+$total1 = $total1 + $value['loading_expense_1'] + $value['other_expense_1'];
+//$lbltotal1 = $lbltotal1 + $value['cost'];
+$lbltotal1 = $lbltotal1 + $value['loading_expense_1'];
 if(!empty($expense_details)) {
 $other_expensetxt = $value['loading_expense_1'] + $value['other_expense_1'];
 $total_travel_claim_hidd = $total_travel_claim_hidd - $other_expensetxt;
@@ -445,40 +437,20 @@ $total_travel_claim_hidd = $total_travel_claim_hidd - $other_expensetxt;
 <?php // } else {   ?>
 																																																																																																	<!--<input type="number" id="loading_cost" min="0" onkeyup="received_total()" class="form-control" name="hotel_cost" value="////<?php echo $value['cost']; ?>">-->
 <?php // }     ?>
-<input type="number" id="loading_cost" min="0" onkeyup="received_total()" class="only_number form-control" name="hotel_cost" value="<?php echo $value['cost']; ?>">
-<input type="hidden" id="loadtotal" value="<?php echo $value['cost']; ?>" class="form-control">
-</td><td id="loading_total_1"><?php echo $value['cost'] + $value['loading_expense_1'] + $value['other_expense_1']; ?></td></tr><?php
+<input type="number" readonly="true" id="loading_cost" min="0" onkeyup="received_total()" class="only_number form-control" name="hotel_cost" value="0">
+<input type="hidden" id="loadtotal" value="<?php echo $value['loading_expense_1']; ?>" class="form-control">
+</td><td id="loading_total_1"><?php echo $value['loading_expense_1'] + $value['other_expense_1']; ?></td></tr><?php
 $i++;
-}
-} else {
+}}
+else {
 ?><input type="hidden" name="loading_expense_1" id="loading_expense_1" value="0">
 <input type="hidden" name="other_expense_1" id="other_expense_1" value="0">
 <input type="hidden" name="loading_cost" id="loading_cost" value="0"><?php
 }
 $i = 2;
-if (!empty($other_loading_booking)) {
-foreach ($other_loading_booking as $key => $value) {
-?><tr id="<?php echo "row_load_id_" . $i ?>">
-<td><a onclick="remove_load_row('<?php echo $i ?>')" class='btn-xs btn_red'><i class='fa fa-trash-o'></i></a></td>
-<td><?php echo $i; ?></td><td><?php echo $value['hotel_provider_name']; ?></td>
-<td><div class="input-group date form_datetime" data-date="<?php echo isset($flight_request['departure_date']) ? $flight_request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-<input style="width:100px !important;" name="loading_departure[]" id="departure_date11"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($value['loading_departure'])); ?>" readonly>
-<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
-<td><div class="input-group date form_datetime" data-date="<?php echo isset($flight_request['departure_date']) ? $flight_request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-<input style="width:100px !important;" name="loading_return[]" id="loading_return"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($value['loading_return'])); ?>" readonly>
-<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
-<td><input type='text' name='load_room_no[]' id="<?php echo "load_room_no" . $i; ?>" class='form-control required' value="<?php echo $value['room_no']; ?>"></td>
-<td><input type='text' name='load_bill_no[]' id="<?php echo "load_bill_no" . $i; ?>" class='form-control' value="<?php echo $value['bill_no']; ?>"></td>
-<td><input type='text' name='load_location[]' id="<?php echo "load_location" . $i; ?>" class='form-control required' value="<?php echo $value['location']; ?>"></td>
-<td><input type="file" name="<?php echo 'load_attachment_' . $i . '[]'; ?>" id="<?php echo 'load_attachment_' . $i ?>" multiple="" class="btn green button-submit" style="width:120px !important;">
-<input type="hidden" name="load_reference_id[]" value="<?php echo $value['reference_id']; ?>"></td>
-<td><select name="load_arrange_by[]" onchange='received_total()' id="<?php echo 'load_arrange_by_' . $i ?>" class="form-control">
-<option value="Company" <?php if ($value['arrange_by'] == "Company") echo "selected"; ?>>Company</option>
-<option value="Own" <?php if ($value['arrange_by'] == "Own") echo "selected"; ?>>Own</option></select>
-</td><td><input type='text' name='loading_expense[]' id="<?php echo "loading_expense_" . $i ?>" onkeyup='received_total()'  class='form-control only_number ' value="<?php echo $value['loading_expense'] ?>"></td>
-<td><input type='text' name='other_expense[]' id="<?php echo "other_expense_" . $i ?>" onkeyup='received_total()'  class='form-control only_number ' value="<?php echo $value['other_expense'] ?>"></td>
-<td><input type='text' name='loading_total[]' id="<?php echo "loading_total_" . $i ?>"  onkeyup='received_total()'  class='form-control required only_number ' value="<?php echo $value['loading_total'] ?>"></td>
-<?php
+
+if(!empty($other_loading_booking)){
+foreach($other_loading_booking as $key => $value){
 $total_loading = $value['loading_total'] + $value['loading_expense'] + $value['other_expense'];
 $total1 = $total1 + $total_loading;
 //$lbltotal1 = $lbltotal1 + $total_loading;
@@ -502,79 +474,73 @@ else
   //$total_unpaid_claim = $total_unpaid_claim + $total_loading;
  }
 
-if(!empty($expense_details))
- {
-  //$other_expensetxt = $value['loading_expense'] + $value['other_expense'];
-  //$total_travel_claim_hidd = $total_travel_claim_hidd - $other_expensetxt;
- }
+$HD1= date(DATETIME_FORMAT, strtotime($value['loading_departure']));
+$HD2= date(DATETIME_FORMAT, strtotime($value['loading_return']));
+$stays= 1;
+$stayFrom=date_create($HD1);
+$stayTo=date_create($HD2);
+$haltCounter=date_diff($stayFrom,$stayTo);
+$daysInThisHotel= $haltCounter->days;
+if($daysInThisHotel>0){$stays=$daysInThisHotel;}
+$perdayCostOfHotel= $total_loading/$stays;
+$trClassHotel= '';
+if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel>$GH_Act){$trClassHotel= 'danger';}
+
+?><tr class="<?php echo $trClassHotel; ?>" id="<?php echo "row_load_id_" . $i ?>">
+<td><a onclick="remove_load_row('<?php echo $i; ?>')" class='btn-xs btn_red'><i class='fa fa-trash-o'></i></a></td>
+<td><?php echo $i; ?></td><td>
+<input type="hidden" name="arrangement_type[]" value="<?php if(isset($value['arrangement_type'])){ echo $value['arrangement_type']; } ?>">
+<?php if(isset($value['arrangement_type'])){ echo $value['arrangement_type']; } ?></td>
+<td><input type="hidden" name="hotel_name[]" value="<?php echo $value['hotal_name']; ?>"><?php echo $value['hotal_name']; ?></td>
+<td><div class="input-group date form_datetime" data-date="<?php echo isset($flight_request['departure_date']) ? $flight_request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
+<input style="width:100px !important;" name="loading_departure[]" id="departure_date11"  class="form-control" size="16" type="text" value="<?php echo $HD1; ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
+<td><div class="input-group date form_datetime" data-date="<?php echo isset($flight_request['departure_date']) ? $flight_request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
+<input style="width:100px !important;" name="loading_return[]" id="loading_return"  class="form-control" size="16" type="text" value="<?php echo $HD2; ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
+<td><input type='text' name='load_room_no[]' id="<?php echo "load_room_no" . $i; ?>" class='form-control required' value="<?php echo $value['room_no']; ?>"></td>
+<td><input type='text' name='load_bill_no[]' id="<?php echo "load_bill_no" . $i; ?>" class='form-control' value="<?php echo $value['bill_no']; ?>"></td>
+<td><input type='text' name='load_location[]' id="<?php echo "load_location" . $i; ?>" class='form-control required' value="<?php echo $value['location']; ?>"></td>
+<td><input type="file" name="<?php echo 'load_attachment_' . $i . '[]'; ?>" id="<?php echo 'load_attachment_' . $i ?>" multiple="" class="btn green button-submit" style="width:120px !important;">
+<input type="hidden" name="load_reference_id[]" value="<?php echo $value['reference_id']; ?>"></td>
+<td><select name="load_arrange_by[]" onchange='received_total()' id="<?php echo 'load_arrange_by_' . $i ?>" class="form-control">
+<option value="Company" <?php if ($value['arrange_by'] == "Company") echo "selected"; ?>>Company</option>
+<option value="Own" <?php if ($value['arrange_by'] == "Own") echo "selected"; ?>>Own</option></select>
+</td><td><input type='text' name='loading_expense[]' id="<?php echo "loading_expense_" . $i ?>" onkeyup='received_total()'  class='form-control only_number ' value="<?php echo $value['loading_expense'] ?>"></td>
+<td><input type='text' name='other_expense[]' id="<?php echo "other_expense_" . $i ?>" onkeyup='received_total()'  class='form-control only_number ' value="<?php echo $value['other_expense'] ?>"></td>
+<td><input type='text' name='loading_total[]' id="<?php echo "loading_total_" . $i ?>"  onkeyup='received_total()'  class='form-control required only_number ' value="<?php echo $value['loading_total'] ?>"></td><?php
+
 ?><td width="5%" id="<?php echo "loading_total_final_" . $i; ?>"><?php echo $total_loading; ?></td></tr><?php
 $i++;
-}
-}
-?></tbody><tfoot><tr>
-<td colspan="12">If Company Guest House is not available, View Ticket should available here</td>
+}}
+?></tbody><tfoot><tr><td colspan="13">If Company Guest House is not available, View Ticket should available here</td>
 <th><b id="other_load_total">Total (&#8377;) </b></th>
 <td><b id="loading_total_final"><?php echo $total1 . '.00'; ?></b></td>                                        
 <?php $expense_hotel = $total1 ?></tr></tfoot></table>
 <input type="hidden" name="other_load_row" id="other_load_row" value="<?php echo $i; ?>">
-<input type="hidden" id="other_load_total_hidd" value="<?php echo $lbltotal1; ?>">
-</div></div></div>
+<input type="hidden" id="other_load_total_hidd" value="<?php echo $lbltotal1; ?>"></div></div></div>
 
 <?php /*
-<div class="row">
-<div class="col-md-12 light bordered ">
-<h4 class="form-section">DA Particulars</h4>
-<div class="row">
+<div class="row"><div class="col-md-12 light bordered ">
+<h4 class="form-section">DA Particulars</h4><div class="row">
 <table id="da_perticulars" class="table table-hover table-bordered text-center">
-<thead>
-<tr class="th_blue">                               
-<th>#</th>
-<th>From Date</th>
-<th>To Date</th>
-<th>Location</th>
-<th>No of Day</th>
-<th>DA@per day</th>
-<th>Amount</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>
+<thead><tr class="th_blue"><th>#</th><th>From Date</th><th>To Date</th>
+<th>Location</th><th>No of Day</th><th>DA@per day</th><th>Amount</th>
+</tr></thead><tbody><tr><td>1</td><td>
 <input type="hidden" name="departure_date" id="departure_date" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>">
 <?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>
-</td>
-<td id="lbl_da_return_date">
+</td><td id="lbl_da_return_date">
 <?php echo date(DATETIME_FORMAT, strtotime($request['return_date'])); ?>
-</td>
-<td><?php echo $request['to_city_name']; ?></td>
-<td id="lbl_day"><?php
-echo $day . " Day," . $hours . " hours";
-?></td>
-<td  class="col-md-2">
-<input type="hidden" class="form-control required" name="da_actual" id="da_actual" value="<?php echo $request['DA_allowance_actual']; ?>">
-<?php
+</td><td><?php echo $request['to_city_name']; ?></td><td id="lbl_day"><?php
+echo $day . " Day," . $hours . " hours";?></td><td  class="col-md-2">
+<input type="hidden" class="form-control required" name="da_actual" id="da_actual" value="<?php echo $request['DA_allowance_actual']; ?>"><?php
 if ($request['DA_allowance_actual'] != '1') {
 echo $request['DA_allowance'];
-?>
-<input type="hidden" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?php echo $request['DA_allowance']; ?>">
-<?php
+?><input type="hidden" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?php echo $request['DA_allowance']; ?>"><?php
 } else {
-?>
-<input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?php
-if (!empty($expense_details)) {
-echo $request['DA_allowance'];
-} else {
-echo 0;
-}
-?>">                                                                                                                
-<?php
-}
-?>
-<input type="hidden" class="form-control required" name="day" id="day" value="<?php echo $day; ?>">
-<input type="hidden" class="form-control required" name="hours" id="hours" value="<?php echo $hours; ?>">
-</td>
-<?php
+?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance"  onkeyup="received_total()" placeholder="DA/Per day" value="<?phpif (!empty($expense_details)) {echo $request['DA_allowance'];} else {echo 0;}?>"><?php}
+?><input type="hidden" class="form-control required" name="day" id="day" value="<?php echo $day; ?>">
+<input type="hidden" class="form-control required" name="hours" id="hours" value="<?php echo $hours; ?>"></td><?php
 $total2 = 0;
 $da_total = 0;
 if ($request['DA_allowance_actual'] != '1') {
@@ -584,30 +550,17 @@ if ($hours != '0') {
 if ($hours != '') {
 if ($hours < 14) {
 $da = $request['DA_allowance'] / 2;
-$da_total = $da_total + $da;
-} else {
-$da_total = $da_total + $request['DA_allowance'];
-}
-}
-}
-
-$total2 = $total2 + $da_total;
-
-} else {
-
+$da_total = $da_total + $da;} else {
+$da_total = $da_total + $request['DA_allowance'];}}}
+$total2 = $total2 + $da_total;} else {
 if (!empty($expense_details)) {
 $da_total = $request['DA_allowance'] * $day;
 if ($hours != '0') {
 if ($hours != '') {
 if ($hours < 14) {
 $da = $request['DA_allowance'] / 2;
-$da_total = $da_total + $da;
-} else {
-$da_total = $da_total + $request['DA_allowance'];
-}
-}
-}
-}
+$da_total = $da_total + $da;} else {
+$da_total = $da_total + $request['DA_allowance'];}}}}
 
 if (!empty($expense_details)) {
 $total_da = $request['DA_allowance'] * $day;
@@ -616,40 +569,14 @@ if ($hours != '') {
 if ($hours < 14) {
 $da = $request['DA_allowance'] / 2;
 $total_da = $total_da + $da;
-} else {
-$total_da = $total_da + $request['DA_allowance'];
-}
-}
-}
-$total2 = $total2 + $total_da;
-}
-?>
-<input type="hidden" id="da_total_hidd" name="da_total_hidd" value="<?php echo $total2 ?>">
-<?php
-}
-?>
-<td width="5%" id="lbl_final_da">
-<?php
-echo $da_total;
-?>
-</td>
-</tr>
-</tbody>
-<tfoot>
-<tr>
-<td colspan="5"></td>
-<th>Total </th>
-<td><b id="da_final_total"><?php echo "&#8360; " . $total2 . '.00'; ?></b></td>                                        
-<?php $expense_da = $da_total; ?>
-</tr>
-</tfoot>
-</table> 
-</div>
-</div>
-</div>
-
+} else {$total_da = $total_da + $request['DA_allowance'];}}}
+$total2 = $total2 + $total_da;}
+?><input type="hidden" id="da_total_hidd" name="da_total_hidd" value="<?php echo $total2 ?>">
+<?php}?><td width="5%" id="lbl_final_da"><?php
+echo $da_total;?></td></tr></tbody><tfoot><tr><td colspan="5"></td>
+<th>Total </th><td><b id="da_final_total"><?php echo "&#8360; " . $total2 . '.00'; ?></b></td>                                        
+<?php $expense_da = $da_total; ?></tr></tfoot></table> </div></div></div>
 */ ?>
-
 
 <?php
 $DA_style= '';
@@ -748,24 +675,24 @@ $diff=date_diff($t87,$t88);
 <div class="row"><?php
 $total3 = 0;
 ?><table id="conveyance_car" class="table table-hover table-bordered text-center">
-<thead><tr class="th_blue"><th></th><th>#</th><th>Date</th><th>Location From</th>
-<th>Location To</th><th>Book By</th><th>Mode</th><th>View</th><th>Amount</th></tr>
-</thead><tbody id="con_tbody"><?php
+<thead><tr class="th_blue"><th></th><th>#</th><th>Date</th><th>Expense Location</th>
+<th>Location From</th><th>Location To</th><th>Book By</th><th>Mode</th><th>View</th>
+<th>Amount</th></tr></thead><tbody id="con_tbody"><?php
 $i = 1;
 $total3 = 0;
 $lbltotal3 = 0;
 $con_total = 0;
-foreach ($car_details as $key => $value) {
-?><tr><td></td><td><?php echo $i; ?></td><td>
+foreach($car_details as $key=>$value){
+$trClassTX= '';
+if($con_allo>0 and is_numeric($con_allo) and $value['cost']>$con_allo){$trClassTX= 'danger';}
+?><tr class="<?php echo $trClassTX; ?>"><td></td><td><?php echo $i; ?></td><td>
 <div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
 <input style="width:140px !important;" name="con_date_1" id="con_date_1"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?>" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-</div>
-<?php // echo $value['date']           ?>
-</td>
-<td><?php echo $value['location_from'] ?></td>
-<td><?php echo $value['location_to'] ?></td>
-<td><?php
+</div><?php //echo $value['date'] ?></td>
+<td><?php echo $value['expense_location']; ?></td>
+<td><?php echo $value['location_from']; ?></td>
+<td><?php echo $value['location_to']; ?></td><td><?php
 if ($value['book_by'] == "1") {
 echo "Uber";
 } else if ($value['book_by'] == "2") {
@@ -800,14 +727,28 @@ $lbltotal3 = $lbltotal3 + $value['cost'];
 $i++;
 }
 
-if (!empty($other_con_booking)) {
+if(!empty($other_con_booking)) {
 foreach ($other_con_booking as $key => $value) {
-?><tr id="<?php echo "row_con_id_" . $i ?>">
+$trClassTX2= '';
+if($con_allo>0 and is_numeric($con_allo) and $value['total']>$con_allo){$trClassTX2= 'danger';}
+?><tr class="<?php echo $trClassTX2; ?>" id="<?php echo "row_con_id_" . $i ?>">
 <td><a onclick="remove_con_row('<?php echo $i ?>')" class='btn-xs btn_red'><i class='fa fa-trash-o'></i></a></td>
 <td><?php echo $i; ?></td><td>
 <div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
 <input style="width:140px !important;" name="con_date[]" id="con_date"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($value['con_date'])) ?>" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
+
+<td><select name="exp_on[]" onChange="received_total();" id="<?php echo "exp_on_" . $i; ?>" class="form-control required">
+<option value="">Select Location</option><?php
+if(isset($possible_halts2) and count($possible_halts2)>0)
+ {
+  foreach($possible_halts2 as $kiu=>$valu)
+  {
+   ?><option <?php if($valu==$value['expense_location']){ echo 'selected="selected"'; } ?> value="<?php echo $valu; ?>"><?php echo $valu; ?></option><?php
+  }
+ }
+?></select></td>
+
 <td><input type='text' name='con_from[]' id="<?php echo "con_from_" . $i ?>" class='form-control required' value="<?php echo $value['con_from'] ?>"></td>
 <td><input type='text' name='con_to[]' id="<?php echo "con_to_" . $i ?>" class='form-control required' value="<?php echo $value['con_to'] ?>"></td>                                                    
 <td><select name="con_book_by[]" class="form-control">
@@ -839,9 +780,9 @@ $total_travel_claim_hidd = $total_travel_claim_hidd - $value['total'];
 $i++;
 }
 }
-?></tbody><tfoot><tr><td colspan="7"></td><th>Total (&#8377;)</th>
+?></tbody><tfoot><tr><td colspan="8"></td><th>Total (&#8377;)</th>
 <td><b id='other_con_total'><?php echo $total3 . '.00'; $expense_con = $total3; ?></b></td>
-</tr></tfoot></table> 
+</tr></tfoot></table>
 <input type="hidden" name="other_con_row" id="other_con_row" value="<?php echo $i; ?>">
 <input type="hidden" id="other_con_total_hidd" value="<?php echo $lbltotal3; ?>"></div></div></div>
 
@@ -996,50 +937,53 @@ $total_travel_claim_hidd_db = 0;
 //$total_travel_claim_hidd = $total_travel_claim;
 }
 ?>      
-<!--<input type="text" name="hidd_total_claim" id="hidd_total_claim" value="<?php echo $total_travel_claim_hidd_db; ?>" >-->
-<!--<input type="text" name="total_unpaid_claim_hidd" id="total_unpaid_claim_hidd" value="<?php echo $total_unpaid_claim_hidd; ?>" >-->
-<input type="hidden" name="hidd_total_claim" id="hidd_total_claim" value="0" >
-<input type="hidden" name="total_unpaid_claim_hidd" id="total_unpaid_claim_hidd" value="0" >
+<!--<input type="text" name="hidd_total_claim" id="hidd_total_claim" value="<?php // echo $total_travel_claim_hidd_db; ?>" >-->
+<!--<input type="text" name="total_unpaid_claim_hidd" id="total_unpaid_claim_hidd" value="<?php //echo $total_unpaid_claim_hidd; ?>" >-->
+<input type="hidden" name="hidd_total_claim" id="hidd_total_claim" value="0">
+<input type="hidden" name="total_unpaid_claim_hidd" id="total_unpaid_claim_hidd" value="0">
 <input type="hidden" name="total_claim" id="total_claim" value="<?php
-if(empty($expense_details)){echo $total_unpaid_claim_show + $addded_expense_self;}else{echo $total_unpaid_claim_show;}?>" >
-<input type="hidden" name="final_total_claim" id="final_total_claim" value="<?php if(empty($expense_details)){ echo $total_travel_claim + $addded_expense_self + $addded_expense_com; } else {echo $total_travel_claim;} ?>" >
+if(empty($expense_details)){echo $total_unpaid_claim_show + $addded_expense_self;}else{echo $total_unpaid_claim_show;}?>">
+<input type="hidden" name="final_total_claim" id="final_total_claim" value="<?php if(empty($expense_details)){ echo $total_travel_claim + $addded_expense_self + $addded_expense_com; } else {echo $total_travel_claim;} ?>">
 <input type="hidden" name="your_recived_hidd" id="your_recived_hidd" value="<?php
 if(empty($expense_details)){echo $total_unpaid_claim_show + $addded_expense_self - $less_advance - $other_manager_expense;} else {echo $total_unpaid_claim_show - $less_advance - $other_manager_expense;}?>">
-
-<input type="hidden" name="car_hire" id="car_hire" value="<?php echo $request['car_hire']; ?>" >
-<input type="hidden" name="accommodation" id="accommodation" value="<?php echo $request['accommodation']; ?>" >
-<input type="hidden" name="travel_ticket" id="travel_ticket" value="<?php echo $request['travel_ticket']; ?>" >                        
-<input type="hidden" name="expense_ticket" id="expense_ticket" value="<?php echo $expense_ticket; ?>" >
-<input type="hidden" name="expense_hotel" id="expense_hotel" value="<?php echo $expense_hotel; ?>" >
-<input type="hidden" name="expense_da" id="expense_da" value="<?php echo $expense_da; ?>" >
-<input type="hidden" name="expense_con" id="expense_con" value="<?php echo $expense_con; ?>" >
-<input type="hidden" name="expense_oth" id="expense_oth" value="<?php echo $expense_oth; ?>" >
+<input type="hidden" name="car_hire" id="car_hire" value="<?php echo $request['car_hire']; ?>">
+<input type="hidden" name="accommodation" id="accommodation" value="<?php echo $request['accommodation']; ?>">
+<input type="hidden" name="travel_ticket" id="travel_ticket" value="<?php echo $request['travel_ticket']; ?>">                        
+<input type="hidden" name="expense_ticket" id="expense_ticket" value="<?php echo $expense_ticket; ?>">
+<input type="hidden" name="expense_hotel" id="expense_hotel" value="<?php echo $expense_hotel; ?>">
+<input type="hidden" name="expense_da" id="expense_da" value="<?php echo $expense_da; ?>">
+<input type="hidden" name="expense_con" id="expense_con" value="<?php echo $expense_con; ?>">
+<input type="hidden" name="expense_oth" id="expense_oth" value="<?php echo $expense_oth; ?>">
 
 <div class="row"><div class="col-md-4"><table class="table table-bordered">
 <tbody><tr class="th_blue"><th>Expense Summary</th><th>INR (&#8377;)</th></tr>
-<tr><th>Trip Expense Total</th><th id="lbl_total_claim1">
-<?php
+<tr><th>Trip Expense Total</th><th id="lbl_total_claim1"><?php
+
 //if (empty($expense_details)) {
 //$lbl_total_claim1 = $total_travel_claim + $addded_expense_self + $addded_expense_com;
 //} else {
 //$lbl_total_claim1 = $total_travel_claim;
 //}
 //echo "&#8360; " .$lbl_total_claim1;
-?></th></tr><tr><th>Paid By Company</th><th id="lbl_total_claim_company">
-<?php
+
+?></th></tr><tr><th>Paid By Company</th><th id="lbl_total_claim_company"><?php
+
 //if (empty($expense_details)) {
 //$lbl_total_claim_company= $total_travel_claim + $addded_expense_com - $total_unpaid_claim_show;
 //} else {
 //$lbl_total_claim_company= $total_travel_claim - $total_unpaid_claim_show;
 //}
 //echo "&#8360; " .$lbl_total_claim_company;
+
 ?></th></tr><tr><th>Paid By Self</th><th id="lbl_total_claim"><?php
+
 //if (empty($expense_details)) {
 //$lbl_total_claim =  $total_unpaid_claim_show + $addded_expense_self - $da_total;
 //} else {
 //$lbl_total_claim =  $total_unpaid_claim_show - $da_total;
 //}
 //echo "&#8360; " .$lbl_total_claim;
+
 ?></th></tr><tr>
 <th>D.A.<?php if(isset($DA_50) and $DA_50>0){if($DA_50==3){ echo ' (Policy : DA is Not Admissible)'; }elseif($DA_50==1){ echo ' (Policy : Guest house with</br>food DA@50%)'; }elseif($DA_50==2){ echo ' (Policy : Hotel with food DA@50%)'; }} ?></th>
 <th id="lbl_da_total"><?php
@@ -1089,7 +1033,6 @@ Pay to Employee
 </th><th id="your_recived">
 <?php // echo "&#8360; " .$TotalAmountSummery;  ?>
 </th>
-d_total
 </tbody>
 </table>
 </div>
@@ -1161,61 +1104,37 @@ else
 <input type="hidden" id="con_limit" value="<?php echo $con_amount; ?>"></tr>
 </tbody></table></div>
 
-<div class="col-md-4">
-<div class="col-md-offset-1 col-md-12">
+<div class="col-md-4"><div class="col-md-offset-1 col-md-12">
 ** Pls attach all Bills, Upload Option&nbsp;<br>
 <input type="file" name="other_attachment[]" id="other_attachment" class="btn green button-submit" multiple capture><br>
 <input type="submit" class="btn green button-submit">
 <a href="<?php echo base_url() . 'employee_request'; ?>" class="btn default">
-<i class="m-icon-swapleft"></i> Back 
-</a>
-</div>
-</div>
-</div>
-</div>             
+<i class="m-icon-swapleft"></i> Back </a></div></div></div></div>
 <input type="hidden" id="cal_flag" value="0" name="cal_flag">
-</form>
-</div>
-</div>
-<!-- END PAGE CONTENT-->
-</div>
-</div>
+</form></div></div></div></div>
+
 <input type="hidden" id="lblother_manager_expense_hidd" value="<?php echo $lblother_manager_expense; ?>">
 <input type="hidden" name="request_id" id="request_id" value="<?php echo $request['id']; ?>">
 <input type="hidden" id="add_row_flag" value="0">
 <input type="hidden" id="error_da_show" value="0">
 <input type="hidden" id="error_con_show" value="0">
 
-<div class="modal fade" id="error_popup" role="dialog">
-<div class="modal-dialog">
-
-<!-- Modal content-->
-<div class="modal-content">
-<div class="modal-header alert-info">
+<div class="modal fade" id="error_popup" role="dialog"><div class="modal-dialog">
+<div class="modal-content"><div class="modal-header alert-info">
 <button type="button" class="close" data-dismiss="modal">&times;</button>
-<h4 class="modal-title">Notification</h4>
-</div>
-<div class="modal-body">
+<h4 class="modal-title">Notification</h4></div><div class="modal-body">
 <h4 id="error_msg">Do you want to create hangout meeting instead?</h4>
-</div>
-</div>
+</div></div></div></div>
 
-</div>
-</div>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&key=AIzaSyCdGlqSgU-wNjCn6_mig33UF5yv5QB7tqI"></script>
 
 <script type="text/javascript">
 $(document).ready(function () {
-received_total();
-});
+received_total();});
 $(".only_number").on('keypress', function (evt) {
 evt = (evt) ? evt : window.event;
 var charCode = (evt.which) ? evt.which : evt.keyCode;
-if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-return false;
-}
-return true;
-});
+if (charCode > 31 && (charCode < 48 || charCode > 57)) {return false;}return true;});
 
 function check_date() {
 var departure_date = $("#departure_date").val();
@@ -1291,12 +1210,20 @@ function add_native_ticket_exp(dyna)
  received_total();
 }
 
+
+
+
+
 function received_total(){
+if($("#other_expense_1").val()=='' || $("#other_expense_1").val()==null)
+{
+ $("#other_expense_1").val('0');
+}
 var hidd_total_claim = $("#hidd_total_claim").val();
 var total_unpaid_claim_hidd = $("#total_unpaid_claim_hidd").val();
 var loading_cost = $("#loading_cost").val();
 var loading_expense_1 = $("#loading_expense_1").val();
-var other_expense_1 = $("#other_expense_1").val();
+var other_expense_1 = parseInt($("#other_expense_1").val());
 var accommodation = $("#accommodation").val();
 var load_arrange_by_1 = $("#load_arrange_by_1").val();
 if(!$("#loading_cost").length)
@@ -1327,6 +1254,7 @@ if(other_expense_1 == '')
 var final_cost = parseInt(loading_cost) + parseInt(loading_expense_1) + parseInt(other_expense_1);
 $("#loading_total_1").text(final_cost);
 $("#loading_total_final").text(final_cost.toFixed(2));
+$("#loading_total_final").text(final_cost.toFixed(2));
 $("#expense_hotel").val(final_cost);
 
 if(load_arrange_by_1 == "Own")
@@ -1347,8 +1275,14 @@ for(var i = 2; i < other_load_row; i++)
  {
   if($('#loading_expense_' + i).length)
    {
+	if($('#other_expense_' + i).val()=='' || $('#other_expense_' + i).val()==null)
+	{
+	 $('#other_expense_' + i).val('0');
+	}
+	
+	
 	var loading_expense = $('#loading_expense_' + i).val();
-	var other_expense = $('#other_expense_' + i).val();
+	var other_expense = parseInt($('#other_expense_' + i).val());
 	var loading_total = $('#loading_total_' + i).val();
 	var load_arrange_by = $('#load_arrange_by_' + i).val();
 	if(loading_expense == '')
@@ -1378,6 +1312,7 @@ for(var i = 2; i < other_load_row; i++)
 	 }
    }
   }
+ 
  var other_load_total_final = parseFloat(other_load_total_hidd) + parseFloat(other_load_total);
  $("#loading_total_final").text(other_load_total_final.toFixed(2));
  $("#expense_hotel").val(other_load_total_final);
@@ -1426,7 +1361,6 @@ for(var i = 2; i < other_load_row; i++)
  var other_trip_total_hidd = $("#other_trip_total_hidd").val();
  var inps_trip = document.getElementsByName('total_trip_no[]');
  var trip_arrange_by = document.getElementsByName('trip_arrange_by[]');
- 
  var ticket_cost_1 = $("#ticket_cost_1").val();
  if(!$("#ticket_cost_1").length)
   {
@@ -1498,6 +1432,7 @@ for(var i = 2; i < other_load_row; i++)
       }
     }
   }
+ 
  var other_trip_total_final = parseFloat(other_trip_total_hidd) + parseFloat(other_trip_total1);
  $("#other_trip_total").text(total_trip_lbl.toFixed(2));
  $("#expense_ticket").val(total_trip_lbl);
@@ -1560,7 +1495,6 @@ for(var i = 2; i < other_load_row; i++)
  var con_allow = $("#con_allow").val();
  var con_limit = $("#con_limit").val();
  var error_con_show = $("#error_con_show").val();
-
  var day = $("#day").val();
  var con_limit = con_limit * day;
 
@@ -1571,7 +1505,8 @@ for(var i = 2; i < other_load_row; i++)
 	 if(error_con_show == 0)
 	  {
 	   $("#error_msg").text("You are eligible for Conveyance ₨ " + con_limit + " ");
-	   $("#error_popup").modal();
+	   alert("You are eligible for Conveyance ₨ " + con_limit + " ");
+	   //$("#error_popup").modal('show');// here is the problem
 	   $("#error_con_show").val("1");
 	  }
     }
@@ -1725,7 +1660,8 @@ for(var i = 2; i < other_load_row; i++)
 	 if(error_da_show == 0)
 	  {
 	   $("#error_msg").text("You are eligible for DA ₨ " + da_limit + " ");
-	   $("#error_popup").modal();
+	   alert("You are eligible for DA ₨ " + da_limit + " ");
+	   //$("#error_popup").modal();
 	   $("#error_da_show").val("1");
 	  }
     }
@@ -1889,7 +1825,7 @@ var hidd_total_claim = $("#hidd_total_claim").val();
 var total_unpaid_claim_hidd = $("#total_unpaid_claim_hidd").val();
 var loading_cost = $("#loading_cost").val();
 var loading_expense_1 = $("#loading_expense_1").val();
-var other_expense_1 = $("#other_expense_1").val();
+var other_expense_1 = parseInt($("#other_expense_1").val());
 var accommodation = $("#accommodation").val();
 var load_arrange_by_1 = $("#load_arrange_by_1").val();
 
@@ -1933,7 +1869,7 @@ var j = 0;
 for (var i = 2; i < other_load_row; i++) {
 if ($('#loading_expense_' + i).length) {
 var loading_expense = $('#loading_expense_' + i).val();
-var other_expense = $('#other_expense_' + i).val();
+var other_expense = parseInt($('#other_expense_' + i).val());
 var loading_total = $('#loading_total_' + i).val();
 var load_arrange_by = $('#load_arrange_by_' + i).val();
 if (loading_expense == '') {
@@ -2124,7 +2060,8 @@ if (con_allow != "1") {
 if (other_con_total > con_limit) {
 if (error_con_show == 0) {
 $("#error_msg").text("You are eligible for Conveyance ₨ " + con_limit + " ");
-$("#error_popup").modal();
+alert("You are eligible for Conveyance ₨ " + con_limit + " ");
+//$("#error_popup").modal();
 $("#error_con_show").val("1");
 }
 } else {
@@ -2257,7 +2194,8 @@ if (da_allow != "1") {
 if (final_da > da_limit) {
 if (error_da_show == 0) {
 $("#error_msg").text("You are eligible for DA ₨ " + da_limit + " ");
-$("#error_popup").modal();
+alert("You are eligible for DA ₨ " + da_limit + " ");
+//$("#error_popup").modal();
 $("#error_da_show").val("1");
 }
 } else {
@@ -2293,6 +2231,23 @@ $("#cal_flag").val("1");
 
 }
 
+function accomoTypeSelected(dyna)
+ {
+  if($("#arrangement_type_"+dyna).val()!='Hotel')
+  {
+   $("#other_expense_"+dyna).val('0');
+   $("#loading_expense_"+dyna).val('0');
+   $("#loading_total_final_"+dyna).text('0');
+   $("#other_expense_"+dyna).attr('readonly', true);
+   $("#loading_expense_"+dyna).attr('readonly', true);
+  }
+  else
+  {
+   $("#other_expense_"+dyna).attr('readonly', false);
+   $("#loading_expense_"+dyna).attr('readonly', false);
+  }
+  received_total();
+ }
 
 function add_trip_row() {
 var count = document.getElementById('other_trip_row').value;
@@ -2362,13 +2317,14 @@ function add_con_row() {
 var count = document.getElementById('other_con_row').value;
 var request_id = document.getElementById('request_id').value;
 var add_row_flag = $("#add_row_flag").val();
+var valueToPassInAJAX= '<?php echo $valueToPassInAJAX; ?>';
 if (add_row_flag == "0") {
 $("#add_row_flag").val('1');
 $.ajax({
 url: '<?php echo site_url('employee_request/new_add_con_row'); ?>',
 type: 'post',
 dataType: 'html',
-data: {'count': count, request_id: request_id, '<?php echo $this->security->get_csrf_token_name() ?>': '<?php echo $this->security->get_csrf_hash() ?>'},
+data: {'count': count, request_id: request_id, '<?php echo $this->security->get_csrf_token_name() ?>': '<?php echo $this->security->get_csrf_hash() ?>', 'halts':valueToPassInAJAX},
 catch : false,
 success: function (data) {
 $("#con_tbody").append(data);
@@ -2381,8 +2337,10 @@ initialize1();
 function initialize1() {
 var other_row = $("#other_con_row").val();
 other_row--;
+//var exp_on = document.getElementById("exp_on_" + other_row);
 var con_from = document.getElementById("con_from_" + other_row);
 var con_to = document.getElementById("con_to_" + other_row);
+//var autocomplete = new google.maps.places.Autocomplete(exp_on);
 var autocomplete = new google.maps.places.Autocomplete(con_from);
 var autocomplete = new google.maps.places.Autocomplete(con_to);
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -2472,7 +2430,7 @@ $('.form_datetime').datetimepicker({
 weekStart: 1,
 todayBtn: 1,
 startDate: "<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>",
-//                                                        endDate: "<?php // echo $return_date;                                                                                 ?>",
+//endDate: "<?php // echo $return_date;?>",
 autoclose: 1,
 todayHighlight: 1,
 startView: 2,
@@ -2484,4 +2442,4 @@ format: "<?php echo DATETIME_FORMAT_DATEPICKER; ?>"
 </script>
 <style>
 .table { text-align:left;}
-</styl
+</style>

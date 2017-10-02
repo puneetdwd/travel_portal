@@ -210,7 +210,7 @@
                    </div>-->
                 <div class="col-sm-3 text-center" ng-show="travelCardObject.fromLocation & amp; & amp; travelCardObject.toLocation" data-original-title="" title="">
                     <label>
-                        <h4 class="label-class ng-binding"><?php echo $request['from_city_name'] . " To " . $request['to_city_name'] ?></h4>
+                        <h4 class="label-class ng-binding"><?php echo $request['from_city_name'] . " To " . $request['to_city_name']; ?></h4>
                     </label>
                 </div>
                 <div class="col-sm-3 text-right" ng-show="travelCardObject.fromLocation & amp; & amp; travelCardObject.toLocation" data-original-title="" title="">                    
@@ -280,7 +280,28 @@
                                                         <label class="control-label text-left-imp">PNR number<span class="required"> * </span>:</label>                                    
                                                         <input type="text" class="form-control required" name="pnr_number">
                                                     </div>
-                                                    <div class="form-group col-xs-12">
+                                                    
+													
+													
+<div class="form-group col-xs-12">
+<label for="dtp_input3" class="control-label">Boarding Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input3">
+<input id="boarding_date" onChange="updateDepDateTime();" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="boarding_date-error" class="error" for="boarding_date"></label></div>
+
+<div class="form-group col-xs-12">
+<label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="reaching_date-error" class="error" for="reaching_date"></label></div>
+													
+													
+													
+													
+													
+													<div class="form-group col-xs-12">
                                                         <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                         <input type="number" class="form-control required" name="cost">
                                                     </div>
@@ -379,6 +400,29 @@
                                                         <input type="text" class="form-control required" name="pnr_number">
                                                     </div>
                                                     
+													
+													
+<div class="form-group col-xs-12">
+<label for="dtp_input3" class="control-label">Boarding Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input3">
+<input id="boarding_date" onChange="updateDepDateTime();" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="boarding_date-error" class="error" for="boarding_date"></label></div>
+
+<div class="form-group col-xs-12">
+<label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="reaching_date-error" class="error" for="reaching_date"></label></div>
+
+
+											
+													
+													
+													
+													
+													
 													<div class="form-group col-xs-12">
                                                         <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                         <input type="number" class="form-control required" name="cost">
@@ -471,7 +515,26 @@
                                                             <option value='2'>Tatkal</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-xs-12">
+                                                    
+													
+													
+<div class="form-group col-xs-12">
+<label for="dtp_input3" class="control-label">Boarding Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input3">
+<input id="boarding_date" onChange="updateDepDateTime();" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="boarding_date-error" class="error" for="boarding_date"></label></div>
+
+<div class="form-group col-xs-12">
+<label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="reaching_date-error" class="error" for="reaching_date"></label></div>
+													
+													
+													
+													<div class="form-group col-xs-12">
                                                         <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                         <input type="number" class="form-control required" name="cost">
                                                     </div>
@@ -547,7 +610,26 @@
                                                             <option value='2'>Tatkal</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-xs-12">
+                                                    
+													
+													
+<div class="form-group col-xs-12">
+<label for="dtp_input3" class="control-label">Boarding Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input3">
+<input id="boarding_date" onChange="updateDepDateTime();" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="boarding_date-error" class="error" for="boarding_date"></label></div>
+
+<div class="form-group col-xs-12">
+<label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
+<div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
+<label id="reaching_date-error" class="error" for="reaching_date"></label></div>
+													
+													
+													
+													<div class="form-group col-xs-12">
                                                         <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
                                                         <input type="number" class="form-control required" name="cost">
                                                     </div>
@@ -1342,656 +1424,680 @@
     } else {
         $return_date = '';
     }
-    ?>
-    <script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ?>" charset="UTF-8"></script>
-    <script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.fr.js" ?>" charset="UTF-8"></script>
-    <script type="text/javascript">
+?>
+<script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ?>" charset="UTF-8"></script>
+<script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.fr.js" ?>" charset="UTF-8"></script>
+<script type="text/javascript">
+
+function updateDepDateTime()
+ {
+  var departure_date = $("#boarding_date").val();
+  var primID = '<?php echo $request['request_id']; ?>';
+  $.ajax({
+	  url: "<?php echo base_url('employee_request/updateBoardingTime'); ?>",
+	  type: "POST",
+	  dataType: "html",
+	  data: {departure_date: departure_date, primID: primID},
+	  catch : false,
+	  success: function (data)
+	   {
+		if(data=='success')
+		{
+		 alert('Boarding Time Updated..!!');
+		 location.reload(true);
+		}
+		else
+		{
+		 alert('Something went wrong, please try again..!!');
+		}
+	   }
+	});
+ }
+
+function setSubjectId(SubjectId)
+ {
+  $('#subjectOfRejection').val(SubjectId);
+ }
+
+function postRejection()
+{
+if ($("#rejectionReason").val() == '')
+{
+$('#postFail').slideDown('slow').fadeOut(9999);
+return false;
+}
+var subjectType = $("#subjectOfRejection").val();
+$.ajax({
+url: "<?php echo base_url('travel_desk/rejection'); ?>",
+		type: "POST",
+		dataType: "html",
+		data: {
+		rejectionSubject: $("#subjectOfRejection").val(),
+				subjectId: $("#subjectID").val(),
+				reason: $("#rejectionReason").val()
+		},
+		catch : false,
+		success: function (data) {
+		$('#cancelForm').modal('hide');
+		if (data == 'success' || data == 'half_success')
+		{
+		$('#' + subjectType + '_HOLDER').remove();
+		$('#rejectionPass').slideDown('slow').fadeOut(9999);
+		$("#rejectionReason").val('');
+		}
+		},
+		error: function () {
+		$('#cancelForm').modal('hide');
+		$('#rejectionFail').slideDown('slow').fadeOut(9999);
+		}
+});
+}
 
 
-        function setSubjectId(SubjectId)
-        {
-        $('#subjectOfRejection').val(SubjectId);
-        }
+$('.form_datetime').datetimepicker({
+weekStart: 1,
+		todayBtn: 1,
+		startDate: "<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d h", strtotime("+1 day")); ?>",
+		endDate: "<?php echo $return_date; ?>",
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		showMeridian: 1,
+		minView: 1,
+		format: "<?php echo DATETIME_FORMAT_DATEPICKER; ?>"
+});</script>
+<script type="text/javascript">
+$(document).ready(function() {
 
-        function postRejection()
-        {
-        if ($("#rejectionReason").val() == '')
-        {
-        $('#postFail').slideDown('slow').fadeOut(9999);
-        return false;
-        }
-        var subjectType = $("#subjectOfRejection").val();
-        $.ajax({
-        url: "<?php echo base_url('travel_desk/rejection'); ?>",
-                type: "POST",
-                dataType: "html",
-                data: {
-                rejectionSubject: $("#subjectOfRejection").val(),
-                        subjectId: $("#subjectID").val(),
-                        reason: $("#rejectionReason").val()
-                },
-                catch : false,
-                success: function (data) {
-                $('#cancelForm').modal('hide');
-                if (data == 'success' || data == 'half_success')
-                {
-                $('#' + subjectType + '_HOLDER').remove();
-                $('#rejectionPass').slideDown('slow').fadeOut(9999);
-                $("#rejectionReason").val('');
-                }
-                },
-                error: function () {
-                $('#cancelForm').modal('hide');
-                $('#rejectionFail').slideDown('slow').fadeOut(9999);
-                }
-        });
-        }
+$("#check_in_date,#check_out_date").change(function () {
+var check_in_date = document.getElementById("check_in_date").value;
+var check_out_date = document.getElementById("check_out_date").value;
+if (check_out_date == check_in_date) {
+alert("Check-In date and Check-Out date should not be same");
+document.getElementById("check_out_date").value = "";
+}
+});
+$("#pick_up_date,#drop_off_date").change(function () {
+var pick_up_date = document.getElementById("pick_up_date").value;
+var drop_off_date = document.getElementById("drop_off_date").value;
+if (pick_up_date == drop_off_date) {
+alert("Pick-Up date and Drop-Off date should not be same");
+document.getElementById("drop_off_date").value = "";
+}
+});
+initialize();
+google.maps.event.addDomListener(window, 'load', initialize);
+var isAfterStartDate = function (startDateStr, endDateStr) {
+var startDateStr = new Date(startDateStr),
+		endDateStr = new Date(endDateStr);
+if (endDateStr != '') {
+if (startDateStr > endDateStr) {
+return false;
+} else {
+return true;
+}
+} else {
+return true;
+}
 
-
-        $('.form_datetime').datetimepicker({
-        weekStart: 1,
-                todayBtn: 1,
-                startDate: "<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d h", strtotime("+1 day")); ?>",
-                endDate: "<?php echo $return_date; ?>",
-                autoclose: 1,
-                todayHighlight: 1,
-                startView: 2,
-                forceParse: 0,
-                showMeridian: 1,
-                minView: 1,
-                format: "<?php echo DATETIME_FORMAT_DATEPICKER; ?>"
-        });</script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-
-        $("#check_in_date,#check_out_date").change(function () {
-        var check_in_date = document.getElementById("check_in_date").value;
-        var check_out_date = document.getElementById("check_out_date").value;
-        if (check_out_date == check_in_date) {
-        alert("Check-In date and Check-Out date should not be same");
-        document.getElementById("check_out_date").value = "";
-        }
-        });
-        $("#pick_up_date,#drop_off_date").change(function () {
-        var pick_up_date = document.getElementById("pick_up_date").value;
-        var drop_off_date = document.getElementById("drop_off_date").value;
-        if (pick_up_date == drop_off_date) {
-        alert("Pick-Up date and Drop-Off date should not be same");
-        document.getElementById("drop_off_date").value = "";
-        }
-        });
-        initialize();
-        google.maps.event.addDomListener(window, 'load', initialize);
-        var isAfterStartDate = function (startDateStr, endDateStr) {
-        var startDateStr = new Date(startDateStr),
-                endDateStr = new Date(endDateStr);
-        if (endDateStr != '') {
-        if (startDateStr > endDateStr) {
-        return false;
-        } else {
-        return true;
-        }
-        } else {
-        return true;
-        }
-
-        };
-        $('#other_expense_form').validate({
-        rules: {
-        foods: {
-        required: true,
-                min: 0,
-        },
-                travel: {
-                required: true,
-                        min: 0,
-                },
-                other: {
-                required: true,
-                        min: 0,
-                },
-        },
-                messages: {
-                foods: {
-                required: 'Foods is required'
-                },
-                        travel: {
-                        required: 'Travel is required'
-                        },
-                        other: {
-                        required: 'Others is required'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $.validator.addMethod('filesize', function (value, element, param) {
-        return this.optional(element) || (element.files[0].size <= param)
-        }, 'File size must be less than 2MB');
-        $('#flight_booking').validate({
-        rules: {
-        flight_provider_id: {
-        required: true
-        },
-                pnr_number: {
-                required: true
-                },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-                flight_number: {
-                required: true
-                },
-                flight_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-        },
-                messages: {
-                flight_provider_id: {
-                required: 'Flight provider is required'
-                },
-                        pnr_number: {
-                        required: 'PNR Number is required'
-                        },
-                        cost: {
-                        required: 'Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                        flight_number: {
-                        required: 'Flight Number is required'
-                        },
-                        flight_attachment: {
-                        required: 'Attachment is required'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $('#flight_booking_return').validate({
-        rules: {
-        flight_provider_id: {
-        required: true
-        },
-                pnr_number: {
-                required: true
-                },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-                flight_number: {
-                required: true
-                },
-                flight_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-        },
-                messages: {
-                flight_provider_id: {
-                required: 'Flight provider is required'
-                },
-                        pnr_number: {
-                        required: 'PNR Number is required'
-                        },
-                        cost: {
-                        required: 'Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                        flight_number: {
-                        required: 'Flight Number is required'
-                        },
-                        flight_attachment: {
-                        required: 'Attachment is required'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $('#train_booking').validate({
-        rules: {
-        train_provider_id: {
-        required: true
-        },
-                pnr_number: {
-                required: true,
-                        //                number:true,
-                        //                min:0,
-                        //                maxlength:15,
-                        //                minlength:5,
-                },
-                train_number: {
-                required: true,
-                        number: true,
-                        min:0,
-                        maxlength:15,
-                        minlength:3,
-                },
-                train_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-        },
-                messages: {
-                train_provider_id: {
-                required: 'Train provider is required'
-                },
-                        pnr_number: {
-                        required: 'PNR number is required'
-                        },
-                        train_number: {
-                        required: 'Train number is required'
-                        },
-                        train_attachment: {
-                        required: 'Train Attachment is required'
-                        },
-                        cost: {
-                        required: 'Ticket Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $('#train_booking_return').validate({
-        rules: {
-        train_provider_id: {
-        required: true
-        },
-                pnr_number: {
-                required: true,
-                        //                number:true,
-                        //                min:0,
-                        //                maxlength:15,
-                        //                minlength:5,
-                },
-                train_number: {
-                required: true,
-                        number: true,
-                        min:0,
-                        maxlength:15,
-                        minlength:3,
-                },
-                train_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-        },
-                messages: {
-                train_provider_id: {
-                required: 'Train provider is required'
-                },
-                        pnr_number: {
-                        required: 'PNR number is required'
-                        },
-                        train_number: {
-                        required: 'Train number is required'
-                        },
-                        train_attachment: {
-                        required: 'Attachment is required'
-                        },
-                        cost: {
-                        required: 'Ticket Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $('#car_ticket_booking').validate({
-        rules: {
-        car_provider_id: {
-        required: true
-        },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-                car_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-        },
-                messages: {
-                car_provider_id: {
-                required: 'Car provider is required'
-                },
-                        car_attachment: {
-                        required: 'Attachment is required'
-                        },
-                        cost: {
-                        required: 'Ticket Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $('#car_ticket_booking_return').validate({
-        rules: {
-        car_provider_id: {
-        required: true
-        },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-                car_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-        },
-                messages: {
-                car_provider_id: {
-                required: 'Car provider is required'
-                },
-                        car_attachment: {
-                        required: 'Attachment is required'
-                        },
-                        cost: {
-                        required: 'Ticket Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $('#bus_ticket_booking').validate({
-        rules: {
-        bus_provider_id: {
-        required: true
-        },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-                bus_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-        },
-                messages: {
-                bus_provider_id: {
-                required: 'Bus provider is required'
-                },
-                        bus_attachment: {
-                        required: 'Attachment is required'
-                        },
-                        cost: {
-                        required: 'Ticket Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $('#bus_ticket_booking_return').validate({
-        rules: {
-        bus_provider_id: {
-        required: true
-        },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-                bus_attachment: {
-                required: true,
-                        filesize: 2097152,
-                },
-        },
-                messages: {
-                bus_provider_id: {
-                required: 'Bus provider is required'
-                },
-                        bus_attachment: {
-                        required: 'Attachment is required'
-                        },
-                        cost: {
-                        required: 'Ticket Cost is required',
-                                number: 'Only Number is allowed'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $.validator.addMethod("isAfterStartDateHotel", function (value, element) {
-        return isAfterStartDate($('#check_in_date').val(), value);
-        }, "Check-Out Date should be after Check-In Date");
-        $('#hotel_booking').validate({
-        rules: {
-        accommodation_type: {
-        required: true,
-        },
-                occupancy: {
-                required: true,
-                },
-                'city_id': {
-                required: true,
-                },
-                hotel_provider_id: {
-                required: true,
-                },
-                check_in_date: {
-                required: true,
-                },
-                check_out_date: {
-                required: true,
-                        isAfterStartDateHotel: true
-                },
-                hotel_attchment: {
-                filesize: 2097152,
-                },
-                //            cost: {
-                //                required: true,
-                //                number: true,
-                //                min: 0
-                //            },
-        },
-                messages: {
-                accommodation_type: {
-                required: 'Accommodation type is required'
-                },
-                        occupancy: {
-                        required: 'Occupancy is required'
-                        },
-                        'city_id': {
-                        required: 'Location is required'
-                        },
-                        hotel_provider_id: {
-                        required: 'Hotel Provider is required'
-                        },
-                        check_in_date: {
-                        required: 'Check-In date is required'
-                        },
-                        check_out_date: {
-                        required: 'Check-Out date is required'
-                        },
-                        //            cost: {
-                        //                required: 'Cost is required',
-                        //                number: 'Only Number is allowed'
-                        //            },
-                        hotel_attchment: {
-                        required: 'Hotel Attachment is required'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        $.validator.addMethod("isAfterStartDateCar", function (value, element) {
-        return isAfterStartDate($('#pick_up_date').val(), value);
-        }, "Drop-Off Date and time should be after Pick-Up Date and Time");
-        //    jQuery.validator.addMethod("notEqual", function(value, element, param) {
-        //        return this.optional(element) || value != param;
-        //    }, "Drop-off date and time can not be same");
-        //    
-        //    $.validator.addMethod("not_same", function(value, element) {
-        //       return $('#pick_up_date').val() != $('#drop_off_date').val()
-        //    }, "Drop-off date and time can not be same");
+};
+$('#other_expense_form').validate({
+rules: {
+foods: {
+required: true,
+		min: 0,
+},
+		travel: {
+		required: true,
+				min: 0,
+		},
+		other: {
+		required: true,
+				min: 0,
+		},
+},
+		messages: {
+		foods: {
+		required: 'Foods is required'
+		},
+				travel: {
+				required: 'Travel is required'
+				},
+				other: {
+				required: 'Others is required'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$.validator.addMethod('filesize', function (value, element, param) {
+return this.optional(element) || (element.files[0].size <= param)
+}, 'File size must be less than 2MB');
+$('#flight_booking').validate({
+rules: {
+flight_provider_id: {
+required: true
+},
+		pnr_number: {
+		required: true
+		},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+		flight_number: {
+		required: true
+		},
+		flight_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+},
+		messages: {
+		flight_provider_id: {
+		required: 'Flight provider is required'
+		},
+				pnr_number: {
+				required: 'PNR Number is required'
+				},
+				cost: {
+				required: 'Cost is required',
+						number: 'Only Number is allowed'
+				},
+				flight_number: {
+				required: 'Flight Number is required'
+				},
+				flight_attachment: {
+				required: 'Attachment is required'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$('#flight_booking_return').validate({
+rules: {
+flight_provider_id: {
+required: true
+},
+		pnr_number: {
+		required: true
+		},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+		flight_number: {
+		required: true
+		},
+		flight_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+},
+		messages: {
+		flight_provider_id: {
+		required: 'Flight provider is required'
+		},
+				pnr_number: {
+				required: 'PNR Number is required'
+				},
+				cost: {
+				required: 'Cost is required',
+						number: 'Only Number is allowed'
+				},
+				flight_number: {
+				required: 'Flight Number is required'
+				},
+				flight_attachment: {
+				required: 'Attachment is required'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$('#train_booking').validate({
+rules: {
+train_provider_id: {
+required: true
+},
+		pnr_number: {
+		required: true,
+				//                number:true,
+				//                min:0,
+				//                maxlength:15,
+				//                minlength:5,
+		},
+		train_number: {
+		required: true,
+				number: true,
+				min:0,
+				maxlength:15,
+				minlength:3,
+		},
+		train_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+},
+		messages: {
+		train_provider_id: {
+		required: 'Train provider is required'
+		},
+				pnr_number: {
+				required: 'PNR number is required'
+				},
+				train_number: {
+				required: 'Train number is required'
+				},
+				train_attachment: {
+				required: 'Train Attachment is required'
+				},
+				cost: {
+				required: 'Ticket Cost is required',
+						number: 'Only Number is allowed'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$('#train_booking_return').validate({
+rules: {
+train_provider_id: {
+required: true
+},
+		pnr_number: {
+		required: true,
+				//                number:true,
+				//                min:0,
+				//                maxlength:15,
+				//                minlength:5,
+		},
+		train_number: {
+		required: true,
+				number: true,
+				min:0,
+				maxlength:15,
+				minlength:3,
+		},
+		train_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+},
+		messages: {
+		train_provider_id: {
+		required: 'Train provider is required'
+		},
+				pnr_number: {
+				required: 'PNR number is required'
+				},
+				train_number: {
+				required: 'Train number is required'
+				},
+				train_attachment: {
+				required: 'Attachment is required'
+				},
+				cost: {
+				required: 'Ticket Cost is required',
+						number: 'Only Number is allowed'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$('#car_ticket_booking').validate({
+rules: {
+car_provider_id: {
+required: true
+},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+		car_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+},
+		messages: {
+		car_provider_id: {
+		required: 'Car provider is required'
+		},
+				car_attachment: {
+				required: 'Attachment is required'
+				},
+				cost: {
+				required: 'Ticket Cost is required',
+						number: 'Only Number is allowed'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$('#car_ticket_booking_return').validate({
+rules: {
+car_provider_id: {
+required: true
+},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+		car_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+},
+		messages: {
+		car_provider_id: {
+		required: 'Car provider is required'
+		},
+				car_attachment: {
+				required: 'Attachment is required'
+				},
+				cost: {
+				required: 'Ticket Cost is required',
+						number: 'Only Number is allowed'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$('#bus_ticket_booking').validate({
+rules: {
+bus_provider_id: {
+required: true
+},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+		bus_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+},
+		messages: {
+		bus_provider_id: {
+		required: 'Bus provider is required'
+		},
+				bus_attachment: {
+				required: 'Attachment is required'
+				},
+				cost: {
+				required: 'Ticket Cost is required',
+						number: 'Only Number is allowed'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$('#bus_ticket_booking_return').validate({
+rules: {
+bus_provider_id: {
+required: true
+},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+		bus_attachment: {
+		required: true,
+				filesize: 2097152,
+		},
+},
+		messages: {
+		bus_provider_id: {
+		required: 'Bus provider is required'
+		},
+				bus_attachment: {
+				required: 'Attachment is required'
+				},
+				cost: {
+				required: 'Ticket Cost is required',
+						number: 'Only Number is allowed'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$.validator.addMethod("isAfterStartDateHotel", function (value, element) {
+return isAfterStartDate($('#check_in_date').val(), value);
+}, "Check-Out Date should be after Check-In Date");
+$('#hotel_booking').validate({
+rules: {
+accommodation_type: {
+required: true,
+},
+		occupancy: {
+		required: true,
+		},
+		'city_id': {
+		required: true,
+		},
+		hotel_provider_id: {
+		required: true,
+		},
+		check_in_date: {
+		required: true,
+		},
+		check_out_date: {
+		required: true,
+				isAfterStartDateHotel: true
+		},
+		hotel_attchment: {
+		filesize: 2097152,
+		},
+		//            cost: {
+		//                required: true,
+		//                number: true,
+		//                min: 0
+		//            },
+},
+		messages: {
+		accommodation_type: {
+		required: 'Accommodation type is required'
+		},
+				occupancy: {
+				required: 'Occupancy is required'
+				},
+				'city_id': {
+				required: 'Location is required'
+				},
+				hotel_provider_id: {
+				required: 'Hotel Provider is required'
+				},
+				check_in_date: {
+				required: 'Check-In date is required'
+				},
+				check_out_date: {
+				required: 'Check-Out date is required'
+				},
+				//            cost: {
+				//                required: 'Cost is required',
+				//                number: 'Only Number is allowed'
+				//            },
+				hotel_attchment: {
+				required: 'Hotel Attachment is required'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+$.validator.addMethod("isAfterStartDateCar", function (value, element) {
+return isAfterStartDate($('#pick_up_date').val(), value);
+}, "Drop-Off Date and time should be after Pick-Up Date and Time");
+//    jQuery.validator.addMethod("notEqual", function(value, element, param) {
+//        return this.optional(element) || value != param;
+//    }, "Drop-off date and time can not be same");
+//    
+//    $.validator.addMethod("not_same", function(value, element) {
+//       return $('#pick_up_date').val() != $('#drop_off_date').val()
+//    }, "Drop-off date and time can not be same");
 
 
 
-        $('#car_booking').validate({
-        rules: {
-        book_by: {
-        required: true,
-        },
-                car_category_id: {
-                required: true,
-                },
-                car_type: {
-                required: true,
-                },
-                pick_up_date: {
-                required: true,
-                },
-                drop_off_date: {
-                required: true,
-                        isAfterStartDateCar: true,
-                        //                notEqual: "#pick_up_date",
-                        //                not_same: true,
-                },
-                pick_up_location: {
-                required: true,
-                },
-                drop_off_location: {
-                required: true,
-                },
-                cost: {
-                required: true,
-                        number: true,
-                        min: 0
-                },
-                car_attchment: {
-                filesize: 2097152,
-                },
-        },
-                messages: {
-                book_by: {
-                required: 'Book By is required'
-                },
-                        car_type: {
-                        required: 'Car type is required'
-                        },
-                        car_category_id: {
-                        required: 'Car Category is required'
-                        },
-                        pick_up_date: {
-                        required: 'Pick-up date is required'
-                        },
-                        drop_off_date: {
-                        required: 'Drop-off date is required',
-                        },
-                        pick_up_location: {
-                        required: 'Pick-up location is required'
-                        },
-                        drop_off_location: {
-                        required: 'Drop-off location is required'
-                        },
-                        cost: {
-                        required: 'Cost is required',
-                                number:'Please enter only number'
-                        },
-                },
-                highlight: function (element) { // hightlight error inputs
-                $(element)
-                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
-                },
-                unhighlight: function (element) { // revert the change done by hightlight
-                $(element)
-                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
-                },
-        });
-        });
-        function initialize() {
-        var input = document.getElementById('pick_up_location');
-        var drop_off_location = document.getElementById('drop_off_location');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        var drop_off_location = new google.maps.places.Autocomplete(drop_off_location);
-        }
+$('#car_booking').validate({
+rules: {
+book_by: {
+required: true,
+},
+		car_category_id: {
+		required: true,
+		},
+		car_type: {
+		required: true,
+		},
+		pick_up_date: {
+		required: true,
+		},
+		drop_off_date: {
+		required: true,
+				isAfterStartDateCar: true,
+				//                notEqual: "#pick_up_date",
+				//                not_same: true,
+		},
+		pick_up_location: {
+		required: true,
+		},
+		drop_off_location: {
+		required: true,
+		},
+		cost: {
+		required: true,
+				number: true,
+				min: 0
+		},
+		car_attchment: {
+		filesize: 2097152,
+		},
+},
+		messages: {
+		book_by: {
+		required: 'Book By is required'
+		},
+				car_type: {
+				required: 'Car type is required'
+				},
+				car_category_id: {
+				required: 'Car Category is required'
+				},
+				pick_up_date: {
+				required: 'Pick-up date is required'
+				},
+				drop_off_date: {
+				required: 'Drop-off date is required',
+				},
+				pick_up_location: {
+				required: 'Pick-up location is required'
+				},
+				drop_off_location: {
+				required: 'Drop-off location is required'
+				},
+				cost: {
+				required: 'Cost is required',
+						number:'Please enter only number'
+				},
+		},
+		highlight: function (element) { // hightlight error inputs
+		$(element)
+				.closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+		},
+		unhighlight: function (element) { // revert the change done by hightlight
+		$(element)
+				.closest('.form-group').removeClass('has-error'); // set error class to the control group
+		},
+});
+});
+function initialize() {
+var input = document.getElementById('pick_up_location');
+var drop_off_location = document.getElementById('drop_off_location');
+var autocomplete = new google.maps.places.Autocomplete(input);
+var drop_off_location = new google.maps.places.Autocomplete(drop_off_location);
+}
 
-        //    function check_val(id,value) {        
-        //        if (Math.floor(value) == value && $.isNumeric(value)) {
-        //
-        //        } else {    
-        //            $("#"+id).val('');
-        //        }
-        //    }
-    </script>
+//    function check_val(id,value) {        
+//        if (Math.floor(value) == value && $.isNumeric(value)) {
+//
+//        } else {    
+//            $("#"+id).val('');
+//        }
+//    }
+</script>

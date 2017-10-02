@@ -209,7 +209,7 @@ data-placeholder="Select a To Location">
 <label class="control-label">Comments</label>
 <?php $comment = !empty($flight_request['comment']) ? $flight_request['comment'] : ''; ?>
 <!--<textarea ><?php echo $comment; ?></textarea>-->
-<input type="text" class="form-control" rows="5" name="comment" id="comment" placeholder="Any Other Comments" value="<?php echo $comment; ?>">
+<input type="text" class="form-control" rows="5" name="comment" id="comment" placeholder="Mention your ID proof details, and preferred flight." value="<?php echo $comment; ?>">
 </div>                                
 </div>
 </div>

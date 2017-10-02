@@ -78,8 +78,6 @@ function find_DA_rows_OLD_BACKUP($fromDate, $toDate, $cityGrade, $empGrade)//30-
   return $allDatesWithMutiplicationFactor;
  }
 
-
-
 function find_DA_rows($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:00
  {
   $allDatesWithMutiplicationFactor= array();
@@ -201,17 +199,17 @@ echo $expense_pending['bank_name'];
 <h4 class="form-section">Ticket Details (<span style="color:#005982;">Eligibility-<?php
 if($eligibility_mode!='')
  {
-  echo $eligibility_mode . "/" . $eligibility_class;
+  echo $toSetRedFlag1= $eligibility_mode . "/" . $eligibility_class;
  }
 else
  {
   if($sel_traverl_class!='')
    {
-	echo $travel_mode . "/" . $sel_traverl_class;
+	echo $toSetRedFlag1= $travel_mode . "/" . $sel_traverl_class;
    }
   else
    {
-	echo $travel_mode;
+	echo $toSetRedFlag1= $travel_mode;
    }
  }
 ?></span>)</h4>
@@ -238,30 +236,25 @@ else
 $i = 1;
 $total = 0;
 foreach ($ticket_details as $key => $value) {
-?>
-<tr>
-<td><?php echo $i++; ?></td>
+
+$checkRed='';
+$thisRED= '';
+$service_type = !empty($value['travel_type']) ? $value['travel_type'] : '';
+if($service_type=="1"){$thisRED ="Flight";}
+elseif($service_type=="2"){$thisRED= "Train";}
+elseif($service_type=="3"){$thisRED="Car";}
+else if($service_type=="4"){$thisRED="Bus";}
+else if ($service_type=="5"){$thisRED="Hotel";}
+if(isset($value['travel_class'])){ $thisRED= $thisRED.'/'.$value['travel_class']; }
+if($thisRED!=$toSetRedFlag1){$checkRed='danger';}
+
+?><tr class="<?php echo $checkRed; ?>"><td><?php echo $i++; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
 <td><?php echo $value['location_from'] ?></td>
 <td><?php echo $value['location_to'] ?></td>
 <td><?php echo $value['expense_location'] ?></td>
 <td><?php echo $value['arrange_by'] ?></td>
-<td>
-<?php $service_type = !empty($value['travel_type']) ? $value['travel_type'] : ''; ?>
-<?php
-if ($service_type == "1") {
-echo "Flight";
-} else if ($service_type == "2") {
-echo "Train";
-} else if ($service_type == "3") {
-echo "Car";
-} else if ($service_type == "4") {
-echo "Bus";
-} else if ($service_type == "5") {
-echo "Hotel";
-}
-?>
-</td>
+<td><?php echo $thisRED; ?></td>
 <td> 
 <?php if ($value['attachment'] != '') { ?>
 <a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $value['attachment']; ?>">
@@ -280,12 +273,22 @@ $value_cost= $value['cost']+$value['tax']+$value['agency_cost'];
 $total = $total + $value_cost;
 echo $value_cost;
 
-?></td>
-</tr><?php }
+?></td></tr><?php
+}
 foreach ($other_trip_expense as $key => $value) {
-?>
-<tr>
-<td><?php echo $i++; ?></td>                             
+
+$checkRed='';
+$thisRED='';
+$service_type = !empty($value['travel_type']) ? $value['travel_type'] : '';
+if($service_type=="1"){$thisRED ="Flight";}
+elseif($service_type=="2"){$thisRED= "Train";}
+elseif($service_type=="3"){$thisRED="Car";}
+else if($service_type=="4"){$thisRED="Bus";}
+else if ($service_type=="5"){$thisRED="Hotel";}
+if(isset($value['travel_class'])){ $thisRED= $thisRED.'/'.$value['travel_class']; }
+if($thisRED!=$toSetRedFlag1){$checkRed='danger';}
+
+?><tr class="<?php echo $checkRed; ?>"><td><?php echo $i++; ?></td>                             
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['trip_date'])); ?></td>
 <td><?php echo $value['trip_from'] ?></td>
 <td><?php echo $value['trip_to'] ?></td>
@@ -370,10 +373,26 @@ $view++;
 </thead>
 <tbody>
 <?php
+$GH_Act= $GH_act;
 $i = 1;
 $total1 = 0;
 foreach ($hotel_details as $key => $value) {
-?><tr><td><?php echo $i; ?></td><td><?php echo $value['hotel_provider_name']; ?></td>
+
+$trClassHotel1= '';
+$total_loading1= $value['loading_expense_1'] + $value['other_expense_1'];
+$H1= date(DATETIME_FORMAT, strtotime($value['date_from']));
+$H2= date(DATETIME_FORMAT, strtotime($value['date_to']));
+$stays1= 1;
+$stayFrom1=date_create($H1);
+$stayTo1=date_create($H2);
+$haltCounter1=date_diff($stayFrom1,$stayTo1);
+$daysInThisHotel1= $haltCounter1->days;
+if($daysInThisHotel1>0){$stays1=$daysInThisHotel1;}
+$perdayCostOfHotel1= $total_loading1/$stays1;
+$trClassHotel1= '';
+if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel1>$GH_Act){$trClassHotel1= 'danger';}
+
+?><tr class="<?php echo $trClassHotel1; ?>"><td><?php echo $i; ?></td><td><?php echo $value['hotel_provider_name']; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date_from'])); ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date_to'])); ?></td>
 <td><?php echo $value['bill_no']; ?></td>
@@ -394,8 +413,24 @@ echo $tot;
 ?><!--<input type="text" id="total" value="<?php echo $value['cost']; ?>" class="form-control">-->
 </td></tr><?php }
 foreach ($other_loading_booking as $key => $value) {
-?><tr><td><?php echo $i++; ?></td>
-<td><?php echo $value['hotel_provider_name']; ?></td>
+
+$total_loading = $value['loading_total'] + $value['loading_expense'] + $value['other_expense'];
+$total1 = $total1 + $total_loading;
+
+$HD1= date(DATETIME_FORMAT, strtotime($value['loading_departure']));
+$HD2= date(DATETIME_FORMAT, strtotime($value['loading_return']));
+$stays= 1;
+$stayFrom=date_create($HD1);
+$stayTo=date_create($HD2);
+$haltCounter=date_diff($stayFrom,$stayTo);
+$daysInThisHotel= $haltCounter->days;
+if($daysInThisHotel>0){$stays=$daysInThisHotel;}
+$perdayCostOfHotel= $total_loading/$stays;
+$trClassHotel= '';
+if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel>$GH_Act){$trClassHotel= 'danger';}
+
+?><tr class="<?php echo $trClassHotel; ?>"><td><?php echo $i++; ?></td>
+<td><?php echo $value['hotal_name']; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['loading_departure'])); ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['loading_return'])); ?></td>
 <td><?php echo $value['room_no']; ?></td>
@@ -426,10 +461,7 @@ $view++;
 <td><?php echo $value['arrange_by'] ?></td>
 <td><?php echo $value['loading_expense'] ?></td>
 <td><?php echo $value['other_expense'] ?></td>
-<td width="15%"><?php
-$total_loading = $value['loading_total'] + $value['loading_expense'] + $value['other_expense'];
-$total1 = $total1 + $total_loading;
-echo $total_loading; ?></td></tr><?php
+<td width="15%"><?php echo $total_loading; ?></td></tr><?php
 }
 
 $eligible= $hotel_allowance * $day;
@@ -562,9 +594,11 @@ $diff=date_diff($t87,$t88);
 $i = 1;
 $total3 = 0;
 foreach ($car_details as $key => $value) {
-?>
-<tr>
-<td><?php echo $i; ?></td>
+
+$trClassTX= '';
+if($con_allo>0 and is_numeric($con_allo) and $value['cost']>$con_allo){$trClassTX= 'danger';}
+
+?><tr class="<?php echo $trClassTX; ?>"><td><?php echo $i; ?></td>
 <td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
 <td><?php echo $value['location_from'] ?></td>
 <td><?php echo $value['location_to'] ?></td>
