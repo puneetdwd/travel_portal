@@ -336,7 +336,8 @@ class Train_travel extends Admin_Controller {
 
                                 $subject = $email_template[0]['subject'];
                                 $mailformat = $email_template[0]['emailformat'];
-                                $subject = str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject))))))))))));
+
+								$subject = str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($subject))))))))))));
                                 $message = str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat))))))))))));
                                 $cc = '';
                                 $to = $request_data['employee_email'];
@@ -387,7 +388,11 @@ class Train_travel extends Admin_Controller {
                                 if (!empty($travel_email)) {
                                     $to_email = '';
                                     $cc = $request_data['employee_email'];
-                                    foreach ($travel_email as $key => $value) {
+									if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
+									 {
+									  $cc = $cc.','.$request_data['ea_email'];
+									 }
+									foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
                                     $this->sendEmail($to_email, $subject, $message, $cc);

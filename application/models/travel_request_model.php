@@ -266,9 +266,9 @@ class Travel_request_model extends CI_Model {
     public function get_request_details_by_id($request_id) {
 
 //        $sql = "SELECT ,c.name as travel_class,tp.amount from travel_request t "
-        $sql = "SELECT t.from_city_id,g.grade_name as grade,c.name as travel_class,e.phone as mobile,e.gender,TIMESTAMPDIFF(YEAR, e.dob, CURDATE()) AS age,t.departure_date,"
+        $sql = "SELECT t.from_city_id,g.grade_name as grade,c.name as travel_class,e.ea_manager_id,e.phone as mobile,e.gender,TIMESTAMPDIFF(YEAR, e.dob, CURDATE()) AS age,t.departure_date,"
                 . "t.return_date,t.trip_type,t.travel_type,t.reference_id,CONCAT(u.first_name,' ',u.last_name) as employee_name,"
-                . "CONCAT(uu.first_name,' ',uu.last_name) as manager_name,uu.email as manager_email,u.email as employee_email,f.name as from_city_name,"
+                . "CONCAT(uu.first_name,' ',uu.last_name) as manager_name,uu.email as manager_email,uuu.NAME_DISPLAY as ea_name,uuu.email as ea_email,u.email as employee_email,f.name as from_city_name,"
                 . "d.name as to_city_name,r.reason,t.hotel_allowance,t.da_allowance,convince_allowance from travel_request t "
                 . "LEFT JOIN indian_cities f ON f.id = t.from_city_id "
                 . "LEFT JOIN indian_cities d ON d.id = t.to_city_id "
@@ -278,7 +278,8 @@ class Travel_request_model extends CI_Model {
                 . "LEFT JOIN grades g ON g.id = e.grade_id "
                 . "LEFT JOIN users u ON u.employee_id  = e.id "
                 . "LEFT JOIN users uu ON uu.employee_id  = t.reporting_manager_id "
-//                . "LEFT JOIN travel_policy tp ON tp.service_type = t.travel_type and tp.grade_id = e.grade_id ";
+				. "LEFT JOIN users uuu ON uuu.employee_id  = e.ea_manager_id "
+				//. "LEFT JOIN travel_policy tp ON tp.service_type = t.travel_type and tp.grade_id = e.grade_id ";
                 . "";
         $sql .= "WHERE t.status = 'active'";
         $sql .= "and t.id = ?";

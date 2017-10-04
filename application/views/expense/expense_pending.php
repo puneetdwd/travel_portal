@@ -238,6 +238,8 @@ echo $value_cost;
 ?></td></tr><?php
 }
 
+//echo '<pre>'; print_r($other_trip_expense); exit;
+
 foreach($other_trip_expense as $key=>$value){
 $checkRed='';
 $thisRED='';
@@ -521,73 +523,83 @@ $total5 = 0;
 <th>Location</th><th>Paid By</th><th>Bill No</th><th>View</th><th>Remarks</th>
 <th>Amount</th></tr></thead><tbody><?php
 $i = 1;
-if(isset($other_manager_expense)){
-?><tr><td><?php echo $i; ?></td>;
-<td id="other_manager_expense_date"><?php
-if($request['return_date']!='')
+if(isset($other_manager_expense))
  {
-  echo date(DATE_FORMAT, strtotime($request['departure_date'])) . " To " . date(DATE_FORMAT, strtotime($request['return_date']));
+  ?><tr>
+  <td><?php echo $i; ?></td>
+  <td id="other_manager_expense_date"><?php
+  if($request['return_date']!='')
+   {
+    echo date(DATE_FORMAT, strtotime($request['departure_date'])) . " To " . date(DATE_FORMAT, strtotime($request['return_date']));
+   }
+  else
+   {
+    echo date(DATE_FORMAT, strtotime($request['departure_date']));
+   }
+  ?></td>
+  <td>Food Expense</td>
+  <td><?php
+  if(isset($other_manager_expense_location))
+   {
+	echo $other_manager_expense_location;
+   }
+  ?></td>
+  <td><?php echo $request['to_city_name'] . " Travel Desk"; ?></td>
+  <td>-</td><td>-</td><td>-</td>
+  <td><?php echo $other_manager_expense_food; ?></td></tr>
+  <tr>
+  <td><?php $i++;echo $i; ?></td>
+  <td id="other_manager_expense_date"><?php
+  if($request['return_date']!='')
+   {
+    echo date(DATE_FORMAT, strtotime($request['departure_date'])) . " To " . date(DATE_FORMAT, strtotime($request['return_date']));
+   }
+  else
+   {
+    echo date(DATE_FORMAT, strtotime($request['departure_date']));
+   }
+  ?></td>
+  <td>Travel Expense</td>
+  <td><?php
+  if(isset($other_manager_expense_location))
+   {
+    echo $other_manager_expense_location;
+   }
+  ?></td>
+  <td><?php echo $request['to_city_name'] . " Travel Desk"; ?></td>
+  <td>-</td><td>-</td><td>-</td>
+  <td><?php echo $other_manager_expense_travel; $total5 = $total5 + $other_manager_expense; ?></td>
+  </tr><?php
+  $i++;
  }
-else
- {
-  echo date(DATE_FORMAT, strtotime($request['departure_date']));
- }
-?></td><td>Food Expense</td><td><?php
-if(isset($other_manager_expense_location)){
-echo $other_manager_expense_location;
-}
-?></td><td><?php echo $request['to_city_name'] . " Travel Desk"; ?></td>
-<td>-</td><td>-</td><td>-</td><td><?php
-echo $other_manager_expense_food;
-?></td></tr><tr><td><?php
-$i++;
-echo $i;
-?></td>
-<td id="other_manager_expense_date"><?php
-if($request['return_date']!='')
- {
-  echo date(DATE_FORMAT, strtotime($request['departure_date'])) . " To " . date(DATE_FORMAT, strtotime($request['return_date']));
- }
-else
- {
-  echo date(DATE_FORMAT, strtotime($request['departure_date']));
- }
-?></td><td>Travel Expense</td><td><?php
-if(isset($other_manager_expense_location))
- {
-  echo $other_manager_expense_location;
- }
-?></td><td><?php
-echo $request['to_city_name'] . " Travel Desk";
-?></td><td>-</td><td>-</td><td>-</td><td><?php
-echo $other_manager_expense_travel;
-$total5 = $total5 + $other_manager_expense;
-?></td></tr><?php
-$i++;
-}
 $other_total = 0;
-foreach ($other_expense as $key => $value) {
-$amount = $value['amount'];
-$other_total = $other_total + $amount;
-$total5 = $total5 + $amount;
-?><tr><td><?php echo $i++; ?></td>
-<td><?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?></td>
-<td><?php echo $value['expense_name']; ?></td>
-<td><?php echo $value['expense_type']; ?></td>
-<td><?php echo $value['arrange_by'] ?></td>
-<td><?php echo $value['bill_no'] ?></td><td><?php
-$view = 1;
-if(!empty($value['attachment'])){
-$attachment = $value['attachment'];
-foreach($attachment as $key => $val){
-if($val['file_name']!=''){
-?><a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>">
-<i class="fa fa-eye"></i> <?php echo "View" . $view;$view++;?></a><br><?php
-}}}
-?></td>
-<td><?php echo $value['remarks']; ?></td>
-<td><?php echo $amount ?></td></tr><?php
-}
+foreach($other_expense as $key => $value)
+ {
+  $amount = $value['amount'];
+  $other_total = $other_total + $amount;
+  $total5 = $total5 + $amount;
+  ?><tr><td><?php echo $i++; ?></td>
+  <td><?php echo substr(date(DATETIME_FORMAT, strtotime($value['date'])), 0, -6); ?></td>
+  <td><?php echo $value['expense_name']; ?></td>
+  <td><?php echo $value['expense_type']; ?></td>
+  <td><?php echo $value['arrange_by'] ?></td>
+  <td><?php echo $value['bill_no'] ?></td><td><?php
+  $view = 1;
+  if(!empty($value['attachment']))
+   {
+	$attachment = $value['attachment'];
+	foreach($attachment as $key => $val)
+	 {
+	  if($val['file_name']!='')
+	   {
+		?><a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>"><i class="fa fa-eye"></i><?php echo "View" . $view; $view++;?></a><br><?php
+       }
+	 }
+   }
+  ?></td>
+  <td><?php echo $value['remarks']; ?></td>
+  <td><?php echo $amount ?></td></tr><?php
+ }
 ?></tbody><tfoot><tr><td colspan="7"></td><td><b>Total (&#8377;)</b></td>
 <td><b><?php echo $total5.'.00'; ?></b></td></tr></tfoot></table></div>
 </div></div><?php

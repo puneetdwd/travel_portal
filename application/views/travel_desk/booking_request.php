@@ -82,12 +82,10 @@ if ($request['request_status'] >= "4") {
 <?php
 }
 ?>
-<span class="ng-binding">Expense Approval</span>
-</div>
+<span class="ng-binding">Expense Approval</span></div>
 <!-- ngIf: $index!=arrStates.length-1 -->
 <div style="display:inline-block;height:70px;vertical-align:top" ng-if="$index != arrStates.length - 1" class="ng-scope" data-original-title="" title="">
-<div style="border:1px solid black;width:70px;margin-top:35px;"></div>
-</div>
+<div style="border:1px solid black;width:70px;margin-top:35px;"></div></div>
 <!-- end ngIf: $index!=arrStates.length-1 -->
 </div>
 <!-- end ngRepeat: state in arrStates track by $index -->
@@ -107,13 +105,10 @@ if ($request['request_status'] >= "4") {
 <?php
 }
 ?>
-<span class="ng-binding">Finance Approval</span>
-</div>
+<span class="ng-binding">Finance Approval</span></div>
 <!-- ngIf: $index!=arrStates.length-1 -->
 <div style="display:inline-block;height:70px;vertical-align:top" ng-if="$index != arrStates.length - 1" class="ng-scope" data-original-title="" title="">
-<div style="border:1px solid black;width:70px;margin-top:35px;"></div>
-</div>
-</div>
+<div style="border:1px solid black;width:70px;margin-top:35px;"></div></div></div>
 <div ng-repeat="state in arrStates track by $index" style="display:inline-block;vertical-align:top" class="ng-scope" data-original-title="" title="">
 <div style="padding:10px;text-align:center;display:inline-block;width:100px;" data-original-title="" title="">
 <?php if ($request['request_status'] >= "7") {
@@ -211,13 +206,8 @@ echo " (Group Travel)";
 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
 <strong>Sorry!</strong>Something went wrong, please try again.</div></div></div>
 
-<div class="row">
-<div class="col-md-12">
-<div class="portlet light">
-<!-- BEGIN FORM-->
-<div class="form-body">
-<div class="row">
-<?php
+<div class="row"><div class="col-md-12"><div class="portlet light">
+<div class="form-body"><div class="row"><?php
 if ($request['travel_ticket'] == '1') {
 if ($request['travel_type'] == '1') {
 if ($request['trip_ticket'] != '1') {

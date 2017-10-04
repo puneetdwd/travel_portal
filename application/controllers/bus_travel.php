@@ -386,6 +386,10 @@ class Bus_travel extends Admin_Controller {
                                 if (!empty($travel_email)) {
                                     $to_email = '';
                                     $cc = $request_data['employee_email'];
+									if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
+									 {
+									  $cc = $cc.','.$request_data['ea_email'];
+									 }
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }

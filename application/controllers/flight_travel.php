@@ -48,6 +48,10 @@ class Flight_travel extends Admin_Controller {
             $city_id = $employee['city_id'];
             $cost_center_id = $employee['cost_center_id'];
 
+//            $employees = $this->employee_model->get_all_employees_email();
+//            $view_data['employees'] = $employees;
+//            po($employees);
+
             $dept_id = $employee['dept_id'];
             $this->load->model("projects_model");
             $projects = $this->projects_model->get_all_projects();
@@ -56,21 +60,41 @@ class Flight_travel extends Admin_Controller {
             $this->load->model('travel_policy_model');
             $policy_data = $this->travel_policy_model->get_travel_policy_by_grade($grade_id, $service_type = '1');
 
-            $view_data['approval_level'] = '1';
-            $view_data['reporting_manager_id'] = $reporting_manager_id = $employee['reporting_manager_id'];
+            $view_data['approval_level'] = '';
+            $view_data['reporting_manager_id'] = '';
             if (!empty($policy_data)) {
-                if ($policy_data['approval_level'] == 2) {
+                if ($policy_data['approval_level'] == 1) {
+                    $view_data['approval_level'] = $policy_data['approval_level'];
+                    $reporting_manager_data = $this->travel_request->get_employee_manager_id($employee_id);
+                    $view_data['reporting_manager_id'] = $reporting_manager_data['reporting_manager_id'];
+                } else if ($policy_data['approval_level'] == 2) {
                     $view_data['approval_level'] = $policy_data['approval_level'];
                     $reporting_manager_data = $this->travel_request->get_employee_manager_base_id($employee_id);
                     $view_data['reporting_manager_id'] = $reporting_manager_data['reporting_manager_id'];
                 } else if ($policy_data['approval_level'] == 0) {
                     $view_data['approval_level'] = $policy_data['approval_level'];
+                    $reporting_manager_data = $this->travel_request->get_employee_manager_id($employee_id);
+                    $view_data['reporting_manager_id'] = $reporting_manager_data['reporting_manager_id'];
+                } else {
+                    $view_data['approval_level'] = "1";
+                    $reporting_manager_data = $this->travel_request->get_employee_manager_id($employee_id);
+                    $view_data['reporting_manager_id'] = $reporting_manager_data['reporting_manager_id'];
                 }
+            } else {
+                $view_data['approval_level'] = "1";
+                $reporting_manager_data = $this->travel_request->get_employee_manager_id($employee_id);
+                $view_data['reporting_manager_id'] = $reporting_manager_data['reporting_manager_id'];
             }
 
+//            if ($view_data['reporting_manager_id'] == '') {
+//                $view_data['approval_level'] = "1";
+//                $reporting_manager_data = $this->travel_request->get_employee_manager_id($employee_id);
+//                $view_data['reporting_manager_id'] = $reporting_manager_data['reporting_manager_id'];
+//            }
+
             if ($view_data['reporting_manager_id'] == '' || $view_data['reporting_manager_id'] == '0') {
-                $view_data['error'] = 'Reporting Manager Not found.';
-                $this->session->set_flashdata('error', 'Reporting Manager Not found.');
+                $view_data['error'] = 'Reporting Manager Not fount.';
+                $this->session->set_flashdata('error', 'Reporting Manager Not fount.');
                 redirect(base_url() . dashboard);
             }
 
@@ -78,7 +102,7 @@ class Flight_travel extends Admin_Controller {
             $view_data['sel_traverl_class'] = $traverl_class_data;
 
             $this->load->model("city_model");
-            $city = $this->city_model->get_airport_all_city();
+            $city = $this->city_model->get_all_city();
             $view_data['city'] = $city;
 
             $hotel_allowance = 0;
@@ -98,93 +122,80 @@ class Flight_travel extends Admin_Controller {
                 $this->form_validation->set_rules('travel_class_id', 'travel_class_id', 'required');
                 $this->form_validation->set_rules('from_city_id', 'from_city_id', 'required');
                 $this->form_validation->set_rules('to_city_id', 'to_city_id', 'required');
-                if ($this->form_validation->run() == FALSE)
-				 {
-                  $this->session->set_flashdata('error', 'Please follow validation rules!');
-                  redirect('flight_travel', 'refresh');
-                 }
-				else
-				 {
-                  if(!empty($travel_request_id))
-				   {
-                    $this->travel_request->delete_request_other_member($travel_request_id);
-                   }
-
-                  $emp_list = $this->session->userdata('emp_list');
-                  $member_list = array();
-                  if(!empty($emp_list))
-				   {
-                    foreach($emp_list as $key=>$value)
-					 {
-                      $member_list[] = $key;
-                     }
-                   }
-
-                  $from_city_id = $this->input->post('from_city_id');
-                  $to_city_id = $this->input->post('to_city_id');
-                  if($from_city_id == $to_city_id)
-				   {
-                    $this->session->set_flashdata('error', 'To and From Location can not be same..!!');
+                if ($this->form_validation->run() == FALSE) {
+                    $this->session->set_flashdata('error', 'Please follow validation rules!');
                     redirect('flight_travel', 'refresh');
-                   }
+                } else {
 
-                  $departure_date = date(DATEMYSQL, strtotime($this->input->post('departure_date')));
-                  $return_date = date(DATEMYSQL, strtotime($this->input->post('return_date')));
-                  if($return_date != '')
-				   {
-                    if($departure_date>$return_date)
-					 {
-                      $this->session->set_flashdata('error', 'Return date must be greater then the departure date');
-                      redirect('flight_travel', 'refresh');
-                     }
-                   }
-                  $post_data = $this->input->post();
+                    if (!empty($travel_request_id)) {
+                        $this->travel_request->delete_request_other_member($travel_request_id);
+                    }
 
-                  $post_data['departure_date'] = date(DATEMYSQL, strtotime($post_data['departure_date']));
-                  $post_data['return_date'] = date(DATEMYSQL, strtotime($post_data['return_date']));
+                    $emp_list = $this->session->userdata('emp_list');
+                    $member_list = array();
+                    if (!empty($emp_list)) {
+                        foreach ($emp_list as $key => $value) {
+                            $member_list[] = $key;
+                        }
+                    }
 
-                  $request_number = $this->input->post('request_number');
-                  $reference_id = $this->travel_request->generate_reference_id();
-                  $post_data['reference_id'] = $reference_id;
-                  $post_data['employee_id'] = $employee_id;
-                  $post_data['request_date'] = date('Y-m-d');
-                  $post_data['status'] = 'active';
+                    $from_city_id = $this->input->post('from_city_id');
+                    $to_city_id = $this->input->post('to_city_id');
+                    if ($from_city_id == $to_city_id) {
+                        $this->session->set_flashdata('error', 'To and From Location can not be same..!!');
+                        redirect('flight_travel', 'refresh');
+                    }
 
-                  $project_id = $this->input->post('project_id');
-                  if($project_id=='')
-				   {
-                    $post_data['project_id'] = null;
-                   }
+                    $departure_date = date(DATEMYSQL, strtotime($this->input->post('departure_date')));
+                    $return_date = date(DATEMYSQL, strtotime($this->input->post('return_date')));
+                    if ($return_date != '') {
+                        if ($departure_date > $return_date) {
+                            $this->session->set_flashdata('error', 'Return date must be greater then the departure date');
+                            redirect('flight_travel', 'refresh');
+                        }
+                    }
+                    $post_data = $this->input->post();
 
-                  $return_date = $this->input->post('return_date');
-                  if($return_date=='')
-				   {
-                    $travel_date = $departure_date;
-                    $travel_day = "1";
-                    $post_data['trip_type'] = '1';
-                    $post_data['return_date'] = null;
-                   }
-				  else
-				   {
-                    $now = strtotime(date('Y-m-d', strtotime($this->input->post('departure_date'))));
-                    $your_date = strtotime(date('Y-m-d', strtotime($this->input->post('return_date'))));
-                    $datediff = $your_date - $now;
-                    $travel_day = floor($datediff / (60 * 60 * 24));
-                    $travel_date = $departure_date . " To " . $return_date;
-                   }
+                    $post_data['departure_date'] = date(DATEMYSQL, strtotime($post_data['departure_date']));
+                    $post_data['return_date'] = date(DATEMYSQL, strtotime($post_data['return_date']));
 
-                  if($post_data['approval_level']==0)
-				   {
-                    $post_data['approval_status'] = 'Approved';
-                    $post_data['request_status'] = '2';
-                   }
+                    $request_number = $this->input->post('request_number');
+                    $reference_id = $this->travel_request->generate_reference_id();
+                    $post_data['reference_id'] = $reference_id;
+                    $post_data['employee_id'] = $employee_id;
+                    $post_data['request_date'] = date('Y-m-d');
+                    $post_data['status'] = 'active';
 
-                  $to_city_id = $this->input->post('to_city_id');
-                  $to_city = $this->city_model->get_city($to_city_id);
-                  $to_class = $to_city['class'];
+                    $project_id = $this->input->post('project_id');
+                    if ($project_id == '') {
+                        $post_data['project_id'] = null;
+                    }
 
-                  $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
-                  foreach($policy_data as $key => $value) {
+                    $return_date = $this->input->post('return_date');
+                    if ($return_date == '') {
+                        $travel_date = $departure_date;
+                        $travel_day = "1";
+                        $post_data['trip_type'] = '1';
+                        $post_data['return_date'] = null;
+                    } else {
+                        $now = strtotime(date('Y-m-d', strtotime($this->input->post('departure_date'))));
+                        $your_date = strtotime(date('Y-m-d', strtotime($this->input->post('return_date'))));
+                        $datediff = $your_date - $now;
+                        $travel_day = floor($datediff / (60 * 60 * 24));
+                        $travel_date = $departure_date . " To " . $return_date;
+                    }
+
+                    if ($post_data['approval_level'] == 0) {
+                        $post_data['approval_status'] = 'Approved';
+                        $post_data['request_status'] = '2';
+                    }
+
+                    $to_city_id = $this->input->post('to_city_id');
+                    $to_city = $this->city_model->get_city($to_city_id);
+                    $to_class = $to_city['class'];
+
+                    $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
+                    foreach ($policy_data as $key => $value) {
                         if ($value['service_type'] == "5") {
                             if ($value['actual'] == "0") {
                                 $hotel_allowance = $value['amount'];
@@ -288,7 +299,6 @@ class Flight_travel extends Admin_Controller {
                             $post_data = array(
                                 'request_id' => $request_id,
                                 'travel_ticket' => '1',
-                                'return_travel_ticket' => '1',
                                 'accommodation' => '1',
                                 'car_hire' => '1',
                                 'bookbyself' => '0',
@@ -313,14 +323,21 @@ class Flight_travel extends Admin_Controller {
                                 $departure_date = $request_data['departure_date'];
                                 $return_date = $request_data['return_date'];
                                 if ($return_date == '') {
-                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    //$request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+									$dd11= explode(' ', date(DATETIME_FORMAT, strtotime($departure_date)));
+									$request_data['travel_datetime'] = $dd11[0];
                                     $request_data['day_plan'] = "1";
                                 } else {
                                     $now = strtotime(date('Y-m-d', strtotime($departure_date)));
                                     $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
                                     $datediff = $your_date - $now;
                                     $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
-                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                                    //$request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+									
+									$dd11= explode(' ', date(DATETIME_FORMAT, strtotime($departure_date)));
+									$dd22= explode(' ', date(DATETIME_FORMAT, strtotime($return_date)));
+									
+									$request_data['travel_datetime'] = $dd11[0] . " To " . $dd22[0];
                                 }
 
                                 if ($request_data['travel_type'] == "1") {
@@ -389,10 +406,17 @@ class Flight_travel extends Admin_Controller {
                                 $message = str_replace("%mobile%", $request_data['mobile'], str_replace("%employee_email%", $request_data['employee_email'], str_replace("%grade%", $request_data['grade'], str_replace("%age%", $request_data['age'], str_replace("%travel_class%", $request_data['travel_class'], str_replace("%trip_id%", $request_data['reference_id'], str_replace("%reporting_manager_name%", $request_data['manager_name'], str_replace("%employee_name%", $request_data['employee_name'], str_replace("%to_city_name%", $request_data['to_city_name'], str_replace("%from_city_name%", $request_data['from_city_name'], str_replace("%travel_reason%", $request_data['reason'], str_replace("%travel_mode%", $request_data['travel_mode'], str_replace("%travel_datetime%", $request_data['travel_datetime'], str_replace("%day_plan%", $request_data['day_plan'], str_replace("%amount%", $request_data['amount'], str_replace("%url%", $request_data['url'], stripslashes($mailformat)))))))))))))))));
 
                                 $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
-                                if (!empty($travel_email)) {
+                                
+								//echo '<pre>'; print_r($request_data['ea_email']); exit;
+								
+								if (!empty($travel_email)) {
                                     $to_email = '';
                                     $cc = $request_data['employee_email'];
-                                    foreach ($travel_email as $key => $value) {
+                                    if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
+									 {
+									  $cc = $cc.','.$request_data['ea_email'];
+									 }
+									foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
                                     $this->sendEmail($to_email, $subject, $message, $cc);
@@ -409,14 +433,23 @@ class Flight_travel extends Admin_Controller {
                                 $departure_date = $request_data['departure_date'];
                                 $return_date = $request_data['return_date'];
                                 if ($return_date == '') {
-                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
-                                    $request_data['day_plan'] = "1";
+                                    //$request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    
+									$dd11= explode(' ', date(DATETIME_FORMAT, strtotime($departure_date)));
+									$request_data['travel_datetime'] = $dd11[0];
+									
+									$request_data['day_plan'] = "1";
                                 } else {
                                     $now = strtotime(date('Y-m-d', strtotime($departure_date)));
                                     $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
                                     $datediff = $your_date - $now;
                                     $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
-                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                                    //$request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+									
+									$dd11= explode(' ', date(DATETIME_FORMAT, strtotime($departure_date)));
+									$dd22= explode(' ', date(DATETIME_FORMAT, strtotime($return_date)));
+									
+									$request_data['travel_datetime'] = $dd11[0] . " To " . $dd22[0];
                                 }
 
                                 if ($request_data['travel_type'] == "1") {
@@ -622,37 +655,39 @@ class Flight_travel extends Admin_Controller {
 
     //check request unique avalibility
     public function requestExiest($title = '') {
-//        $departure_date = ($this->input->post('departure_date'));
-//        $return_date = ($this->input->post('return_date'));
-//        $employee_id = $this->session->userdata('employee_id');
-//        if (trim($departure_date) != '') {
-//            $sql = "SELECT * FROM travel_request WHERE departure_date <= '" . date('Y-m-d H:i:s', strtotime($departure_date)) . "' and return_date >='" . date('Y-m-d H:i:s', strtotime($departure_date)) . "' and status= 'active' and employee_id='".$employee_id."'";
-//            $result = $this->db->query($sql);
-//            $res = $result->result_array();
-//            if (empty($res)) {
-//                if (trim($return_date) != '') {
-//                    $sql = "SELECT * FROM travel_request WHERE departure_date <= '" . date('Y-m-d H:i:s', strtotime($return_date)) . "' and return_date >='" . date('Y-m-d H:i:s', strtotime($return_date)) . "' and status= 'active' and employee_id='".$employee_id."'";
-//                    $result = $this->db->query($sql);
-//                    $res = $result->result_array();
-//                    if (empty($res)) {
+        echo 'true'; die();
+		
+		
+		$departure_date = ($this->input->post('departure_date'));
+        $return_date = ($this->input->post('return_date'));
+        if (trim($departure_date) != '') {
+            $sql = "SELECT * FROM travel_request WHERE departure_date <= '" . date('Y-m-d H:i:s', strtotime($departure_date)) . "' and return_date >='" . date('Y-m-d H:i:s', strtotime($departure_date)) . "'";
+            $result = $this->db->query($sql);
+            $res = $result->result_array();
+            if (empty($res)) {
+                if (trim($return_date) != '') {
+                    $sql = "SELECT * FROM travel_request WHERE departure_date <= '" . date('Y-m-d H:i:s', strtotime($return_date)) . "' and return_date >='" . date('Y-m-d H:i:s', strtotime($return_date)) . "'";
+                    $result = $this->db->query($sql);
+                    $res = $result->result_array();
+                    if (empty($res)) {
                         echo 'true';
                         die();
-//                    } else {
-//                        echo 'false';
-//                        die();
-//                    }
-//                } else {
-//                    echo 'true';
-//                    die();
-//                }
-//            } else {
-//                echo 'false';
-//                die();
-//            }
-//        } else {
-//            echo 'false';
-//            die();
-//        }
+                    } else {
+                        echo 'false';
+                        die();
+                    }
+                } else {
+                    echo 'true';
+                    die();
+                }
+            } else {
+                echo 'false';
+                die();
+            }
+        } else {
+            echo 'false';
+            die();
+        }
     }
 
 }

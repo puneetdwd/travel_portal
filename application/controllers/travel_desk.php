@@ -5,12 +5,9 @@ class Travel_desk extends Admin_Controller {
         parent::__construct(true);
 
         $this->is_logged_in();
-//        $this->is_user_admin();
+		//$this->is_user_admin();
         //render template
-        $header_data = array(
-            'page' => 'masters',
-            'sub' => 'employee_request'
-        );
+        $header_data = array('page' => 'masters','sub' => 'employee_request');
 
         $this->template->write_view('header', 'templates/header', $header_data);
         $this->template->write_view('footer', 'templates/footer');
@@ -921,7 +918,6 @@ class Travel_desk extends Admin_Controller {
     function flight_booking() {
         if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
-
             $this->form_validation->set_rules('flight_provider_id', 'flight_provider_id', 'required');
             $this->form_validation->set_rules('pnr_number', 'pnr_number', 'required');
             $this->form_validation->set_rules('cost', 'cost', 'required');
@@ -931,19 +927,23 @@ class Travel_desk extends Admin_Controller {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
                 redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
-
                 if (isset($_FILES['flight_attachment']['name']) && $_FILES['flight_attachment']['name'] != null) {
                     $trip_mode = $this->input->post('trip_mode');
-                    $check_booking = $this->common->select_data_by_condition('flight_ticket_booking', array('request_id' => $request_id, 'trip_mode' => $trip_mode), 'request_id');
+					$check_booking = $this->common->select_data_by_condition('flight_ticket_booking', array('request_id' => $request_id, 'trip_mode' => $trip_mode), 'request_id');
 
                     if (empty($check_booking)) {
-
                         $flight_provider_id = $this->input->post('flight_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
                         $pnr_number = $this->input->post('pnr_number');
                         $trip_number = $this->input->post('flight_number');
-                        $request = $this->travel_desk->get_travel_request_by_id($request_id);
-                        $car_booking = $request['car_booking'];
+						$reachingAt= $this->input->post('reaching_date');
+						$request = $this->travel_desk->get_travel_request_by_id($request_id);
+                        
+						$boar_date= explode(' ', substr($request['departure_date'], 0, -3));
+						$boar= explode('-', $boar_date[0]);
+						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
+						
+						$car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
 
                         if ($request['car_hire'] == '1' || $request['car_hire'] == '2') {
@@ -989,10 +989,8 @@ class Travel_desk extends Admin_Controller {
                         $data_array['ticket_type'] = $ticket_type;
                         $data_array['vendor_commission'] = $vendor_commission;
                         $data_array['arrange_by'] = "Company";
-						
 						//echo '<pre>'; print_r($data_array); exit;
-						
-                        if ($this->common->insert_data($data_array, 'flight_ticket_booking')) {
+						if ($this->common->insert_data($data_array, 'flight_ticket_booking')) {
                             $data_array = array();
                             $booking_mode = 0;
                             $redirect_flag = 0;
@@ -1029,10 +1027,11 @@ class Travel_desk extends Admin_Controller {
                                     $your_date = strtotime(date('Y-m-d', strtotime($request['return_date'])));
                                     $datediff = $your_date - $now;
                                     $travel_day = floor($datediff / (60 * 60 * 24));
-                                    $travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                                    $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
                                 } else {
                                     $travel_day = "1";
-                                    $travel_date = $request['departure_date'];
+                                    $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
+									//$travel_date = $request['departure_date'];
                                 }
 
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1054,7 +1053,11 @@ class Travel_desk extends Admin_Controller {
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>Following are the trip details-</span></span></p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>From To: </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . "</span></span></p>
-                        <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                        
+						<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                                <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Boarding Date&Time:" . $boarding_date . "</span></span></p>
+						
+						<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Flight Number: " . $pnr_number . "</span></span></p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR:" . $trip_number . "</span></span></p>
@@ -1069,20 +1072,16 @@ class Travel_desk extends Admin_Controller {
                                 &nbsp;</p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-                        <div>
-                                &nbsp;</div>
-                        ";
+                        <div>&nbsp;</div>";
 
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $reference_id = $request['reference_id'];
                                 $to = $request['email'];
                                 $this->sendEmail($to, $subject, $message);
 
-
                                 $to_city_id = $request['to_city_id'];
                                 $cost_center_list = $this->travel_request->get_cost_center_by_city_id($to_city_id);
                                 $cost_center_id = $cost_center_list['cost_center_id'];
-
 
                                 $request_data = $this->travel_request->get_request_details_by_id($request_id);
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1090,7 +1089,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Mr. " . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . " </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Kindly book the accommodation of trip.</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> Kindly book the accommodation of trip.</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1102,7 +1101,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR: " . $pnr_number . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time: </span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time: " .$reachingAt. "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1120,9 +1119,7 @@ class Travel_desk extends Admin_Controller {
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-<div>
-	&nbsp;</div>
-";
+<div>&nbsp;</div>";
 
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
@@ -1132,7 +1129,14 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    $this->sendEmail($to_email, $subject, $message);
+                                    if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
+									 {
+									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+									 }
+									else
+									 {
+									  $this->sendEmail($to_email, $subject, $message);
+									 }
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -1165,7 +1169,7 @@ class Travel_desk extends Admin_Controller {
     }
 
     function train_booking() {
-        if ($this->input->post('request_id')) {
+		if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
             $this->form_validation->set_rules('train_provider_id', 'train_provider_id', 'required');
             $this->form_validation->set_rules('pnr_number', 'pnr_number', 'required');
@@ -1176,43 +1180,42 @@ class Travel_desk extends Admin_Controller {
                 $this->session->set_flashdata('error', 'Please follow validation rules!');
                 redirect('travel_desk/booking/' . $request_id, 'refresh');
             } else {
-
                 if (isset($_FILES['train_attachment']['name']) && $_FILES['train_attachment']['name'] != null) {
-
                     $trip_mode = $this->input->post('trip_mode');
                     $check_booking = $this->common->select_data_by_condition('train_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
-
-                        $pnr_number = $this->input->post('pnr_number');
+						$pnr_number = $this->input->post('pnr_number');
                         $trip_number = $this->input->post('train_number');
+						$reachingAt = $this->input->post('reaching_date');
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
-
-                        $car_booking = $request['car_booking'];
+                        $boar_date= explode(' ', substr($request['departure_date'], 0, -3));
+						$boar= explode('-', $boar_date[0]);
+						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
+						$car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
-
                         if ($request['car_hire'] == '1' || $request['car_hire'] == '2') {
                             $car_booking = $request['car_booking'];
                         } else {
                             $car_booking = "1";
                         }
-
                         if ($request['accommodation'] == '1' || $request['accommodation'] == '2') {
                             $hotel_booking = $request['hotel_booking'];
                         } else {
                             $hotel_booking = "1";
                         }
-
                         if ($request['trip_type'] == "0") {
                             $now = strtotime(date('Y-m-d', strtotime($request['departure_date'])));
                             $your_date = strtotime(date('Y-m-d', strtotime($request['return_date'])));
                             $datediff = $your_date - $now;
                             $travel_day = floor($datediff / (60 * 60 * 24));
-                            $travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                            $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
+							//$travel_date = $request['departure_date'] . " To " . $request['return_date'];
                         } else {
                             $travel_day = "1";
-                            $travel_date = $request['departure_date'];
+                            //$travel_date = $request['departure_date'];
+							$travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
+							
                         }
-
 
                         $data_array = $this->input->post();
                         if (isset($_FILES['train_attachment']['name']) && $_FILES['train_attachment']['name'] != null) {
@@ -1235,6 +1238,7 @@ class Travel_desk extends Admin_Controller {
 
                         $vendor_id = $this->input->post('train_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
+						$boarding_date = $this->input->post('boarding_date');
                         $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
                         $vendor_commission = 0;
                         if (!empty($vendor_data)) {
@@ -1299,7 +1303,14 @@ class Travel_desk extends Admin_Controller {
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>Following are the trip details-</span></span></p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>From To: </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . "</span></span></p>
-                        <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                        
+						
+						<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                                <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Boarding Date&Time:" . $boarding_date . "</span></span></p>
+						
+						
+						
+						<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Train Number: " . $pnr_number . "</span></span></p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR:" . $trip_number . "</span></span></p>
@@ -1314,19 +1325,18 @@ class Travel_desk extends Admin_Controller {
                                 &nbsp;</p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-                        <div>
-                                &nbsp;</div>
-                        ";
+                        <div>&nbsp;</div>";
+
+
+
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $reference_id = $request['reference_id'];
                                 $to = $request['email'];
                                 $this->sendEmail($to, $subject, $message);
 
-
                                 $to_city_id = $request['to_city_id'];
                                 $cost_center_list = $this->travel_request->get_cost_center_by_city_id($to_city_id);
                                 $cost_center_id = $cost_center_list['cost_center_id'];
-
 
                                 $request_data = $this->travel_request->get_request_details_by_id($request_id);
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1334,7 +1344,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Mr. " . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . " </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Kindly book the accommodation of trip.</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . " </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> Kindly book the accommodation of trip.</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1346,7 +1356,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR: " . $pnr_number . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time:</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time: ".$reachingAt."</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1364,9 +1374,9 @@ class Travel_desk extends Admin_Controller {
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-<div>
-	&nbsp;</div>
-";
+<div>&nbsp;</div>";
+
+
 
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
@@ -1376,7 +1386,14 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    $this->sendEmail($to_email, $subject, $message);
+                                    if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
+									 {
+									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+									 }
+									else
+									 {
+									  $this->sendEmail($to_email, $subject, $message);
+									 }
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -1425,6 +1442,9 @@ class Travel_desk extends Admin_Controller {
                     $check_booking = $this->common->select_data_by_condition('car_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
+						$boar_date= explode(' ', substr($request['departure_date'], 0, -3));
+						$boar= explode('-', $boar_date[0]);
+						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
 
                         $car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
@@ -1440,8 +1460,6 @@ class Travel_desk extends Admin_Controller {
                         } else {
                             $hotel_booking = "1";
                         }
-
-
 
                         $data_array = $this->input->post();
                         if (isset($_FILES['car_attachment']['name']) && $_FILES['car_attachment']['name'] != null) {
@@ -1464,6 +1482,7 @@ class Travel_desk extends Admin_Controller {
 
                         $vendor_id = $this->input->post('car_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
+						$reachingAt = $this->input->post('reaching_date');
                         $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
                         $vendor_commission = 0;
                         if (!empty($vendor_data)) {
@@ -1513,10 +1532,12 @@ class Travel_desk extends Admin_Controller {
                                     $your_date = strtotime(date('Y-m-d', strtotime($request['return_date'])));
                                     $datediff = $your_date - $now;
                                     $travel_day = floor($datediff / (60 * 60 * 24));
-                                    $travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                                    $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
+									//$travel_date = $request['departure_date'] . " To " . $request['return_date'];
                                 } else {
                                     $travel_day = "1";
-                                    $travel_date = $request['departure_date'];
+                                    $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
+									//$travel_date = $request['departure_date'];
                                 }
 
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1539,6 +1560,9 @@ class Travel_desk extends Admin_Controller {
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>From To: </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . "</span></span></p>
                         
+						<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                                <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Boarding Date&Time:" . $boarding_date . "</span></span></p>
+						
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <br />
                                 &nbsp;</p>
@@ -1550,19 +1574,15 @@ class Travel_desk extends Admin_Controller {
                                 &nbsp;</p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-                        <div>
-                                &nbsp;</div>
-                        ";
+                        <div>&nbsp;</div>";
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $reference_id = $request['reference_id'];
                                 $to = $request['email'];
                                 $this->sendEmail($to, $subject, $message);
 
-
                                 $to_city_id = $request['to_city_id'];
                                 $cost_center_list = $this->travel_request->get_cost_center_by_city_id($to_city_id);
                                 $cost_center_id = $cost_center_list['cost_center_id'];
-
 
                                 $request_data = $this->travel_request->get_request_details_by_id($request_id);
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1570,7 +1590,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Mr. " . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . " </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Kindly book the accommodation of trip.</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Mr. " . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . " </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> Kindly book the accommodation of trip.</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1578,7 +1598,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>From To: </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time:" . $request_data['return_date'] . "</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time:" . $reachingAt . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1596,9 +1616,7 @@ class Travel_desk extends Admin_Controller {
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-<div>
-	&nbsp;</div>
-";
+<div>&nbsp;</div>";
 
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
@@ -1608,7 +1626,16 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    $this->sendEmail($to_email, $subject, $message);
+                                    
+									if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
+									 {
+									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+									 }
+									else
+									 {
+									  $this->sendEmail($to_email, $subject, $message);
+									 }
+									
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -1656,6 +1683,9 @@ class Travel_desk extends Admin_Controller {
                     $check_booking = $this->common->select_data_by_condition('bus_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
+						$boar_date= explode(' ', substr($request['departure_date'], 0, -3));
+						$boar= explode('-', $boar_date[0]);
+						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
 
                         $car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
@@ -1693,6 +1723,7 @@ class Travel_desk extends Admin_Controller {
 
                         $vendor_id = $this->input->post('bus_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
+						$reachingAt = $this->input->post('reaching_date');
                         $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
                         $vendor_commission = 0;
                         if (!empty($vendor_data)) {
@@ -1734,19 +1765,18 @@ class Travel_desk extends Admin_Controller {
                                 }
                             }
                             if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
-
-
                                 $request_data = $this->travel_request->get_request_details_by_id($request_id);
-
                                 if ($request['trip_type'] == "0") {
                                     $now = strtotime(date('Y-m-d', strtotime($request['departure_date'])));
                                     $your_date = strtotime(date('Y-m-d', strtotime($request['return_date'])));
                                     $datediff = $your_date - $now;
                                     $travel_day = floor($datediff / (60 * 60 * 24));
-                                    $travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                                    $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
+									//$travel_date = $request['departure_date'] . " To " . $request['return_date'];
                                 } else {
                                     $travel_day = "1";
-                                    $travel_date = $request['departure_date'];
+                                    $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
+									//$travel_date = $request['departure_date'];
                                 }
 
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1769,6 +1799,9 @@ class Travel_desk extends Admin_Controller {
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>From To: </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . "</span></span></p>
                         
+						<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
+                                <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Boarding Date&Time:" . $boarding_date . "</span></span></p>
+						
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <br />
                                 &nbsp;</p>
@@ -1780,19 +1813,15 @@ class Travel_desk extends Admin_Controller {
                                 &nbsp;</p>
                         <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
                                 <span id='docs-internal-guid-b1891aba-cf4c-b842-1e0d-d50556ef916e'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-                        <div>
-                                &nbsp;</div>
-                        ";
+                        <div>&nbsp;</div>";
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $reference_id = $request['reference_id'];
                                 $to = $request['email'];
                                 $this->sendEmail($to, $subject, $message);
 
-
                                 $to_city_id = $request['to_city_id'];
                                 $cost_center_list = $this->travel_request->get_cost_center_by_city_id($to_city_id);
                                 $cost_center_id = $cost_center_list['cost_center_id'];
-
 
                                 $request_data = $this->travel_request->get_request_details_by_id($request_id);
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1800,7 +1829,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Mr. " . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . " </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Kindly book the accommodation of trip.</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Mr. " . $request_data['employee_name'] . " is reaching at </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['to_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $request_data['from_city_name'] . "</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>. Duration</span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'> </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>from </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; font-weight: 700; vertical-align: baseline; white-space: pre-wrap;'>" . $travel_date . " </span><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'> Kindly book the accommodation of trip.</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1812,7 +1841,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR: " . $pnr_number . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time:" . $request_data['return_date'] . "</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time:" . $reachingAt . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1830,9 +1859,7 @@ class Travel_desk extends Admin_Controller {
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-<div>
-	&nbsp;</div>
-";
+<div>&nbsp;</div>";
 
                                 $subject = " " . $request_data['reference_id'] . ",  From " . $request_data['from_city_name'] . " To " . $request_data['to_city_name'] . " Trip Ticket Booked";
                                 $travel_email = $this->travel_request->get_travel_manager_email_from_id($cost_center_id);
@@ -1842,7 +1869,15 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    $this->sendEmail($to_email, $subject, $message);
+                                    
+									if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
+									 {
+									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+									 }
+									else
+									 {
+									  $this->sendEmail($to_email, $subject, $message);
+									 }
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -2006,7 +2041,6 @@ class Travel_desk extends Admin_Controller {
                 }
             }
 
-
             if ($grade['travel_mode'] == "1") {
                 $emp_policy[$i]['name'] = "Flight";
             } else if ($grade['travel_mode'] == "2") {
@@ -2027,10 +2061,7 @@ class Travel_desk extends Admin_Controller {
         }
 
         $view_data['emp_policy'] = $emp_policy;
-
         $this->template->write_view('content', 'travel_desk/view_policy', $view_data);
         $this->template->render();
     }
-
 }
-

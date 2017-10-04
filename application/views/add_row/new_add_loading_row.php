@@ -3,7 +3,8 @@
 
 <td><?php echo $count; ?></td>
 
-<td><select onChange="accomoTypeSelected('<?php echo $count; ?>');" id="<?php echo 'arrangement_type_'.$count; ?>" name="arrangement_type[]" class="form-control required"><option value="Hotel">Hotel</option>
+<td><select onChange="accomoTypeSelected('<?php echo $count; ?>');" id="<?php echo 'arrangement_type_'.$count; ?>" name="arrangement_type[]" class="form-control required">
+<option value="Hotel">Hotel</option>
 <option value="Guest House">Guest House</option>
 <option value="Own Arrangement">Own Arrangement</option></select></td>
 
@@ -19,11 +20,11 @@ if(isset($hotel))
 ?></select></td>
 
 <td><div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-<input name="loading_departure[]" id="<?php echo "departure_date" . $count ?>"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime("+1 day")); ?>" readonly>
+<input name="loading_departure[]" id="<?php echo "departure_date" . $count ?>"  class="form-control shouldLessThanReturn" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime("+1 day")); ?>" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
 
 <td><div class="input-group date form_datetime" data-date="<?php echo isset($flight_request['departure_date']) ? $flight_request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-<input name="loading_return[]" id="<?php echo "loading_return" . $count ?>"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime("+1 day")); ?>" readonly>
+<input name="loading_return[]" id="<?php echo "loading_return" . $count ?>" class="form-control shouldLessThanReturn" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime("+1 day")); ?>" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
 
 <td><input type='text' value="0" name='load_room_no[]' maxlength="15" id='<?php echo "load_room_no" . $count ?>'  class='form-control required'></td>
@@ -60,6 +61,24 @@ $return_date = '';
 ?><script type="text/javascript">
 
 $(document).ready(function () {
+
+$(".shouldLessThanReturn").on('change', function(){
+	var endDate1 = $('#return_date').val().split(' ');
+	var eD= endDate1[0].split('-');
+	var endDate = eD[1]+'-'+eD[0]+'-'+eD[2]+' '+endDate1[1]+':00';
+	var a= new Date(endDate);
+    
+	var thisDate1 = $(this).val().split(' ');
+	var eD1= thisDate1[0].split('-');
+	var thisDate = eD1[1]+'-'+eD1[0]+'-'+eD1[2]+' '+thisDate1[1]+':00';
+	var b= new Date(thisDate);
+	
+	if((Date.parse(a) < Date.parse(b)))
+     {
+	  alert("This should not be greater than return date");
+	  $(this).val('');
+     }
+  });
 
 $("#<?php echo "departure_date" . $count ?>,#<?php echo "loading_return" . $count ?>").change(function () {
 var check_in_date = document.getElementById("<?php echo "departure_date" . $count ?>").value;

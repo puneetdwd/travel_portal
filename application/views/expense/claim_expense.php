@@ -385,11 +385,11 @@ if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel1>$GH_Act){$trClassHo
 <td><?php if(isset($value['arrangement_type'])){ echo $value['arrangement_type']; } ?></td>
 <td><?php echo $value['hotel_provider_name']; ?></td><td>
 <div class="input-group date form_datetime" data-date="<?php echo isset($value['date_from']) ? $value['date_from'] : date("Y-m-d", strtotime("+1 day")); ?>T018:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-<input name="date_from_1" id='date_from_1' class="form-control required" size="16" type="text" readonly value="<?php
+<input name="date_from_1" id='date_from_1' class="form-control required shouldLessThanReturn" size="16" type="text" readonly value="<?php
 if(!empty($value['date_from'])){echo date(DATETIME_FORMAT, strtotime($value['date_from']));}?>">
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
 <td><div class="input-group date form_datetime" data-date="<?php echo isset($value['date_to']) ? $value['date_to'] : date("Y-m-d", strtotime("+1 day")); ?>T018:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-<input name="date_to_1" id='date_to_1' class="form-control required" size="16" type="text" readonly value="<?php if(!empty($value['date_to'])){ echo date(DATETIME_FORMAT, strtotime($value['date_to']));}?>">
+<input name="date_to_1" id='date_to_1' class="form-control required shouldLessThanReturn" size="16" type="text" readonly value="<?php if(!empty($value['date_to'])){ echo date(DATETIME_FORMAT, strtotime($value['date_to']));}?>">
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
 <td><input type="text" class="form-control" id="bill_no" maxlength="15" name="bill_no" value="<?php echo $value['bill_no']; ?>"></td>
 <td class="col-md-1"><input type="text" class="form-control" id="bill_no_1" maxlength="15" name="bill_no_1" value="<?php if($value['bill_no_1'] == ''){echo 0;} else {echo $value['bill_no_1'];}?>">
@@ -1152,8 +1152,28 @@ function submitThisForm()
  }
 
 
-$(document).ready(function () {
-received_total();});
+$(document).ready(function(){
+received_total();
+
+$(".shouldLessThanReturn").on('change', function(){
+	var endDate1 = $('#return_date').val().split(' ');
+	var eD= endDate1[0].split('-');
+	var endDate = eD[1]+'-'+eD[0]+'-'+eD[2]+' '+endDate1[1]+':00';
+	var a= new Date(endDate);
+    
+	var thisDate1 = $(this).val().split(' ');
+	var eD1= thisDate1[0].split('-');
+	var thisDate = eD1[1]+'-'+eD1[0]+'-'+eD1[2]+' '+thisDate1[1]+':00';
+	var b= new Date(thisDate);
+	
+	if((Date.parse(a) < Date.parse(b)))
+     {
+	  alert("This should not be greater than return date");
+	  $(this).val('');
+     }
+  });
+
+});
 $(".only_number").on('keypress', function (evt) {
 evt = (evt) ? evt : window.event;
 var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -1678,7 +1698,7 @@ for(var i = 2; i < other_load_row; i++)
 	 if(error_da_show == 0)
 	  {
 	   $("#error_msg").text("You are eligible for DA ₨ " + da_limit + " ");
-	   alert("You are eligible for DA ₨ " + da_limit + " ");
+	   //alert("You are eligible for DA ₨ " + da_limit + " ");
 	   //$("#error_popup").modal();
 	   $("#error_da_show").val("1");
 	  }
