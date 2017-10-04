@@ -26,7 +26,7 @@ if(isset($hotel))
 <input name="loading_return[]" id="<?php echo "loading_return" . $count ?>"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime("+1 day")); ?>" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div></td>
 
-<td><input type='text' name='load_room_no[]' maxlength="15" id='<?php echo "load_room_no" . $count ?>'  class='form-control required'></td>
+<td><input type='text' value="0" name='load_room_no[]' maxlength="15" id='<?php echo "load_room_no" . $count ?>'  class='form-control required'></td>
 
 <td><input type='text' name='load_bill_no[]' maxlength="15" id='<?php echo "load_bill_no" . $count ?>' class='form-control' value="0"></td>
 

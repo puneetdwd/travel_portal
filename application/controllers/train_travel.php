@@ -42,7 +42,7 @@ class Train_travel extends Admin_Controller {
 
             $train_date = $this->travel_category->get_all_train_category();
             $view_data['train_category'] = $train_date;
-//            po($view_data['train_category']);
+			//po($view_data['train_category']);
 
             $this->load->model('employee_model');
             $employee = $this->employee_model->get_employee_by_id_new($employee_id);
@@ -53,7 +53,6 @@ class Train_travel extends Admin_Controller {
             $this->load->model("projects_model");
             $projects = $this->projects_model->get_all_projects();
             $view_data['projects'] = $projects;
-
 
             $this->load->model('travel_policy_model');
             $policy_data = $this->travel_policy_model->get_travel_policy_by_grade($grade_id, $service_type = '2');
@@ -289,7 +288,7 @@ class Train_travel extends Admin_Controller {
                                     'request_status' => "3",
                                 );
                                 $data1 = $this->travel_request->update_travel_request_status($req_data, $request_id);
-                                $msg = (!empty($request_number)) ? ' Trip Raised Successfully for Accommodation ' : 'Trip Raised Successfully for Accommodation ';
+                                $msg = (!empty($request_number)) ? ' Trip has been raised successfully ' : ' Trip has been raised successfully ';
                             } else {
                                 $view_data['error'] = 'Something went wrong, please try again later.';
                             }
@@ -387,7 +386,7 @@ class Train_travel extends Admin_Controller {
                                 }
                             }
                         } else {
-                            $msg = (!empty($request_number)) ? "Trip raised successfully for Manager's approval." : "Trip raised successfully for Manager's approval.";
+                            $msg = (!empty($request_number)) ? "Trip has been raised successfully, now it requires manager approval." : "Trip has been raised successfully, now it requires manager approval.";
 
                             $email_template = $this->common->select_data_by_id('email_format', 'mail_id', '1');
                             if (!empty($email_template)) {

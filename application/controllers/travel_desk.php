@@ -439,7 +439,6 @@ class Travel_desk extends Admin_Controller {
         $this->load->model("travel_category_model", "car_model");
         $car = $this->car_model->get_all_car_category();
         $view_request['car'] = $car;
-
         $this->template->write_view('content', 'travel_desk/booking_request', $view_request);
         $this->template->render();
     }
@@ -958,8 +957,6 @@ class Travel_desk extends Admin_Controller {
                         } else {
                             $hotel_booking = "1";
                         }
-
-
 
                         $data_array = $this->input->post();
                         if (isset($_FILES['flight_attachment']['name']) && $_FILES['flight_attachment']['name'] != null) {
@@ -2036,3 +2033,4 @@ class Travel_desk extends Admin_Controller {
     }
 
 }
+

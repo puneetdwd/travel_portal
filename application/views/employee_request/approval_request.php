@@ -754,13 +754,15 @@ $i++;
 <h4 class="modal-title">Approve Task</h4>
 </div>
 <form action="<?php echo base_url() . 'employee_request/approve_request/' . $request_id; ?>" id="approval_task" method="post" class="form-horizontal row-border">
-<div class="modal-body">
-<div class="row">
-<div class="col-md-12">
-<div class="widget box">
-<div class="widget-content">
-<div class="col-md-12">
-<div class="form-group">
+<div class="modal-body"><div class="row"><div class="col-md-12">
+<div class="widget box"><div class="widget-content">
+
+<div class="col-md-12"><div title="While booking the Admin Desk will be considered for upgrade of travel class, meanwhile travelling cost will be increased." class="form-group">
+<input value="1" type="checkbox" name="auto_upgrade" />
+<label class="control-label">Considering upgrade travel class if required</label>
+</div></div>
+
+<div class="col-md-12"><div class="form-group">
 <label class="control-label">Please provide your comments.
 <!--<span class="required">*</span>-->:</label>
 <!--<div class="col-md-12">-->

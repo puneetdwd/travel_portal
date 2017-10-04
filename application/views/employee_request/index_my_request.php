@@ -26,7 +26,7 @@ if(!empty($emp_request))
 <th>Departure date</th><th>Return date</th>
 <th class="hidden-xs">Service</th><th>From - To</th>
 <th class="hidden-xs">Action by</th><th>Status</th>
-<th class="no_sort" style="width:150px;"></th></tr></thead><tbody><?php
+<th class="no_sort" style="width:150px;">Action</th></tr></thead><tbody><?php
 $post_data[$this->security->get_csrf_token_name()] = $this->security->get_csrf_hash();
 foreach ($request as $data) {
 $display_flag = 0;
@@ -81,8 +81,7 @@ echo "Projects (" . $data['project_name'] . ")";
 };
 ?></td>
 
-<td class="form_datetime">
-<input class="form-control" size="11" type="text" readonly onchange="edit_date();" value="<?php echo date(DATETIME_FORMAT, strtotime($data['departure_date']));?>"></td>
+<td class="form_datetime"><?php echo date(DATETIME_FORMAT, strtotime($data['departure_date']));?></td>
 
 <td class="form_datetime"><?php
 if($data['trip_type'] != "1")
@@ -164,11 +163,11 @@ if($data['request_status'] != "9")
  }
 else
  {
-  ?><a class="btn btn-xs blue-chambray" href="<?php echo base_url() . 'employee_request/view_expense/' . $data['id']; ?>" title="View Approved Expense"><i class="fa fa-eye"></i> Approved Expense </a><?php
+  ?></br><a class="btn btn-xs blue-chambray" href="<?php echo base_url() . 'employee_request/view_expense/' . $data['id']; ?>" title="View Approved Expense"><i class="fa fa-eye"></i> Approved Expense </a><?php
  }
 if($data['request_status'] == "3") {
 if($display_flag == "1") {
-?><a class="btn btn-xs blue-chambray" href="<?php echo base_url() . 'employee_request/self_booking/' . $data['id']; ?>"><i class="fa fa-edit"></i> Self Booking</a><?php
+?></br><a class="btn btn-xs blue-chambray" href="<?php echo base_url() . 'employee_request/self_booking/' . $data['id']; ?>"><i class="fa fa-edit"></i> Self Booking</a><?php
 }}
 if ($data['cancel_status'] != "1") {
 if ($data['approval_status'] == "Approved") {
@@ -176,34 +175,34 @@ if ($data['request_status'] <= "3") {
 ?>
 <!--<a class="btn btn-xs blue-chambray" href="<?php echo base_url() . 'employee_request/accommodation/' . $data['id']; ?>"><i class="fa fa-edit"></i> Booking</a>-->
 <!--<button type="button" class="btn btn-xs blue-chambray" data-id="<?php echo $data['booking_req_id']; ?>" data-href="<?php echo base_url() . 'employee_request/accommodation/' . $data['id']; ?>" data-toggle="modal" data-target="#myModal"><i class="fa fa-bus"></i> Request Booking</button>-->
-<a class="btn btn-xs blue-chambray" data-placement="top" data-original-title="View" href="#edit_modal" data-toggle="modal" title="View" data-url="<?php echo base_url() . 'ajax/check_booking/' . $data['id']; ?>" onclick='show_modal(this,<?php echo json_encode($post_data); ?>);' title="Send Booking Request To Admin OR Self-booking"><i class="fa fa-bus"></i> Request Booking</a><?PHP
+</br><a class="btn btn-xs blue-chambray" data-placement="top" data-original-title="View" href="#edit_modal" data-toggle="modal" title="View" data-url="<?php echo base_url() . 'ajax/check_booking/' . $data['id']; ?>" onclick='show_modal(this,<?php echo json_encode($post_data); ?>);' title="Send Booking Request To Admin OR Self-booking"><i class="fa fa-bus"></i> Request Booking</a><?PHP
 }}
 
 if ($data['request_status'] != "9") {
 if ($data['cancel_status'] == "0") {
 if ($data['approval_status'] == "Approved") {
-?><a class="btn btn-xs red-intense" href="<?php echo base_url() . 'employee_request/cancel_trip_request/' . $data['id']; ?>" title="Cancel Your Travel"><i class="fa fa-remove"></i> Trip Cancel</a><?PHP
+?></br><a class="btn btn-xs red-intense" href="<?php echo base_url() . 'employee_request/cancel_trip_request/' . $data['id']; ?>" title="Cancel Your Travel"><i class="fa fa-remove"></i> Trip Cancel</a><?PHP
 }}
 else if ($data['cancel_status'] == "4") {
-?><span class="btn btn-xs red"> Refund Pending </span><?PHP
+?></br><span class="btn btn-xs red"> Refund Pending </span><?PHP
 }}
 if ($data['request_status'] == "4") {
 if ($data['cancel_status'] == "0") {
-?><a class="btn btn-xs purple" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>" title="Submit Your Travel Expense"><i class="fa fa-eye"></i> Claim</a><?php
+?></br><a onClick="sureClaim('<?php echo $data['id']; ?>');" class="btn btn-xs purple" href="javascript:void(0);" title="Submit Your Travel Expense"><i class="fa fa-eye"></i> Claim</a><?php
 }}
 else if ($data['request_status'] == "5" && $data['expense_status'] == "Pending") {
-?><a class="btn btn-xs blue" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>" title="View Your Unapproved Expense"><i class="fa fa-eye"></i>Unapproved Expense </a><?php
+?></br><a class="btn btn-xs blue" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>" title="View Your Unapproved Expense"><i class="fa fa-eye"></i>Unapproved Expense </a><?php
 }
 else if ($data['request_status'] == "5" && $data['expense_status'] == "Clarification") {
 if($data['cancel_status'] == "0") {
-?><a class="btn btn-xs red" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>"><i class="fa fa-eye"></i> Claim Clarification</a><?php
+?></br><a class="btn btn-xs red" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>"><i class="fa fa-eye"></i> Claim Clarification</a><?php
 }}
 else if ($data['request_status'] == "6") {
 if($data['expense_status'] == "Approved") {
-?><a class="btn btn-xs blue-chambray" href="<?php echo base_url() . 'employee_request/view_expense/' . $data['id']; ?>"><i class="fa fa-eye"></i> Expense Approved </a><?php
+?></br><a class="btn btn-xs blue-chambray" href="<?php echo base_url() . 'employee_request/view_expense/' . $data['id']; ?>"><i class="fa fa-eye"></i> Expense Approved </a><?php
 }
 else if ($data['expense_status'] == "Rejected") {
-?><span class="btn btn-xs red" <i class="fa fa-eye"></i> Expense Rejected </span><?php
+?></br><span class="btn btn-xs red" <i class="fa fa-eye"></i> Expense Rejected </span><?php
 }}}
 ?></td></tr><?php
 }
@@ -315,23 +314,23 @@ echo "Completed";
 }}
 ?></td><td class="nowrap"><?php
 if($data['request_status'] != "9") {
-?><a class="btn btn-xs purple" title="Incompleted Trip" href="<?php echo base_url() . 'employee_request/view/' . $data['id']; ?>">
+?></br><a class="btn btn-xs purple" title="Incompleted Trip" href="<?php echo base_url() . 'employee_request/view/' . $data['id']; ?>">
 <i class="fa fa-eye"></i> view</a><?php
 }else {
-?><a class="btn btn-xs btn-success" title="Completed Trip" href="<?php echo base_url() . 'employee_request/view/' . $data['id']; ?>"><i class="fa fa-eye"></i>view</a><?php
+?></br><a class="btn btn-xs btn-success" title="Completed Trip" href="<?php echo base_url() . 'employee_request/view/' . $data['id']; ?>"><i class="fa fa-eye"></i>view</a><?php
 }
 if ($data['cancel_status'] != "1") {
 if ($data['approval_status'] == "Approved") {
 if ($data['request_status'] <= "3") {
 ?>
 <!--<button type="button" class="btn btn-xs blue-chambray" data-href="<?php echo base_url() . 'employee_request/accommodation/' . $data['id']; ?>" data-toggle="modal" data-target="#myModal"><i class="fa fa-bus"></i> Request Booking</button>-->
-<a class="btn btn-xs blue-chambray" data-placement="top" data-original-title="View" href="#edit_modal" data-toggle="modal" title="View" data-url="<?php echo base_url() . 'ajax/check_booking/' . $data['id']; ?>" onclick='show_modal(this,<?php echo json_encode($post_data); ?>);' title="View"><i class="fa fa-bus"></i> Request Booking</a><?PHP
+</br><a class="btn btn-xs blue-chambray" data-placement="top" data-original-title="View" href="#edit_modal" data-toggle="modal" title="View" data-url="<?php echo base_url() . 'ajax/check_booking/' . $data['id']; ?>" onclick='show_modal(this,<?php echo json_encode($post_data); ?>);' title="View"><i class="fa fa-bus"></i> Request Booking</a><?PHP
 }}}
 
 if ($data['cancel_status'] != "1") {
 if ($data['request_status'] == "4") {
 if ($data['cancel_status'] == "0") {
-?><a class="btn btn-xs purple" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>"><i class="fa fa-eye"></i> Claim</a><?php
+?></br><a class="btn btn-xs purple" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>"><i class="fa fa-eye"></i> Claim</a><?php
 }
 //}
 //} else if ($data['request_status'] == "5" && $data['expense_status'] == "Pending") {
@@ -339,7 +338,7 @@ if ($data['cancel_status'] == "0") {
 
 } else if ($data['request_status'] == "5" && $data['expense_status'] == "Clarification") {
 if ($data['cancel_status'] == "0") {
-?><a class="btn btn-xs red" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>"><i class="fa fa-eye"></i> Claim Clarification</a><?php
+?></br><a class="btn btn-xs red" href="<?php echo base_url() . 'employee_request/claim/' . $data['id']; ?>"><i class="fa fa-eye"></i> Claim Clarification</a><?php
 }}
 
 //} else if ($data['request_status'] == "6") {
@@ -421,10 +420,28 @@ Car Hire</label></div></div></div></div></div></div></div>
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="edit_modal">
 <div class="modal-dialog"><div class="modal-content"></div></div></div>
 
+<div class="modal fade" id="sureClaim" role="dialog">
+<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+<button type="button" class="close" data-dismiss="modal">&times;</button>
+<h4 class="modal-title">Confirmation</h4></div><div class="modal-body">
+<p>Are you sure to claim your travel expense? If you have filled your pocket expenses, click 'Yes'</p></div>
+<div class="modal-footer">
+<a id="sureClaimYesButton" href="" class="btn btn-success">Yes</a>
+<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+</div></div></div></div>
+
 <script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ?>" charset="UTF-8"></script>
 <script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.fr.js" ?>" charset="UTF-8"></script>
 
 <script type="text/javascript">
+
+function sureClaim(recordID)
+ {
+  var link= '<?php echo base_url().'employee_request/claim/'; ?>'+recordID;
+  $("#sureClaimYesButton").attr('href', link);
+  $("#sureClaim").modal();
+ }
+
 $('.form_datetime_REMOVE_ME').datetimepicker({
 weekStart: 0,
 todayBtn: 1,
@@ -440,15 +457,12 @@ format: "<?php echo DATETIME_FORMAT_DATEPICKER; ?>"
 
 <script type="text/javascript">
 $(document).ready(function () {
-
 $('#confirm-delete').on('show.bs.modal', function (e) {
 $(this).find('.danger').attr('href', $(e.relatedTarget).data('href'));});
 $('#myModal').on('show.bs.modal', function (e) {
 $(this).find('#accommodation_form').attr('action', $(e.relatedTarget).data('href'));
 var data_id = $(e.relatedTarget).data('id');
-$("#id").val(data_id);});
-
-});
+$("#id").val(data_id);});});
 
 function edit_date()
 {
@@ -465,9 +479,7 @@ url: data_url,
 type: "POST",
 dataType: "html",
 data: post_data, catch : false,
-success: function (data) {
-$(content).html(data);
-}});}
+success: function (data) {$(content).html(data);}});}
 
 //$(document).ready(function () {
 //var oTable = $('#make-data-table').dataTable();

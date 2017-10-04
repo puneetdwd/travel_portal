@@ -1107,7 +1107,10 @@ else
 <div class="col-md-4"><div class="col-md-offset-1 col-md-12">
 ** Pls attach all Bills, Upload Option&nbsp;<br>
 <input type="file" name="other_attachment[]" id="other_attachment" class="btn green button-submit" multiple capture><br>
-<input type="submit" class="btn green button-submit">
+<!---<input type="submit" class="btn green button-submit">--->
+
+<input type="button" value="Submit" onClick="confirmSubmission();" class="btn green button-submit">
+
 <a href="<?php echo base_url() . 'employee_request'; ?>" class="btn default">
 <i class="m-icon-swapleft"></i> Back </a></div></div></div></div>
 <input type="hidden" id="cal_flag" value="0" name="cal_flag">
@@ -1126,9 +1129,29 @@ else
 <h4 id="error_msg">Do you want to create hangout meeting instead?</h4>
 </div></div></div></div>
 
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&key=AIzaSyCdGlqSgU-wNjCn6_mig33UF5yv5QB7tqI"></script>
+<div class="modal fade" id="sureClaim" role="dialog">
+<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+<button type="button" class="close" data-dismiss="modal">&times;</button>
+<h4 class="modal-title">Confirmation</h4></div><div class="modal-body">
+<p>Are you sure to submit travel expense?</p></div><div class="modal-footer">
+<a href="javascript:void(0);" onClick="submitThisForm();" class="btn btn-success">Yes</a>
+<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+</div></div></div></div>
 
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&key=AIzaSyCdGlqSgU-wNjCn6_mig33UF5yv5QB7tqI"></script>
 <script type="text/javascript">
+
+function confirmSubmission()
+ {
+  $("#sureClaim").modal();
+ }
+
+function submitThisForm()
+ {
+  $("#expense_form").submit();
+ }
+
+
 $(document).ready(function () {
 received_total();});
 $(".only_number").on('keypress', function (evt) {
@@ -1210,10 +1233,6 @@ function add_native_ticket_exp(dyna)
  received_total();
 }
 
-
-
-
-
 function received_total(){
 if($("#other_expense_1").val()=='' || $("#other_expense_1").val()==null)
 {
@@ -1279,7 +1298,6 @@ for(var i = 2; i < other_load_row; i++)
 	{
 	 $('#other_expense_' + i).val('0');
 	}
-	
 	
 	var loading_expense = $('#loading_expense_' + i).val();
 	var other_expense = parseInt($('#other_expense_' + i).val());
@@ -2288,12 +2306,7 @@ success: function (data) {
 $("#load_tbody").append(data);
 count++;
 $("#other_load_row").val(count);
-$("#add_row_flag").val('0');
-initialize();
-}
-});
-}
-}
+$("#add_row_flag").val('0');initialize();}});}}
 
 function initialize() {
 var other_row = $("#other_load_row").val();

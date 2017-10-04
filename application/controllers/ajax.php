@@ -27,7 +27,6 @@ class Ajax extends Admin_Controller {
     }
 
     function check_booking($request_id = '') {
-//        $response = array();
         if ($this->input->is_ajax_request()) {
             if ($request_id != '') {
                 $this->data['request_id'] = $request_id;
@@ -53,7 +52,9 @@ class Ajax extends Admin_Controller {
 
 //echo '<pre>'; print_r($this->data); exit;
 
-                $this->load->view('expense/check_booking', $this->data);
+//echo '<pre>'; print_r($this->data); exit;
+
+          $this->load->view('expense/check_booking', $this->data);
 //        $this->template->write_view('content', 'expense/check_booking', $this->data);
 //        $this->template->render();
 

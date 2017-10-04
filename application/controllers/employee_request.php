@@ -608,9 +608,18 @@ class Employee_request extends Admin_Controller {
                     'approval_status' => 'Approved',
                     'approve_comment' => $this->input->post('approve_comment'),
                     'approval_datetime' => date('Y-m-d H:i:s'),
-                    'request_status' => '2',
+                    'request_status' => '2'
                 );
-                if ($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
+                if($this->input->post('auto_upgrade'))
+				 {
+				  $data_array['auto_upgrade']=$this->input->post('auto_upgrade');
+				 }
+			    else
+				 {
+				  $data_array['auto_upgrade']=0;
+				 }
+				
+				if($this->common->update_data($data_array, 'travel_request', 'id', $request_id)) {
                     $request_data = $this->travel_request->get_request_details_by_id($request_id);
                     if ($request['travel_type'] == "1") {
                         $travel_mode = "Flight";
@@ -2421,7 +2430,7 @@ class Employee_request extends Admin_Controller {
                                     $subject = $request_data['reference_id'] . ", Claim Raised";
                                     $this->sendEmail($to, $subject, $message);
 
-                                    $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                    $this->session->set_flashdata('success', 'Travel expense has been claimed successfully.');
                                     redirect(base_url() . employee_request);
                                 } else {
                                     $this->session->set_flashdata('error', 'Error occurred. Try Again!');
@@ -2496,7 +2505,7 @@ class Employee_request extends Admin_Controller {
                                 $subject = $request_data['reference_id'] . ", Claim Approval " . $request_data['employee_name'];
                                 $this->sendEmail($to, $subject, $message, $cc);
 
-                                $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                $this->session->set_flashdata('success', 'Travel expense has been claimed successfully.');
                                 redirect(base_url() . employee_request);
                             } else {
                                 $this->session->set_flashdata('error', 'Error occurred. Try Again!');
@@ -2557,7 +2566,7 @@ class Employee_request extends Admin_Controller {
                                     $subject = $request_data['reference_id'] . ", Claim Raised";
                                     $this->sendEmail($to, $subject, $message);
 
-                                    $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                    $this->session->set_flashdata('success', 'Travel expense has been claimed successfully.');
                                     redirect(base_url() . employee_request);
                                 } else {
                                     $this->session->set_flashdata('error', 'Error occurred. Try Again!');
@@ -2624,15 +2633,13 @@ class Employee_request extends Admin_Controller {
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-e9df-f82d-9215-776a388c604e'><span style='font-size: 9pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(153, 153, 153); background-color: transparent; font-style: italic; vertical-align: baseline; white-space: pre-wrap;'>This is an automatically generated email, please do not reply</span></span></p>
-<div>
-	&nbsp;</div>
-";
+	<div>&nbsp;</div>";
 
                                 $to = $request_data['manager_email'];
                                 $subject = $request_data['reference_id'] . ", Claim Approval " . $request_data['employee_name'];
                                 $this->sendEmail($to, $subject, $message, $cc);
 
-                                $this->session->set_flashdata('success', 'New Expense claimed successfully.');
+                                $this->session->set_flashdata('success', 'Travel expense has been claimed successfully.');
                                 redirect(base_url() . employee_request);
                             } else {
                                 $this->session->set_flashdata('error', 'Error occurred. Try Again!');
