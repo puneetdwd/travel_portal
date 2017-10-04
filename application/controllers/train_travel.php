@@ -302,14 +302,22 @@ class Train_travel extends Admin_Controller {
                                 $departure_date = $request_data['departure_date'];
                                 $return_date = $request_data['return_date'];
                                 if ($return_date == '') {
-                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
-                                    $request_data['day_plan'] = "1";
+                                    //$request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date));
+                                    
+									$dd11= explode(' ', date(DATETIME_FORMAT, strtotime($departure_date)));
+									$request_data['travel_datetime'] = $dd11[0];
+									
+									$request_data['day_plan'] = "1";
                                 } else {
                                     $now = strtotime(date('Y-m-d', strtotime($departure_date)));
                                     $your_date = strtotime(date('Y-m-d', strtotime($return_date)));
                                     $datediff = $your_date - $now;
                                     $request_data['day_plan'] = floor($datediff / (60 * 60 * 24));
-                                    $request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+                                    //$request_data['travel_datetime'] = date(DATETIME_FORMAT, strtotime($departure_date)) . " To " . date(DATETIME_FORMAT, strtotime($return_date));
+									$dd11= explode(' ', date(DATETIME_FORMAT, strtotime($departure_date)));
+									$dd22= explode(' ', date(DATETIME_FORMAT, strtotime($return_date)));
+									$request_data['travel_datetime'] = $dd11[0] . " To " . $dd22[0];
+									
                                 }
 
                                 if ($request_data['travel_type'] == "1") {
