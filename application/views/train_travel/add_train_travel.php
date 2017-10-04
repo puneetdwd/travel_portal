@@ -6,34 +6,23 @@ width: 1300px;
 }
 .pull-left {float: left !important;text-align: left;}
 </style>
-<div class="page-content">
-<!-- BEGIN PAGE HEADER-->
-<div class="breadcrumbs">
-
-<div class="pull-left"><img src="assets/images/train-icon" /></div>
+<div class="page-content"><div class="breadcrumbs">
+<div class="pull-left"><img src="assets/images/train-icon"/></div>
 <div class="pull-mob" style="margin-top:15px">
 <a title="Hotel Search" class="btn btn-success" href="javascript:void(0)" data-toggle="modal" data-target="#hotel_modal"><i class="fa fa-bed"></i></a>
 <a title="Flight Travel" class="btn btn_blue" href="<?php echo base_url('flight_travel/index') ?>"><i class="fa fa-plane"></i></a>
 <a title="Car Travel" class="btn btn_blue" href="<?php echo base_url('car_travel/index') ?>"><i class="fa fa-car"></i></a>
 <a title="Bus Travel" class="btn btn_blue" href="<?php echo base_url('bus_travel/index') ?>"><i class="fa fa-bus"></i></a>
-</div>
+</div></div>
 
-</div>
-<!-- END PAGE HEADER-->
-<div class="row">
-<div class="col-md-12">
+<div class="row"><div class="col-md-12">
 <?php if ($this->session->flashdata('error')) { ?>
-<div class="alert alert-danger">
-<i class="fa fa-times"></i>
-<?php echo $this->session->flashdata('error'); ?>
-</div>
+<div class="alert alert-danger"><i class="fa fa-times"></i>
+<?php echo $this->session->flashdata('error'); ?></div>
 <?php } else if ($this->session->flashdata('success')) { ?>
-<div class="alert alert-success">
-<i class="fa fa-check"></i>
-<?php echo $this->session->flashdata('success'); ?>
-</div>
-<?php } ?>
-<div class="portlet light borderLight">
+<div class="alert alert-success"><i class="fa fa-check"></i>
+<?php echo $this->session->flashdata('success'); ?></div>
+<?php } ?><div class="portlet light borderLight">
 <!--<div class="portlet-body form">-->
 <form role="form" class="" method="post" id="trf_form">
 <!--<form role="form" class="validate-form" method="post" id="myform">-->
