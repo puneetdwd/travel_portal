@@ -593,7 +593,7 @@ class Employee_request extends Admin_Controller {
 
         $request = $this->travel_request->get_last_few_request_by_empid($empID, $request_id);
         $view_request['last_few_req'] = $request;
-
+//echo '<pre>'; print_r($view_request); exit;
         $this->template->write_view('content', 'employee_request/approval_request', $view_request);
         $this->template->render();
     }
@@ -2680,7 +2680,6 @@ class Employee_request extends Admin_Controller {
 		{
 		 echo 'fail';
 		}
-		
     }
 
 	function get_days_hours_S() {

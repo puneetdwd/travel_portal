@@ -236,7 +236,7 @@ if(isset($request['auto_upgrade']) and $request['auto_upgrade']==1)
 <div class="form-group col-xs-12">
 <label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
 <div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
-<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
 <label id="reaching_date-error" class="error" for="reaching_date"></label></div>
 
@@ -349,7 +349,7 @@ if(isset($request['auto_upgrade']) and $request['auto_upgrade']==1)
 <div class="form-group col-xs-12">
 <label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
 <div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
-<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
 <label id="reaching_date-error" class="error" for="reaching_date"></label></div>
 
@@ -459,7 +459,7 @@ Car Ticket
 <div class="form-group col-xs-12">
 <label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
 <div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
-<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
 <label id="reaching_date-error" class="error" for="reaching_date"></label></div>
 
@@ -546,7 +546,7 @@ if ($request['trip_ticket'] != '1') {
 <div class="form-group col-xs-12">
 <label for="dtp_input4" class="control-label"><?php echo $request['to_city_name'].' '; ?>Reaching Date/Time<span class="required"> * </span></label>
 <div class="input-group date form_datetime" data-date="<?php echo isset($request['departure_date']) ? $request['departure_date'] : date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input4">
-<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
+<input name="reaching_date" id="reaching_date" class="form-control" size="16" type="text" readonly>
 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div>
 <label id="reaching_date-error" class="error" for="reaching_date"></label></div>
 

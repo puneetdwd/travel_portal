@@ -433,6 +433,88 @@
                             $(document).ready(function () {
                                 check_hangout_suggestion();
 
+
+								$("#departure_date").change(function () {
+
+var startDate1 = $('#departure_date').val().split(' ');
+var sD= startDate1[0].split('-');
+var startDate = sD[1]+'-'+sD[0]+'-'+sD[2]+' '+startDate1[1]+':00';
+
+var currentDateTime= '<?php echo date('m-d-Y h:i:s', time()); ?>';
+var b= new Date(startDate);
+var c= new Date(currentDateTime);
+
+if(b<c)
+ {
+  alert('As far as possible, you should plan their travel well in advance in order to available lowest fares possible.');
+ }
+
+if($('#return_date').val()!='')
+ {
+  var endDate1 = $('#return_date').val().split(' ');
+  var eD= endDate1[0].split('-');
+  var endDate = eD[1]+'-'+eD[0]+'-'+eD[2]+' '+endDate1[1]+':00';
+  var a= new Date(endDate);
+  if(Date.parse(a)==Date.parse(b))
+   {
+	alert("Departure date and Return date should not be same.");
+	$('#return_date').val('');
+   }
+  else
+   {
+    if((Date.parse(endDate) < Date.parse(startDate)))
+     {
+	  alert("Return date should be greater than Departure Date");
+	  $('#return_date').val('');
+     }
+   }
+  var diff = new Date(a - b);
+  var days = diff/1000/60/60/24;
+  var dayDiff= parseInt(days);
+  if(dayDiff>15)
+  {
+   alert('Your travel will be treated as deputation and expense will be covered under the business travel deputation policy.');
+  }
+ }
+});
+
+$("#return_date").change(function () {
+
+var startDate1 = $('#departure_date').val().split(' ');
+var sD= startDate1[0].split('-');
+var startDate = sD[1]+'-'+sD[0]+'-'+sD[2]+' '+startDate1[1]+':00';
+var b= new Date(startDate);
+if($('#return_date').val()!='')
+ {
+  var endDate1 = $('#return_date').val().split(' ');
+  var eD= endDate1[0].split('-');
+  var endDate = eD[1]+'-'+eD[0]+'-'+eD[2]+' '+endDate1[1]+':00';
+  var a= new Date(endDate);
+  if(Date.parse(a)==Date.parse(b))
+   {
+	alert("Departure date and Return date should not be same.");
+	$('#return_date').val('');
+   }
+  else
+   {
+    if((Date.parse(a) < Date.parse(b)))
+     {
+	  alert("Return date should be greater than Departure Date");
+	  $('#return_date').val('');
+     }
+   }
+  var diff = new Date(a - b);
+  var days = diff/1000/60/60/24;
+  var dayDiff= parseInt(days);
+  if(dayDiff>15)
+  {
+   alert('Your travel will be treated as deputation and expense will be covered under the business travel deputation policy.');
+  }
+ }
+});
+								
+								
+								
                                 $('.form_datetime').datetimepicker({
                                     weekStart: 1,
                                     todayBtn: 1,

@@ -508,16 +508,6 @@ if($('#return_date').val()!='')
 });
 
 
-
-
-
-
-
-
-
-
-
-
 $("#travel_reason_id").change(function(){check_hangout_suggestion();});
 
 function check_hangout_suggestion() {

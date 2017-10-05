@@ -314,27 +314,16 @@ echo $dep_date->format(DATE_FORMAT) . " to " . $ret_date->format(DATE_FORMAT);
 $dep_date = new DateTime($request['departure_date']);
 echo $dep_date->format(DATE_FORMAT);
 }
-?>
-</p>
-</div>
-</div>
-</div>
-<div class="col-md-12">
-<div class="form-group">
+?></p></div></div></div>
+
+<div class="col-md-12"><div class="form-group">
 <div class="col-md-5 col-xs-5 ">
-<p class="text-left-imp">Travel Reason:</p>    
-</div>
-<div class="col-md-7 col-xs-7">
-<p class="text-left-imp">
-<?php echo $request['reason']; ?>
-</p>
-</div>
-</div>
-</div>
-<!--/span-->
-</div>
+<p class="text-left-imp">Travel Reason:</p></div>
+<div class="col-md-7 col-xs-7"><p class="text-left-imp">
+<?php if(isset($request['reason']) and $request['reason']!=''){ echo $request['reason']; }else{ echo 'Project'; } ?></p>
+</div></div></div></div>
+
 <div class="row">
-<!--/span-->
 <div class="col-md-12">
 <div class="form-group">
 <div class="col-md-5 col-xs-5 ">

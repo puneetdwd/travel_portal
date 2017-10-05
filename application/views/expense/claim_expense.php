@@ -140,7 +140,7 @@ if (!empty($expense_details))
 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 <h4 class="modal-title">Clarification Comment</h4></div>
 <div class="modal-body"><?php
-if (!empty($expense_details))
+if(!empty($expense_details))
  {
   echo $expense_details['clarification_comment'];
  }
@@ -1543,7 +1543,7 @@ for(var i = 2; i < other_load_row; i++)
 	 if(error_con_show == 0)
 	  {
 	   $("#error_msg").text("You are eligible for Conveyance ₨ " + con_limit + " ");
-	   alert("You are eligible for Conveyance ₨ " + con_limit + " ");
+	   //alert("You are eligible for Conveyance ₨ " + con_limit + " ");
 	   //$("#error_popup").modal('show');// here is the problem
 	   $("#error_con_show").val("1");
 	  }
@@ -2098,7 +2098,7 @@ if (con_allow != "1") {
 if (other_con_total > con_limit) {
 if (error_con_show == 0) {
 $("#error_msg").text("You are eligible for Conveyance ₨ " + con_limit + " ");
-alert("You are eligible for Conveyance ₨ " + con_limit + " ");
+//alert("You are eligible for Conveyance ₨ " + con_limit + " ");
 //$("#error_popup").modal();
 $("#error_con_show").val("1");
 }
