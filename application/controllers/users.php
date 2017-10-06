@@ -8,7 +8,7 @@ class Users extends CI_Controller {
     public function __construct() {
         parent::__construct(true);
 
-//render template
+        //render template
         $header_data = array(
             'page' => 'masters',
             'sub' => 'users'
@@ -17,7 +17,7 @@ class Users extends CI_Controller {
         $this->template->write_view('header', 'templates/header', $header_data);
         $this->template->write_view('footer', 'templates/footer');
     }
-    
+
     public function index() {
         $this->is_logged_in();
         $this->is_user_admin();
@@ -79,247 +79,80 @@ class Users extends CI_Controller {
         $this->template->write_view('content', 'users/add_user', $view_data);
         $this->template->render();
     }
-    
+
     public function login() {
-        if ($this->session->userdata('username')) {
-            redirect(base_url() . 'dashboard');
-        }
+
+//        if ($this->session->userdata('username')) {
+//            redirect(base_url() . 'dashboard');
+//        }
 
         $data = array();
         if ($this->input->post()) {
 
-            $uid = $_REQUEST['username'];
-            $pwd = $_REQUEST['password'];
-            $ldap_host = "10.51.82.51"; //final IP conform by Abhishekji 
-//            $ldap_host = "10.51.82.50";
-//            $ldap_host = "10.51.6.1";
-            $ldap = ldap_connect($ldap_host);
-            if ($bind = @ldap_bind($ldap, "dbgroup\\" . $uid, $pwd)) {
-// authenticated
-                ldap_unbind($ldap);
+//            $uid = $_REQUEST['username'];
+//            $pwd = $_REQUEST['password'];
+//            $ldap_host = "10.51.82.51"; //final IP conform by Abhishekji 
+////            $ldap_host = "10.51.82.50";
+////            $ldap_host = "10.51.6.1";
+//            $ldap = ldap_connect($ldap_host);
+//            if ($bind = @ldap_bind($ldap, "dbgroup\\" . $uid, $pwd)) {
+//                // authenticated
+//                ldap_unbind($ldap);
+            $post_data = $this->input->post();
+            $this->load->model('User_model');
+            $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
+            if (!empty($psfim_data)) {
 
-                $post_data = $this->input->post();
-                $this->load->model('User_model');
-                $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
-
-                if (!empty($psfim_data)) {
-                    
-                    $output = $this->User_model->check_login($post_data['username'], $post_data['password']);
-                   
-                    if (!empty($output)) {
-                         
-                        if ($output['STATUS'] == 'Success') {
-                            $data = $this->update_employee($post_data['username']);
-                            if (isset($data['status'])) {
-                                if ($data['status'] == "0") {
-                                    $msg = $data['msg'];
-                                    $data['error'] = $msg;
-                                    $this->session->sess_destroy();
-                                    $this->session->set_flashdata('error', "Invalid Username");
-                                } else {
-                                    redirect(base_url() . 'dashboard');
-                                }
-                            } else {
-                                redirect(base_url() . 'dashboard');
-                            }
+                $output = $this->User_model->check_login($post_data['username'], $post_data['password']);
+                
+                if (!empty($output)) {
+                    if ($output['STATUS'] == 'Success') {
+                        redirect(base_url() . 'dashboard');
+                        $user = $output['data'];
+//                        $this->update_employee($post_data['username']);
+                        $employee_sql = "SELECT * FROM employees e  
+                        WHERE e.id = ?";
+                        $employee = $this->db->query($employee_sql, array($user['employee_id']))->row_array();
+                        if (empty($employee)) {
+//                session_destroy();
+                            $this->session->sess_destroy();
+//                $session = array(
+//                    'employee_id' => $user['employee_id'],
+//                    'name' => $user['first_name'] . " " . $user['last_name'],
+//                );
+//                $this->session->set_userdata($session);
+                            redirect(base_url() . 'employee_update/edit/' . $user['employee_id']);
                         } else {
-                            $data['error'] = $output['MSG'];
+                            redirect(base_url() . 'dashboard');
                         }
                     } else {
-//code for update employee profile 
-                        $this->add_new_employee($post_data['username']);
+                        $data['error'] = $output['MSG'];
                     }
                 } else {
-                    $data['error'] = $output['MSG'];
+                    //code for update employee profile 
+                    $this->add_new_employee($post_data['username']);
                 }
-//write code for further process
             } else {
-// invalid name or password
-                ldap_unbind($ldap);
-                $data['error'] = "invalid name or password";
-//return false;
-//write code for authentication fail process
-//                exit;
+                $data['error'] = $output['MSG'];
             }
-//authenticate($uid,$pwd);
-            ob_end_flush();
+
+
+
+            //write code for further process
+//                exit;
+//            } else {
+//                // invalid name or password
+//                ldap_unbind($ldap);
+//                $data['error'] = "invalid name or password";
+//                //return false;
+//                //write code for authentication fail process
+////                exit;
+//            }
+//            //authenticate($uid,$pwd);
+//            ob_end_flush();
         }
 
         $this->load->view('login2', $data);
-    }
-
-    function add_new_employee($username = "") {
-        
-        $post_data = $this->input->post();
-        $this->load->model('User_model');
-
-
-        $sql = "SELECT * FROM grades";
-        $user = $this->db->query($sql);
-        $grade_array = $user->result_array();
-
-        $grade_data = array();
-        foreach ($grade_array as $key => $value) {
-            $grade_data[$value['grade_name']] = $value['id'];
-        }
-
-        $sql = "SELECT * FROM designations";
-        $user = $this->db->query($sql);
-        $desg_array = $user->result_array();
-        $desg_data = array();
-        foreach ($desg_array as $key => $value) {
-            $desg_data[strtolower($value['desg_name'])] = $value['id'];
-        }
-
-        $sql = "SELECT * FROM departments";
-        $user = $this->db->query($sql);
-        $dept_array = $user->result_array();
-        $dept_data = array();
-        foreach ($dept_array as $key => $value) {
-            $dept_data[strtolower($value['dept_name'])] = $value['id'];
-        }
-
-        $sql = "SELECT * FROM indian_cities";
-        $user = $this->db->query($sql);
-        $city_array = $user->result_array();
-        $city_data = array();
-        $city_data1 = array();
-        foreach ($city_array as $key => $value) {
-            $city_data[strtolower($value['name'])] = $value['cost_center_id'];
-            $city_data1[strtolower($value['name'])] = $value['id'];
-        }
-        
-        $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
-        $value = $psfim_data['data'];
-        $value['employee_id'] = $value['EMPLID'];
-           
-        
-        if ($value['STEP'] == " " || $value['STEP'] == "" || $value['STEP'] == NULL) {
-            $GRADE = $value['GRADE'];
-        } else {
-            $GRADE = $value['GRADE'] . "/" . $value['STEP'];
-        }
-
-        $designation = strtolower($value['DESCR6']);
-        $department = strtolower($value['Z_PRNTDEPT_DESCR']);
-
-        $city = strtolower($value['CITY']);
-        $cost_center = strtolower($value['DESCR4']);
-        
-        if (!isset($grade_data[$GRADE])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Grade!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($value['employee_id'])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Record!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($desg_data[$designation])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Designation!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($dept_data[$department])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Department!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($city_data1[$city])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid City!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($city_data[$city])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Cost Center!, Please contact Administrator";
-            return $data;
-        }
-
-        $grade_id = $grade_data[$GRADE];
-        $desg_id = $desg_data[strtolower($designation)];
-        $dept_id = $dept_data[strtolower($department)];
-
-        $cost_center_id = $city_data[strtolower($city)];
-        $city_id = $city_data1[strtolower($city)];
-
-        $sql = "SELECT * FROM employees WHERE id = " . $value['employee_id'];
-        $user = $this->db->query($sql);
-        $user = $user->result_array();
-        if ($value['employee_id'] != '' && $desg_id != '' && $dept_id != '' && $cost_center_id != '') {
-            $employee = array(
-                "id" => $value['employee_id'],
-                "grade_id" => $grade_id,
-                "empID" => $value['employee_id'],
-                "employee_id" => $value['employee_id'],
-                "gi_email" => $value['EMAIL_ADDR'],
-                "designation_id" => $desg_id,
-                "dept_id" => $dept_id,
-                "cost_center_id" => $cost_center_id,
-                "city_id" => $city_id,
-                "reporting_manager_id" => $value['SUPERVISOR_ID'],
-                "ea_manager_id" => "0",
-                "reporting_person_id" => $value['SUPERVISOR_ID'],
-                "location" => "",
-                "father_name" => "",
-                "gender" => "Male",
-                "blood_group" => "",
-                "dob" => date('Y-m-d', strtotime($value['BIRTHDATE'])),
-                "phone" => $value['PHONE1'],
-                "emergency_phone" => "",
-                "emergency_phone2" => "",
-                "email" => $value['EMAIL_ADDR'],
-                "l_address1" => "",
-                "l_address2" => "",
-                "l_city" => $value['CITY'],
-                "l_state" => $value['STATE'],
-                "l_post_code" => $value['POSTAL'],
-                "l_country" => $value['COUNTRY'],
-                "p_address1" => $value['ADDRESS1'],
-                "p_address2" => $value['ADDRESS2'],
-                "p_city" => $value['CITY'],
-                "p_state" => $value['STATE'],
-                "p_post_code" => $value['POSTAL'],
-                "p_country" => $value['COUNTRY'],
-                "pan" => "",
-                "bank_name" => "",
-                "bank_account_number" => "",
-                "bank_account_name" => "",
-                "bank_ifsc" => "",
-                "bank_address" => "",
-                "bank_address" => "active",
-                "image" => "",
-                "created" => date("Y-m-d H:i:s"),
-                "modified" => date("Y-m-d H:i:s"),
-                "status_modified" => date("Y-m-d H:i:s"),
-            );
-            $value['is_active'] = "active";
-
-            $result = $this->db->insert('employees', $employee);
-            $value['email'] = $value['EMAIL_ADDR'];
-            $value['is_active'] = "1";
-            $value['username'] = $value['alias'];
-            unset($value['EMPLID']);
-            unset($value['EMAIL_ADDR']);
-            unset($value['alias']);
-            unset($value['gender']);
-            unset($value['dashboardrole']);
-            $result = $this->db->insert('users', $value);
-            $this->login();
-            $data['status'] = "1";
-            $data['msg'] = "";
-            return $data;
-        } else {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid record";
-            return $data;
-        }
     }
 
     function update_employee($username = "") {
@@ -357,73 +190,27 @@ class Users extends CI_Controller {
         $user = $this->db->query($sql);
         $city_array = $user->result_array();
         $city_data = array();
-        $city_data1 = array();
         foreach ($city_array as $key => $value) {
             $city_data[strtolower($value['name'])] = $value['cost_center_id'];
-            $city_data1[strtolower($value['name'])] = $value['id'];
         }
 
         $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
         $value = $psfim_data['data'];
         $value['employee_id'] = $value['EMPLID'];
+        $user_update = array();
+        $user_update['employees_id'] = $value['employee_id'];
+        $user_update['roles_id'] = "1";
+        $this->common->insert_data($user_update, 'employees_role');
 
-
-//        $value['DESCR4'] = "sangudfghwdjhdskfdgfj";
-
-        if ($value['STEP'] == " " || $value['STEP'] == "" || $value['STEP'] == NULL) {
-            $GRADE = $value['GRADE'];
-        } else {
-            $GRADE = $value['GRADE'] . "/" . $value['STEP'];
-        }
+        $GRADE = $value['GRADE'];
         $designation = strtolower($value['DESCR6']);
         $department = strtolower($value['Z_PRNTDEPT_DESCR']);
-
-        $city = strtolower($value['CITY']);
         $cost_center = strtolower($value['DESCR4']);
-
-        if (!isset($grade_data[$GRADE])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Grade!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($value['employee_id'])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Record!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($desg_data[$designation])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Designation!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($dept_data[$department])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Department!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($city_data1[$city])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid City!, Please contact Administrator";
-            return $data;
-        }
-
-        if (!isset($city_data[$city])) {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid Cost Center!, Please contact Administrator";
-            return $data;
-        }
 
         $grade_id = $grade_data[$GRADE];
         $desg_id = $desg_data[$designation];
         $dept_id = $dept_data[$department];
-
-        $city_id = $city_data1[$city];
-        $cost_center_id = $city_data[$city];
-
+        $cost_center_id = $city_data[$cost_center];
         $sql = "SELECT * FROM employees WHERE id = " . $value['employee_id'];
         $user = $this->db->query($sql);
         $user = $user->result_array();
@@ -437,9 +224,9 @@ class Users extends CI_Controller {
                 "designation_id" => $desg_id,
                 "dept_id" => $dept_id,
                 "cost_center_id" => $cost_center_id,
-                "city_id" => $city_id,
+                "city_id" => $cost_center_id,
                 "reporting_manager_id" => $value['SUPERVISOR_ID'],
-//                "ea_manager_id" => "0",
+                "ea_manager_id" => "0",
                 "reporting_person_id" => $value['SUPERVISOR_ID'],
                 "location" => "",
                 "father_name" => "",
@@ -470,8 +257,9 @@ class Users extends CI_Controller {
                 "bank_address" => "",
                 "bank_address" => "active",
                 "image" => "",
-                "modified" => date("Y-m-d H:i:s"),
-                "status_modified" => date("Y-m-d H:i:s"),
+                "created" => "",
+                "modified" => "",
+                "status_modified" => "",
             );
             $value['is_active'] = "active";
 
@@ -484,19 +272,131 @@ class Users extends CI_Controller {
             unset($value['EMPLID']);
             unset($value['EMAIL_ADDR']);
             unset($value['alias']);
-            unset($value['dashboardrole']);
             unset($value['gender']);
 
             $this->db->where('employee_id', $value['employee_id']);
             $result = $this->db->update('users', $value);
-            $data['status'] = "1";
-            $data['msg'] = "";
-            return $data;
         } else {
-            $data['status'] = "0";
-            $data['msg'] = "Invalid record";
-            return $data;
+            $data['error'] = "Invalid record";
         }
+    }
+
+    function add_new_employee($username = "") {
+
+        $post_data = $this->input->post();
+        $this->load->model('User_model');
+
+
+        $sql = "SELECT * FROM grades";
+        $user = $this->db->query($sql);
+        $grade_array = $user->result_array();
+
+        $grade_data = array();
+        foreach ($grade_array as $key => $value) {
+            $grade_data[$value['grade_name']] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM designations";
+        $user = $this->db->query($sql);
+        $desg_array = $user->result_array();
+        $desg_data = array();
+        foreach ($desg_array as $key => $value) {
+            $desg_data[strtolower($value['desg_name'])] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM departments";
+        $user = $this->db->query($sql);
+        $dept_array = $user->result_array();
+        $dept_data = array();
+        foreach ($dept_array as $key => $value) {
+            $dept_data[strtolower($value['dept_name'])] = $value['id'];
+        }
+
+        $sql = "SELECT * FROM indian_cities";
+        $user = $this->db->query($sql);
+        $city_array = $user->result_array();
+        $city_data = array();
+        foreach ($city_array as $key => $value) {
+            $city_data[strtolower($value['name'])] = $value['cost_center_id'];
+        }
+
+        $psfim_data = $this->User_model->check_login_psfim($post_data['username'], $post_data['password']);
+        $value = $psfim_data['data'];
+        $value['employee_id'] = $value['EMPLID'];
+        $user_update = array();
+        $user_update['employees_id'] = $value['employee_id'];
+        $user_update['roles_id'] = "1";
+        $this->common->insert_data($user_update, 'employees_role');
+        $GRADE = $value['GRADE'];
+        $designation = strtolower($value['DESCR6']);
+        $department = strtolower($value['Z_PRNTDEPT_DESCR']);
+        $cost_center = $value['DESCR4'];
+
+        $grade_id = $grade_data[$GRADE];
+        $desg_id = $desg_data[strtolower($designation)];
+        $dept_id = $dept_data[strtolower($department)];
+        $cost_center_id = $city_data[strtolower($cost_center)];
+        $sql = "SELECT * FROM employees WHERE id = " . $value['employee_id'];
+        $user = $this->db->query($sql);
+        $user = $user->result_array();
+//        po($value);
+        $employee = array(
+            "id" => $value['employee_id'],
+            "grade_id" => $grade_id,
+            "empID" => $value['employee_id'],
+            "employee_id" => $value['employee_id'],
+            "gi_email" => $value['EMAIL_ADDR'],
+            "designation_id" => $desg_id,
+            "dept_id" => $dept_id,
+            "cost_center_id" => $cost_center_id,
+            "city_id" => $cost_center_id,
+            "reporting_manager_id" => $value['SUPERVISOR_ID'],
+            "ea_manager_id" => "0",
+            "reporting_person_id" => $value['SUPERVISOR_ID'],
+            "location" => "",
+            "father_name" => "",
+            "gender" => "Male",
+            "blood_group" => "",
+            "dob" => date('Y-m-d', strtotime($value['BIRTHDATE'])),
+            "phone" => $value['PHONE1'],
+            "emergency_phone" => "",
+            "emergency_phone2" => "",
+            "email" => $value['EMAIL_ADDR'],
+            "l_address1" => "",
+            "l_address2" => "",
+            "l_city" => $value['CITY'],
+            "l_state" => $value['STATE'],
+            "l_post_code" => $value['POSTAL'],
+            "l_country" => $value['COUNTRY'],
+            "p_address1" => $value['ADDRESS1'],
+            "p_address2" => $value['ADDRESS2'],
+            "p_city" => $value['CITY'],
+            "p_state" => $value['STATE'],
+            "p_post_code" => $value['POSTAL'],
+            "p_country" => $value['COUNTRY'],
+            "pan" => "",
+            "bank_name" => "",
+            "bank_account_number" => "",
+            "bank_account_name" => "",
+            "bank_ifsc" => "",
+            "bank_address" => "",
+            "bank_address" => "active",
+            "image" => "",
+            "created" => "",
+            "modified" => "",
+            "status_modified" => "",
+        );
+        $value['is_active'] = "active";
+
+        $result = $this->db->insert('employees', $employee);
+        $value['email'] = $value['EMAIL_ADDR'];
+        $value['is_active'] = "1";
+        $value['username'] = $value['alias'];
+        unset($value['EMPLID']);
+        unset($value['EMAIL_ADDR']);
+        unset($value['alias']);
+        $result = $this->db->insert('users', $value);
+        $this->login();
     }
 
     public function logout() {

@@ -446,7 +446,7 @@ class Travel_request_model extends CI_Model {
                 . "LEFT JOIN expense x ON x.request_id = t.id "
                 . "LEFT JOIN users u ON u.employee_id = t.employee_id "
                 . "LEFT JOIN travel_policy tp ON tp.service_type = t.travel_type and tp.grade_id = e.grade_id "
-                . " WHERE t.status = 'active' and x.expense_status = 'Pending' and t.request_status ='5' and t.reporting_manager_id=" . $employee_id . " ";
+                . " WHERE t.status = 'active' and merge_expense != '1' and x.expense_status = 'Pending' and t.request_status ='5' and t.reporting_manager_id=" . $employee_id . " ";
 //                . " WHERE t.status = 'active' and x.expense_status = 'Pending' and t.request_status ='5' and t.reporting_manager_id=" . $employee_id . " GROUP BY t.id";
 
         $result = $this->db->query($sql);
@@ -687,6 +687,14 @@ class Travel_request_model extends CI_Model {
         $sql = "select id,expense_name from " . $TableName . " where status='active';";
         $result = $this->db->query($sql);
         return $result->result_array();
+    } 
+    
+    public function get_all_merge_expense_pending_for_manager($employee_id) {
+        $sql = "SELECT t.*,e.employee_id as emp_id,CONCAT(u.first_name,' ',u.last_name) as requested_name from merge_expense t "
+                . "LEFT JOIN employees e ON e.id = t.employee_id "
+                . "LEFT JOIN users u ON u.employee_id = t.employee_id "
+                . " WHERE t.status = 'active' and t.expense_status = 'Pending' and t.request_status ='5' and t.reporting_manager_id=" . $employee_id . " ";
+        $result = $this->db->query($sql);
+        return $result->result_array();
     }
-
 }

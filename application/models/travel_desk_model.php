@@ -276,6 +276,44 @@ class Travel_desk_model extends CI_Model {
         return $result->result_array();
     }
     
+    /* ---  Return --- */
+    public function get_flight_ticket_booking_return($request_id) {
+        $sql = "SELECT t.*,s.name as flight_provider_name,c.name as expense_location from flight_ticket_booking t "
+                . "LEFT JOIN service_proviers s ON s.id = t.flight_provider_id "
+                . "LEFT JOIN indian_cities c ON c.id = t.booking_city_id "
+                . " WHERE t.trip_mode !='1' and t.request_id = ?";
+        $result = $this->db->query($sql, array($request_id));
+        return $result->result_array();
+    }
+
+    public function get_train_ticket_booking_return($request_id) {
+        $sql = "SELECT t.*,s.name as train_provider_name,c.name as expense_location from train_ticket_booking t "
+                . "LEFT JOIN service_proviers s ON s.id = t.train_provider_id "
+                . "LEFT JOIN indian_cities c ON c.id = t.booking_city_id "
+                . " WHERE t.trip_mode !='1' and t.request_id = ?";
+        $result = $this->db->query($sql, array($request_id));
+        return $result->result_array();
+    }
+
+    public function get_car_ticket_booking_return($request_id) {
+        $sql = "SELECT t.*,s.name as car_provider_name,c.name as expense_location from car_ticket_booking t "
+                . "LEFT JOIN service_proviers s ON s.id = t.car_provider_id "
+                . "LEFT JOIN indian_cities c ON c.id = t.booking_city_id "
+                . " WHERE t.trip_mode !='1' and t.request_id = ?";
+        $result = $this->db->query($sql, array($request_id));
+        return $result->result_array();
+    }
+
+    public function get_bus_ticket_booking_return($request_id) {
+        $sql = "SELECT t.*,s.name as bus_provider_name,c.name as expense_location from bus_ticket_booking t "
+                . "LEFT JOIN service_proviers s ON s.id = t.bus_provider_id "
+                . "LEFT JOIN indian_cities c ON c.id = t.booking_city_id "
+                . " WHERE t.trip_mode !='1' and t.request_id = ?";
+        $result = $this->db->query($sql, array($request_id));
+        return $result->result_array();
+    }
+    /* ---  Return --- */
+    
     public function get_travel_category_id($id) {
         $sql = "SELECT * from travel_category WHERE id = ?";
         $result = $this->db->query($sql, array($id));

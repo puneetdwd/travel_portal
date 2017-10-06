@@ -17,22 +17,10 @@ class Dashboard extends Admin_Controller {
     }
 
     function test() {
-        
-//        $this->load->library('encryption');
-//        $this->encryption->initialize(array('driver' => 'mcrypt'));
-//        $this->encryption->initialize(array('driver' => 'openssl'));
-//        $plain_text = 'This is a plain-text message!';
-//        echo $ciphertext = $this->encryption->encrypt($plain_text);
-//        echo $this->encryption->decrypt($ciphertext);
-        
-//        $sql = "INSERT INTO `travel_portal`.`menu` (`id`, `menu_id`, `name`, `label`, `module`, `action`, `url`, `logo`, `is_active`, `is_visible`, `sort_order`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES (NULL, '5', 'Travel Policy', 'Travel Policy', 'finance_desk', 'travel_policy', 'finance_desk/travel_policy', '<i class="fa fa-rupee"></i>', '1', '1', NULL, NULL, NULL, NULL, NULL);";
-//        
-//        $sql = "INSERT INTO `menu` (`id`, `menu_id`, `name`, `label`, `module`, `action`, `url`, `logo`, `is_active`, `is_visible`, `sort_order`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES (NULL, '5', 'Travel Policy', 'Travel Policy', 'finance_desk', 'travel_policy', 'finance_desk/travel_policy', '', '1', '1', NULL, NULL, NULL, NULL, NULL);";
-//        $sql = "DROP TABLE `email_format`;";
-//        $result = $this->db->query($sql);
-        $sql = "SELECT * FROM `travel_portal`.`menu` WHERE `menu_id` LIKE '4'";
+         
+        $sql = "ALTER TABLE `merge_expense` CHANGE `policy_meet` `policy_meet` TINYINT(4) NULL;";
         $result = $this->db->query($sql);
-        $result->result_array();
+//        $result->result_array();  
         po($result);
         
         

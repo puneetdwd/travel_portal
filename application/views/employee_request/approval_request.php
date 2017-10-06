@@ -1,17 +1,19 @@
 <link href="<?php echo base_url('/assets/gauges'); ?>/jquery-gauge.css" type="text/css" rel="stylesheet">
-<div class="page-content"><div class="row hidden-xs" style="display:none">
+<div class="page-content"> 
+<div class="row hidden-xs" style="display:none">
 <div style="text-align:center;margin-top: 0px;" data-original-title="" title="">
 <!-- ngRepeat: state in arrStates track by $index -->
 <div ng-repeat="state in arrStates track by $index" style="display:inline-block;vertical-align:top" class="ng-scope" data-original-title="" title="">
-<div style="padding:10px;text-align:center;display:inline-block;width:100px;" data-original-title="" title=""><?php
-if ($request['request_status'] >= "1")
- {
-  ?><div style="width: 50px; height: 50px; color: white; padding: 17px; margin: 0px auto; border-radius: 50px !important; background-color: #27a4b0;" ng-style="$parent.getBackgroundColor($index)" class="ng-binding" data-original-title="" title="">✔</div><?php
- }
-else
- {
-  ?><div style="width: 50px; height: 50px; color: white; padding: 17px; margin: 0px auto; border-radius: 50px !important; background-color: rgb(209, 200, 201); border: 1px solid #27a4b0;" ng-style="$parent.getBackgroundColor($index)" class="ng-binding" data-original-title="" title=""></div><?php
- }
+<div style="padding:10px;text-align:center;display:inline-block;width:100px;" data-original-title="" title="">
+<?php if ($request['request_status'] >= "1") {
+?>
+<div style="width: 50px; height: 50px; color: white; padding: 17px; margin: 0px auto; border-radius: 50px !important; background-color: #27a4b0;" ng-style="$parent.getBackgroundColor($index)" class="ng-binding" data-original-title="" title="">✔</div>
+<?php
+} else {
+?>
+<div style="width: 50px; height: 50px; color: white; padding: 17px; margin: 0px auto; border-radius: 50px !important; background-color: rgb(209, 200, 201); border: 1px solid #27a4b0;" ng-style="$parent.getBackgroundColor($index)" class="ng-binding" data-original-title="" title=""></div>
+<?php
+}
 ?><span class="ng-binding">Travel Request</span></div>
 <!-- ngIf: $index!=arrStates.length-1 -->
 <div style="display:inline-block;height:70px;vertical-align:top" ng-if="$index != arrStates.length - 1" class="ng-scope" data-original-title="" title="">
@@ -321,40 +323,138 @@ echo $dep_date->format(DATE_FORMAT);
 <?php if(isset($request['reason']) and $request['reason']!=''){ echo $request['reason']; }else{ echo 'Project'; } ?></p>
 </div></div></div></div>
 
-<div class="row"><div class="col-md-12"><div class="form-group">
-<div class="col-md-5 col-xs-5"><p class="text-left-imp">Travel Class:</p></div>
-<div class="col-md-7 col-xs-7"><p class="text-left-imp">
-<?php echo $request['travel_class']; ?></p></div></div></div>
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<div class="col-md-5 col-xs-5 ">
+<p class="text-left-imp">Travel Class:</p>    
+</div>
+<div class="col-md-7 col-xs-7">
+<p class="text-left-imp">
+<?php echo $request['travel_class']; ?>
+</p>
+</div>
+</div>
+</div>
 
-<div class="col-md-12"><div class="form-group"><div class="col-md-5 col-xs-5">
-<p class="text-left-imp">Comments:</p></div><div class="col-md-7 col-xs-7">
-<p class="text-left-imp"><?php echo $request['comment']; ?></p></div></div></div></div></div>
-
+<div class="col-md-12">
+<div class="form-group">
+<div class="col-md-5 col-xs-5 ">
+<p class="text-left-imp">Comments:</p>    
+</div>
+<div class="col-md-7 col-xs-7">
+<p class="text-left-imp">
+<?php echo $request['comment']; ?>
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div class="col-md-4 portlet light borderLight padding-mob custom-height-app">
-<h4 class="form-section"><spam class="cutm_lbl btn_blue">Allowances</spam></h4>
-<div class="row"><table class="table table-bordered"><thead>
-<tr><th>Expense Type</th><th>Eligibility</th><th>Requested</th></tr></thead>
-<tbody><tr><td>Travel Mode/Class</td>
-<td><?phpif($sel_traverl_class != ''){echo $travel_mode . "/" . $sel_traverl_class;}else{echo $travel_mode;}?></td>
-<td><?php echo $travel_mode . "/" . $request['travel_class']; ?></td></tr>
-<tr><td>D.A.</td><td><?php echo $DA_allowance; ?></td>
-<td><?php if($request['DA_allowance_actual']!=1){echo $request['DA_allowance'];} else{echo "Actual";}?></td></tr>
-<tr><td>Hotel</td><td><?php echo $hotel_allowance; ?></td>
-<td><?php if($request['hotel_allowance_actual']!=1){echo $request['hotel_allowance'];}else{echo "Actual";}?></td></tr>
-<tr><td>Conveyance</td><td><?php echo $convince_allowance; ?></td>
-<td><?php if($request['convince_allowance_actual'] != 1){echo $request['convince_allowance'];}else{echo "Actual";}?></td></tr>
-</tbody></table></div></div>
-
+<h4 class="form-section">
+<spam class="cutm_lbl btn_blue">
+Allowances
+</spam>
+</h4>
+<div class="row">
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>Expense Type</th>
+<th>Eligibility</th>
+<th>Requested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Travel Mode/Class</td>
+<td><?php
+if ($sel_traverl_class != '') {
+echo $travel_mode . "/" . $sel_traverl_class;
+} else {
+echo $travel_mode;
+}
+?></td>
+<td><?php echo $travel_mode . "/" . $request['travel_class']; ?></td>
+</tr>
+<tr>
+<td>D.A.</td>
+<td><?php echo $DA_allowance; ?></td>
+<td><?php
+if ($request['DA_allowance_actual'] != 1) {
+echo $request['DA_allowance'];
+} else {
+echo "Actual";
+}
+?></td>
+</tr>
+<tr>
+<td>Hotel</td>
+<td><?php echo $hotel_allowance; ?></td>
+<td><?php
+if ($request['hotel_allowance_actual'] != 1) {
+echo $request['hotel_allowance'];
+} else {
+echo "Actual";
+}
+?></td>
+</tr>
+<tr>
+<td>Conveyance</td>
+<td><?php echo $convince_allowance; ?></td>
+<td><?php
+if ($request['convince_allowance_actual'] != 1) {
+echo $request['convince_allowance'];
+} else {
+echo "Actual";
+}
+?></td>
+</tr>
+</tbody>
+</table>                                        
+</div>
+</div>
 <div class="col-md-5 portlet light bordered padding-mob custom-height-app">
-<h4 class="form-section"><spam class="cutm_lbl btn_blue">Travel Budget</spam></h4>
-<div class="row"><div class="col-md-4"><div class="form-group"><div class="col-md-5 col-xs-5 ">
-<p class="text-left-imp">Total Budget:</p></div><div class="col-md-7 col-xs-7">
-<p class="text-left-imp"><?php if(isset($budget['budget'])){echo number_format($budget['budget'], 2);}?></p></div></div></div>
-
-<div class="col-md-4"><div class="form-group"><div class="col-md-5 col-xs-5 ">
-<p class="text-left-imp">Spend:</p></div><div class="col-md-7 col-xs-7">
-<p class="text-left-imp"><?php if(isset($budget['remain_budget']) && isset($budget['budget'])){$spend = $budget['budget'] - $budget['remain_budget'];echo number_format($spend, 2);}?></p></div></div></div>
-
+<h4 class="form-section">
+<spam class="cutm_lbl btn_blue">
+Travel Budget
+</spam>
+</h4>
+<div class="row">                                    
+<div class="col-md-4">
+<div class="form-group">
+<div class="col-md-5 col-xs-5 ">
+<p class="text-left-imp">Total Budget:</p>    
+</div>
+<div class="col-md-7 col-xs-7">
+<p class="text-left-imp">
+<?php
+if (isset($budget['budget'])) {
+echo number_format($budget['budget'], 2);
+}
+?>
+</p>
+</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="form-group">
+<div class="col-md-5 col-xs-5 ">
+<p class="text-left-imp">Spend:</p>    
+</div>
+<div class="col-md-7 col-xs-7">
+<p class="text-left-imp">
+<?php
+if (isset($budget['remain_budget']) && isset($budget['budget'])) {
+$spend = $budget['budget'] - $budget['remain_budget'];
+echo number_format($spend, 2);
+}
+?>
+</p>
+</div>
+</div>
+</div>
 <div class="col-md-4">
 <div class="form-group">
 <div class="col-md-5 col-xs-5 ">

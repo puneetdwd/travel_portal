@@ -115,6 +115,9 @@ function find_DA_rows($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:
   return $allDatesWithMutiplicationFactor;
  }
 
+$OwnExpenses= array();
+$expensesByCompany= array();
+
 ?><div class="page-content"><div class="header text-center">
 <h3>DB Corp Ltd.,<?php echo $employee['city_name'] ?></h3></div>
 <div class="row margin-mob-zero"><div class="col-md-12">
@@ -273,6 +276,9 @@ $value_cost= $value['cost']+$value['tax']+$value['agency_cost'];
 $total = $total + $value_cost;
 echo $value_cost;
 
+if($value['arrange_by']=='Own'){$OwnExpenses[]=$value_cost;}
+if($value['arrange_by']=='Company'){$expensesByCompany[]=$value_cost;}
+
 ?></td></tr><?php
 }
 foreach ($other_trip_expense as $key => $value) {
@@ -332,10 +338,13 @@ $view++;
 <td width="15%"></td>
 <td width="15%"></td>
 
-<td width="15%"><?php $total = $total + $value['total']; echo $value['total']; ?></td>
-</tr>
-<?php } ?>
-</tbody>
+<td width="15%"><?php $total = $total + $value['total']; echo $value['total']; ?></td></tr><?php
+
+if($value['trip_arrange_by']=='Own'){$OwnExpenses[]=$value['total'];}
+if($value['trip_arrange_by']=='Company'){$expensesByCompany[]=$value['total'];}
+
+}
+?></tbody>
 <tfoot>
 <tr>
 <td colspan="10"></td>
@@ -405,13 +414,19 @@ if($GH_Act>0 and is_numeric($GH_Act) and $perdayCostOfHotel1>$GH_Act){$trClassHo
 <td><?php echo $value['arrange_by'] ?></td>
 <td><?php echo $value['loading_expense_1'] ?></td>
 <td><?php echo $value['other_expense_1'] ?></td>
-<td width="15%"><?php $tot=$value['loading_expense_1']+$value['other_expense_1'];
-//$total1 = $total1 + $value['cost'];
-$total1 = $total1 + $tot;
-echo $tot;
-//echo $value['cost'];
-?><!--<input type="text" id="total" value="<?php echo $value['cost']; ?>" class="form-control">-->
-</td></tr><?php }
+<td width="15%"><?php
+
+$total_loading = $value['cost'] + $value['loading_expense_1'] + $value['other_expense_1'];
+$total1 = $total1 + $total_loading;
+echo $total_loading;
+
+?></td></tr><?php
+
+if($value['arrange_by']=='Own'){$OwnExpenses[]=$total_loading;}
+if($value['arrange_by']=='Company'){$expensesByCompany[]=$total_loading;}
+
+}
+
 foreach ($other_loading_booking as $key => $value) {
 
 $total_loading = $value['loading_total'] + $value['loading_expense'] + $value['other_expense'];
@@ -462,6 +477,10 @@ $view++;
 <td><?php echo $value['loading_expense'] ?></td>
 <td><?php echo $value['other_expense'] ?></td>
 <td width="15%"><?php echo $total_loading; ?></td></tr><?php
+
+if($value['arrange_by']=='Own'){$OwnExpenses[]=$total_loading;}
+if($value['arrange_by']=='Company'){$expensesByCompany[]=$total_loading;}
+
 }
 
 $eligible= $hotel_allowance * $day;
@@ -511,53 +530,75 @@ $d2= date(DATETIME_FORMAT, strtotime($request['return_date']));
 $allDates= find_DA_rows($d1, $d2, 'A', 'M');
 ?><table id="da_perticulars" class="table table-hover table-bordered text-center">
 <thead>
-<tr class="th_blue">
-<th>#</th>
-<th>Date</th>
-<th>City</th>
-<th>Class</th>
-<th>Term</th>
-<th>Duration</th>
-<th>DA/Day</th>
-<th>Amount</th>
-</tr>
+<tr class="th_blue"><th>#</th><th>Date</th><th>City</th><th>Class</th><th>Term</th><th>Duration</th>
+<th title="<?php if(isset($DA_50) and $DA_50>0){if($DA_50==3){ echo ' (Policy : DA is Not Admissible)'; $policy= ' (Not Admissible)'; }elseif($DA_50==1){ echo ' (Policy : Guest house with</br>food DA@50%)'; $policy= ' (DA@50%)'; }elseif($DA_50==2){ echo ' (Policy : Hotel with food DA@50%)'; $policy= ' (DA@50%)'; }} ?>">DA/day <?php echo $policy; ?></th>
+<th>Amount</th></tr>
 </thead>
 <tbody>
 <?php
 $i=1;
-$totRecordCount= count($allDates);
 $allAmounts= array();
-foreach($allDates as $key=>$val)
-{
- ?><tr><td><?php echo $i; ?></td>
- <td><?php echo $val['FROM'].'-to-'.$val['TO']; ?></td>
- <td><?php echo $request['to_city_name']; ?></td>
- <td><?php echo $request['to_city_class']; ?></td>
- <td><?php if($val['multiple']==1){ echo 'Full DA'; }elseif($val['multiple']==0.5){ echo '1/2 DA'; }elseif($val['multiple']==0){ echo 'N/A'; } ?></td>
- <td><?php echo $val['HRS'].' hrs'; ?></td>
- <td><?php
- if($request['DA_allowance_actual'] != '1')
-  {
-   echo $request['DA_allowance'];
-   $da_to_show= $request['DA_allowance'];
-  }
- else
-  {
-   ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance" onkeyup="received_total();" placeholder="DA/Per day" value="<?php
-   if(!empty($expense_details))
-    {
-	 echo $request['DA_allowance'];
-	 $da_to_show= $request['DA_allowance'];
-	}
-   else
-    {
-	 echo 0;
-	 $da_to_show= 0;
-	}?>"><?php
-  }
- ?></td><td><?php echo $da_to_show*$val['multiple']; $allAmounts[]=$da_to_show*$val['multiple']; ?></td></tr><?php
- $i++;
-}
+if(isset($existing_DA_Data) and count($existing_DA_Data)>0)
+ {
+  foreach($existing_DA_Data as $key=>$val)
+   {
+    $amnt= $val['amount'];
+	if($val['donate']==0){$allAmounts[]= $amnt;}
+	
+	if($request['DA_allowance_actual'] != '1')
+	 {
+      $to_add_sustract= $request['DA_allowance'];
+     }
+	else
+	 {
+	  if(!empty($expense_details))
+	   {
+		$to_add_sustract= $request['DA_allowance'];
+	   }
+      else
+	   {
+		$to_add_sustract= 0;
+	   }
+	 }
+	
+	if(isset($DA_50) and $DA_50>0)// if policy radio rules are applied
+	 {
+	  if($DA_50==3)
+	   {
+		$to_add_sustract= 0;
+	   }
+	  elseif($DA_50==1 or $DA_50==2)
+	   {
+		$to_add_sustract= $to_add_sustract/2;
+	   }
+     }
+	$fullDA_after_policy_1= $to_add_sustract;
+	$its_multiple= find_da_multiple($val['duration_in_hr']);
+	$to_add_sustract= $to_add_sustract*$its_multiple;
+	
+	?><tr><td title="If you do not want to claim this DA, please uncheck it.">
+	<input disabled class="da_cb" rel="<?php echo $to_add_sustract; ?>" rel2="<?php echo 'rec_'.$i; ?>" value="1" type="checkbox" name="<?php echo 'claim_this_'.$i; ?>" <?php if($val['donate']==0){ echo 'checked="checked"'; } ?> /><?php echo $val['serial']; ?><input type="hidden" value="<?php echo $val['serial']; ?>" name="da_claims_serial[]" readonly /></td>
+	<td><?php echo $val['date']; ?><input type="hidden" value="<?php echo $val['date']; ?>" name="da_claims_date[]" readonly /></td>
+	<td><?php echo $val['city']; ?><input type="hidden" value="<?php echo $val['city']; ?>" name="da_claims_city[]" readonly /></td>
+	<td><?php echo $val['class']; ?><input type="hidden" value="<?php echo $val['class']; ?>" name="da_claims_class[]" readonly /></td>
+	<td><?php echo $val['term']; ?><input type="hidden" value="<?php echo $val['term']; ?>" name="da_claims_term[]" readonly /></td>
+	<td><?php echo $val['duration_in_hr'].' hrs'; ?><input type="hidden" value="<?php echo $val['duration_in_hr']; ?>" name="da_claims_duration_in_hr[]" readonly /></td>
+	<td><?php
+	if($request['DA_allowance_actual'] != '1')
+	 {
+      echo $fullDA_after_policy_1;
+	  //echo $da_to_show;
+     }
+	else
+	 {
+	  ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance" onkeyup="received_total();" placeholder="DA/Per day" value="<?php echo $fullDA_after_policy_1; ?>"><?php
+	 }
+	?><input type="hidden" value="<?php echo $fullDA_after_policy_1; ?>" name="da_claims_da_per_day[]" readonly /></td>
+	<td><b id="<?php echo 'a_m_t_'.$i; ?>"><?php if($val['donate']==0) { echo $amnt; } else{ echo 0; } ?></b>
+	<input id="<?php echo 'tBox_a_m_t_'.$i; ?>" type="hidden" value="<?php if($val['donate']==0){ echo $amnt; } else{ echo 0; } ?>" name="da_claims_amount[]" readonly /></td></tr><?php
+	$i++;
+   }
+ }
 $t87=date_create($d1);
 $t88=date_create($d2);
 $diff=date_diff($t87,$t88);
@@ -623,54 +664,43 @@ echo "Auto";
 </td>
 <td width="15%">
 <?php $total3 = $total3 + $value['cost']; ?>
-<?php echo $value['cost']; ?>
-</td>
-</tr>
-<?php }
-foreach ($other_con_booking as $key => $value) {
-?>
-<tr>
-<td><?php echo $i++; ?></td>
-<td><?php echo date(DATETIME_FORMAT, strtotime($value['con_date'])) ?></td>
-<td><?php echo $value['con_from'] ?></td>
-<td><?php echo $value['con_to'] ?></td>
-<td><?php // echo $value['con_to']               ?></td>
-<td><?php echo $value['con_arrange_by'] ?></td>
-<td><?php
-if ($value['con_book_by'] == "1") {
-echo "Uber";
-} else if ($value['con_book_by'] == "2") {
-echo "Ola";
-} else if ($value['con_book_by'] == "3") {
-echo "Auto";
+<?php echo $value['cost']; ?></td></tr><?php
+
+if($value['arrange_by']=='Own'){$OwnExpenses[]=$value['cost'];}
+if($value['arrange_by']=='Company'){$expensesByCompany[]=$value['cost'];}
+
 }
-?></td>
-<td>
-<?php
-$view = 1;
-if (!empty($value['attachment'])) {
-$attachment = $value['attachment'];
-foreach ($attachment as $key => $val) {
-if ($val['file_name'] != '') {
-?>
-<a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>">
-<i class="fa fa-eye"></i> <?php
-echo "View" . $view;
-$view++;
-?> 
-</a><br>
-<?php
+foreach ($other_con_booking as $key => $value)
+ {
+  ?><tr><td><?php echo $i++; ?></td>
+  <td><?php echo date(DATETIME_FORMAT, strtotime($value['con_date'])) ?></td>
+  <td><?php echo $value['con_from'] ?></td>
+  <td><?php echo $value['con_to'] ?></td>
+  <td><?php // echo $value['con_to'] ?></td>
+  <td><?php echo $value['con_arrange_by'] ?></td>
+  <td><?php
+  if($value['con_book_by'] == "1"){echo "Uber";}
+  else if ($value['con_book_by'] == "2"){echo "Ola";}
+  else if ($value['con_book_by'] == "3") {echo "Auto";}
+  ?></td><td><?php
+  $view = 1;
+  if(!empty($value['attachment'])){
+  $attachment = $value['attachment'];
+  foreach ($attachment as $key=>$val){
+  if($val['file_name'] != '')
+   {
+    ?><a class="btn-link" target="_blank" href="<?php echo base_url() . $this->config->item('upload_booking_attch_path') . '/' . $val['file_name']; ?>"><i class="fa fa-eye"></i> <?php echo "View" . $view; $view++;?></a><br><?php
+   }
+   }
+  }
+ ?></td><td width="15%">
+ <?php $total3 = $total3 + $value['total']; ?>
+ <?php echo $value['total']; ?></td></tr><?php
+
+if($value['con_arrange_by']=='Own'){$OwnExpenses[]=$value['total'];}
+if($value['con_arrange_by']=='Company'){$expensesByCompany[]=$value['total'];}
+
 }
-}
-}
-?>
-</td>
-<td width="15%">
-<?php $total3 = $total3 + $value['total']; ?>
-<?php echo $value['total']; ?>
-</td>
-</tr>
-<?php }
 $styl2= '';
 if(isset($conELG) and $conELG<$total3){$styl2= 'style="color:red;"';}
 ?>
@@ -740,6 +770,7 @@ echo $request['to_city_name'] . " Travel Desk";
 <td>-</td>
 <td><?php
 echo $other_manager_expense_food;
+$expensesByCompany[]=$other_manager_expense_food;
 ?></td>
 </tr>
 <tr>
@@ -778,6 +809,7 @@ $total5 = $total5 + $other_manager_expense;
 </tr>
 <?php
 $i++;
+$expensesByCompany[]=$other_manager_expense_travel;
 }
 $other_total = 0;
 foreach ($other_expense as $key => $value) {
@@ -813,7 +845,12 @@ $view++;
 </td><td><?php echo $value['remarks'] ?></td>
 <td><?php echo $amount ?></td>
 </tr>
-<?php } ?>
+<?php
+
+if($value['arrange_by']=='Own'){$OwnExpenses[]=$amount;}
+if($value['arrange_by']=='Company'){$expensesByCompany[]=$amount;}
+
+} ?>
 </tbody>
 <tfoot>
 <tr>
@@ -828,52 +865,50 @@ $view++;
 </div>
 
 <?php
+$lbl_da_total = $da_total;
 if(isset($DA_50) and $DA_50>0)
  {
   if($DA_50==3)
    {
 	$lbl_da_total=0;
    }
-  elseif($DA_50==1 or $DA_50==2)
-   {
-	$lbl_da_total = $da_total/2;
-   }
- }
-else
- {
-  $lbl_da_total = $da_total;
  }
 ?>
 <div class="row"><div class="col-md-4 col-xs-12">
 <table class="table table-bordered"><tbody>
 <tr class="th_blue"><th>Expense Summary</th><th>INR(&#8377;)</th></tr>
-<tr><th>Trip Expense Total</th><th id="lbl_total_claim1">
-<?php echo $expense_pending['final_total_claim'] . '.00'; ?></th></tr>
+<tr><th>Trip Expense Total</th><th id="lbl_total_claim1"><?php
+echo $total_trip_ex= array_sum($expensesByCompany)+array_sum($OwnExpenses)+$lbl_da_total;
+//echo $expense_pending['final_total_claim'] . '.00';
+?></th></tr>
 
 <tr><th>Paid By Company</th><th id="lbl_total_claim_company"><?php
-$lbl_total_claim_company = $expense_pending['final_total_claim'] - $expense_pending['total_claim'] . '.00';
-echo $lbl_total_claim_company; ?></th></tr>
-
-<tr><th>Paid By Employee</th><th id="lbl_total_claim"><?php
-$lbl_total_claim = $expense_pending['total_claim'] - $lbl_da_total;
-//$lbl_total_claim = $expense_pending['total_claim'] - $da_total . '.00';
-echo $lbl_total_claim; ?></th></tr>
-
-<tr><th>D.A.<?php if(isset($DA_50) and $DA_50>0){if($DA_50==3){ echo ' (Policy : DA is Not Admissible)'; }elseif($DA_50==1){ echo ' (Policy : Guest house with</br>food DA@50%)'; }elseif($DA_50==2){ echo ' (Policy : Hotel with food DA@50%)'; }} ?></th>
-<th id="lbl_da_total"><?php
-echo $lbl_da_total;
-//$lbl_da_total = $da_total . '.00';
-//echo $lbl_da_total;
+echo $paid_by_comp= array_sum($expensesByCompany);
+//$lbl_total_claim_company = $expense_pending['final_total_claim'] - $expense_pending['total_claim'] . '.00';
+//echo $lbl_total_claim_company;
 ?></th></tr>
+
+<tr><th>Paid By Self</th><th id="lbl_total_claim"><?php
+echo $paid_by_self = array_sum($OwnExpenses);
+//$lbl_total_claim = $expense_pending['total_claim'] - $lbl_da_total;
+//$lbl_total_claim = $expense_pending['total_claim'] - $da_total . '.00';
+//echo $lbl_total_claim;
+?></th></tr>
+
+<tr><th>D.A.<?php echo $policy; ?></th>
+<th id="lbl_da_total"><?php echo $lbl_da_total; ?></th></tr>
 
 <tr style="display:none;"><th>Other Expense By Travel Desk</th><th><?php
 if(isset($other_manager_expense)){echo $other_manager_expense.'.00';}?></th></tr>
 
 <tr><th>Travel Advance</th><th class="col-md-3"><?php
-echo $expense_pending['less_advance'] . '.00'; ?></th></tr>
+echo $expense_pending['less_advance']; ?></th></tr>
 
 <tr><th><?php
-if($expense_pending['recevied_amount']>=0)
+
+$balan= $paid_by_self+$lbl_da_total-($expense_pending['less_advance']+$other_manager_expense_food+$other_manager_expense_travel);
+
+if($balan>=0)
  {
   ?>Pay to Employee<?php
  }
@@ -881,9 +916,9 @@ else
  {
   ?><span style="color:red;">Employee will pay to company</span><?php
  }
-?></th>
-<th id="your_recived"><?php echo $expense_pending['recevied_amount'].'.00';?></th>
-</tr></tbody></table></div><?php
+?></th><th id="your_recived"><?php
+echo $balan;
+?></th></tr></tbody></table></div><?php
 
 if($request['travel_type']=="1")
  {

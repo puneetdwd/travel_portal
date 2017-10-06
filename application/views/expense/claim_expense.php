@@ -1,61 +1,4 @@
 <?php
-function find_DA_rows_OLD_BACKUP($fromDate, $toDate, $cityGrade, $empGrade)//30-08-2017 06:00
- {
-  $allDatesWithMutiplicationFactor= array();
-  $Begin= explode(' ', $fromDate);
-  $Finish= explode(' ', $toDate);
-  $ff= $Begin[0];
-  $tt= $Finish[0];
-  $allDuringDates= find_all_dates_between_2_dates($ff, $tt);
-  foreach($allDuringDates as $k=>$v)
-  {
-   if($v==$ff)// first_date
-   {
-	$it2= $v.' 23:59';
-	$t1=date_create($fromDate);
-    $t2=date_create($it2);
-    $diff=date_diff($t1,$t2);
-	$hrCount= $diff->h+1;
-	$allDatesWithMutiplicationFactor[$v]['HRS']= $hrCount;
-	$da_mul= find_da_multiple($hrCount);
-	$allDatesWithMutiplicationFactor[$v]['multiple']= $da_mul;
-	$allDatesWithMutiplicationFactor[$v]['FROM']= '';
-	$allDatesWithMutiplicationFactor[$v]['TO']= '';
-   }
-   elseif($v==$tt)// last_date// it never comes true
-   {
-	$it1= $v.' 00:01';
-	$t1=date_create($it1);
-    $t2=date_create($toDate);
-    $diff=date_diff($t1,$t2);
-	$hrCount= $diff->h+1;
-	$allDatesWithMutiplicationFactor[$v]['FROM']= '';
-	$allDatesWithMutiplicationFactor[$v]['TO']= '';
-	$allDatesWithMutiplicationFactor[$v]['HRS']= $hrCount;
-	$da_mul= find_da_multiple($hrCount);
-	$allDatesWithMutiplicationFactor[$v]['multiple']= $da_mul;
-   }
-   else// middle_dates
-   {
-	$allDatesWithMutiplicationFactor[$v]['FROM']= '';
-	$allDatesWithMutiplicationFactor[$v]['TO']= '';
-	$allDatesWithMutiplicationFactor[$v]['HRS']= 24;
-	$da_mul= find_da_multiple(24);
-	$allDatesWithMutiplicationFactor[$v]['multiple']= $da_mul;
-   }
-  }
-  $it1= $tt.' 00:01';
-  $t1=date_create($it1);
-  $t2=date_create($toDate);
-  $diff=date_diff($t1,$t2);
-  $hrCount= $diff->h+1;
-  $allDatesWithMutiplicationFactor[$v]['FROM']= '';
-  $allDatesWithMutiplicationFactor[$v]['TO']= '';
-  $allDatesWithMutiplicationFactor[$tt]['HRS']= $hrCount;
-  $da_mul= find_da_multiple($hrCount);
-  $allDatesWithMutiplicationFactor[$tt]['multiple']= $da_mul;
-  return $allDatesWithMutiplicationFactor;
- }
 
 $con_allo= $convince_allowance;
 function find_da_multiple($hrs)
@@ -604,6 +547,7 @@ else
   $DA_style= 'style="display:none;"';
   $da_eligibilityVIEW= "Actual";
  }
+$policy= '';
 ?><div <?php echo $DA_style; ?> class="row"><div class="col-md-12 light bordered">
 <h4 class="form-section">DA Particulars</br>(<span style="color:#005982;">Your Eligibility-&#8377;<?php echo $da_eligibilityVIEW; ?></span>)</h4>
 <div class="row"><?php
@@ -611,18 +555,51 @@ $d1= date(DATETIME_FORMAT, strtotime($request['departure_date']));
 $d2= date(DATETIME_FORMAT, strtotime($request['return_date']));
 $allDates= find_DA_rows($d1, $d2, 'A', 'M');
 ?><table id="da_perticulars" class="table table-hover table-bordered text-center"><thead>
-<tr class="th_blue"><th># Select to claim</th><th>Date</th><th>City</th><th>Class</th>
-<th>Term</th><th>Duration</th><th>DA/day</th><th>Amount</th></tr></thead><tbody><?php
+<tr class="th_blue"><th>#</th><th>Date</th><th>City</th><th>Class</th><th>Term</th><th>Duration</th>
+<th title="<?php if(isset($DA_50) and $DA_50>0){if($DA_50==3){ echo ' (Policy : DA is Not Admissible)'; $policy= ' (Not Admissible)'; }elseif($DA_50==1){ echo ' (Policy : Guest house with</br>food DA@50%)'; $policy= ' (DA@50%)'; }elseif($DA_50==2){ echo ' (Policy : Hotel with food DA@50%)'; $policy= ' (DA@50%)'; }} ?>">DA/day <?php echo $policy; ?></th>
+<th>Amount</th></tr></thead><tbody><?php
 $i=1;
 $allAmounts= array();
 if(isset($existing_DA_Data) and count($existing_DA_Data)>0)
  {
   foreach($existing_DA_Data as $key=>$val)
    {
-    $amnt= $da_to_show= $val['amount'];
-	if($val['donate']==0){ $allAmounts[]= $amnt; }
+    $amnt= $val['amount'];
+	if($val['donate']==0){$allAmounts[]= $amnt;}
+	
+	if($request['DA_allowance_actual'] != '1')
+	 {
+      $to_add_sustract= $request['DA_allowance'];
+     }
+	else
+	 {
+	  if(!empty($expense_details))
+	   {
+		$to_add_sustract= $request['DA_allowance'];
+	   }
+      else
+	   {
+		$to_add_sustract= 0;
+	   }
+	 }
+	
+	if(isset($DA_50) and $DA_50>0)// if policy radio rules are applied
+	 {
+	  if($DA_50==3)
+	   {
+		$to_add_sustract= 0;
+	   }
+	  elseif($DA_50==1 or $DA_50==2)
+	   {
+		$to_add_sustract= $to_add_sustract/2;
+	   }
+     }
+	$fullDA_after_policy_1= $to_add_sustract;
+	$its_multiple= find_da_multiple($val['duration_in_hr']);
+	$to_add_sustract= $to_add_sustract*$its_multiple;
+	
 	?><tr><td title="If you do not want to claim this DA, please uncheck it.">
-	<input class="da_cb" rel="<?php echo $amnt; ?>" rel2="<?php echo 'rec_'.$i; ?>" value="1" type="checkbox" name="<?php echo 'claim_this_'.$i; ?>" <?php if($val['donate']==0){ echo 'checked="checked"'; } ?> /><?php echo $val['serial']; ?><input type="hidden" value="<?php echo $val['serial']; ?>" name="da_claims_serial[]" readonly /></td>
+	<input class="da_cb" rel="<?php echo $to_add_sustract; ?>" rel2="<?php echo 'rec_'.$i; ?>" value="1" type="checkbox" name="<?php echo 'claim_this_'.$i; ?>" <?php if($val['donate']==0){ echo 'checked="checked"'; } ?> /><?php echo $val['serial']; ?><input type="hidden" value="<?php echo $val['serial']; ?>" name="da_claims_serial[]" readonly /></td>
 	<td><?php echo $val['date']; ?><input type="hidden" value="<?php echo $val['date']; ?>" name="da_claims_date[]" readonly /></td>
 	<td><?php echo $val['city']; ?><input type="hidden" value="<?php echo $val['city']; ?>" name="da_claims_city[]" readonly /></td>
 	<td><?php echo $val['class']; ?><input type="hidden" value="<?php echo $val['class']; ?>" name="da_claims_class[]" readonly /></td>
@@ -631,14 +608,16 @@ if(isset($existing_DA_Data) and count($existing_DA_Data)>0)
 	<td><?php
 	if($request['DA_allowance_actual'] != '1')
 	 {
-      echo $da_to_show;
+      echo $fullDA_after_policy_1;
+	  //echo $da_to_show;
      }
 	else
 	 {
-	  ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance" onkeyup="received_total();" placeholder="DA/Per day" value="<?php echo $val['amount']; ?>"><?php
+	  ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance" onkeyup="received_total();" placeholder="DA/Per day" value="<?php echo $fullDA_after_policy_1; ?>"><?php
 	 }
-	?><input type="hidden" value="<?php echo $da_to_show; ?>" name="da_claims_da_per_day[]" readonly /></td>
-	<td><b id="<?php echo 'a_m_t_'.$i; ?>"><?php if($val['donate']==0){ echo $amnt; } else{ echo 0; } ?></b><input id="<?php echo 'tBox_a_m_t_'.$i; ?>" type="hidden" value="<?php if($val['donate']==0){ echo $amnt; } else{ echo 0; } ?>" name="da_claims_amount[]" readonly /></td></tr><?php
+	?><input type="hidden" value="<?php echo $fullDA_after_policy_1; ?>" name="da_claims_da_per_day[]" readonly /></td>
+	<td><b id="<?php echo 'a_m_t_'.$i; ?>"><?php if($val['donate']==0) { echo $amnt; } else{ echo 0; } ?></b>
+	<input id="<?php echo 'tBox_a_m_t_'.$i; ?>" type="hidden" value="<?php if($val['donate']==0){ echo $amnt; } else{ echo 0; } ?>" name="da_claims_amount[]" readonly /></td></tr><?php
 	$i++;
    }
  }
@@ -661,6 +640,23 @@ else
 		$da_to_show= 0;
 	   }
 	 }
+	
+	if(isset($DA_50) and $DA_50>0)// if policy radio rules are applied
+	 {
+	  if($DA_50==3)
+	   {
+		$da_to_show= 0;
+	   }
+	  elseif($DA_50==1 or $DA_50==2)
+	   {
+		$da_to_show= $da_to_show/2;
+	   }
+     }
+	else
+	 {
+	  $da_to_show= $da_to_show;
+     }
+	
 	$amnt=$da_to_show*$val['multiple'];
 	$allAmounts[]=$amnt;
 	
@@ -992,6 +988,7 @@ if(empty($expense_details)){echo $total_unpaid_claim_show + $addded_expense_self
 //$lbl_total_claim1 = $total_travel_claim + $addded_expense_self + $addded_expense_com;
 //} else {
 //$lbl_total_claim1 = $total_travel_claim;
+
 //}
 //echo "&#8360; " .$lbl_total_claim1;
 
@@ -1013,26 +1010,27 @@ if(empty($expense_details)){echo $total_unpaid_claim_show + $addded_expense_self
 //}
 //echo "&#8360; " .$lbl_total_claim;
 
-?></th></tr><tr>
-<th>D.A.<?php if(isset($DA_50) and $DA_50>0){if($DA_50==3){ echo ' (Policy : DA is Not Admissible)'; }elseif($DA_50==1){ echo ' (Policy : Guest house with</br>food DA@50%)'; }elseif($DA_50==2){ echo ' (Policy : Hotel with food DA@50%)'; }} ?></th>
-<th id="lbl_da_total"><?php
-//$lbl_da_total = $da_total;
-if(isset($DA_50) and $DA_50>0)
- {
-  if($DA_50==3)
-   {
-	echo $lbl_da_total=0;
-   }
-  elseif($DA_50==1 or $DA_50==2)
-   {
-	echo $lbl_da_total = $da_total/2;
-   }
- }
-else
- {
-  echo $lbl_da_total = $da_total;
- }
-// echo "&#8360; " .$lbl_da_total;
+?></th></tr><tr><th title="<?php if(isset($DA_50) and $DA_50>0){if($DA_50==3){ echo ' (Policy : DA is Not Admissible)'; }elseif($DA_50==1){ echo ' (Policy : Guest house with</br>food DA@50%)'; }elseif($DA_50==2){ echo ' (Policy : Hotel with food DA@50%)'; }} ?>">D.A. <?php echo $policy; ?></th>
+<th title="<?php if(isset($DA_50) and $DA_50>0){if($DA_50==3){ echo ' (Policy : DA is Not Admissible)'; }elseif($DA_50==1){ echo ' (Policy : Guest house with</br>food DA@50%)'; }elseif($DA_50==2){ echo ' (Policy : Hotel with food DA@50%)'; }} ?>" id="lbl_da_total"><?php
+
+echo $lbl_da_total = $da_total;
+
+//if(isset($DA_50) and $DA_50>0)
+ //{
+  //if($DA_50==3)
+   //{
+	//echo $lbl_da_total=0;
+   //}
+  //elseif($DA_50==1 or $DA_50==2)
+   //{
+	//echo $lbl_da_total = $da_total/2;
+   //}
+ //}
+//else
+ //{
+  //echo $lbl_da_total = $da_total;
+ //}
+
 ?></th></tr>
 <tr style="display:none;">
 <th>Other Expense By Travel Desk</th>
@@ -1055,7 +1053,7 @@ $TotalAmountSummery = $total_unpaid_claim_show - $less_advance - $other_manager_
 }
 ?><tr><th>
 <?php // if ($TotalAmountSummery >= 0) { ?>
-Pay to Employee
+Pay to Employee </br>(Self Pay+DA-Travel Desk Expense)
 <?php // } else { ?>
 <!--<span style="color:red;">  Employee will pay to company</span>-->
 <?php // } ?>
@@ -1136,14 +1134,28 @@ else
 <div class="col-md-4"><div class="col-md-offset-1 col-md-12">
 ** Pls attach all Bills, Upload Option&nbsp;<br>
 <input type="file" name="other_attachment[]" id="other_attachment" class="btn green button-submit" multiple capture><br>
-<!---<input type="submit" class="btn green button-submit">--->
 
-<input type="button" value="Submit" onClick="confirmSubmission();" class="btn green button-submit">
+<!---<input type="button" value="Submit" onClick="confirmSubmission();" class="btn green button-submit">
+<a href="<?php //echo base_url() . 'employee_request'; ?>" class="btn default"><i class="m-icon-swapleft"></i> Back </a>
+<input type="button" value="SANT Submit" onClick="confirmSubmission();" class="btn green button-submit">--->
 
-<a href="<?php echo base_url() . 'employee_request'; ?>" class="btn default">
-<i class="m-icon-swapleft"></i> Back </a></div></div></div></div>
+<a href="#claim_modal" data-toggle="modal" class="btn green button-submit">Submit</a>
+<input type="submit" name="save" value="Save" class="btn blue-chambray button-submit">
+<a href="<?php echo base_url() . 'employee_request'; ?>" class="btn default"><i class="m-icon-swapleft"></i> Back </a>
+
+</div></div></div></div>
 <input type="hidden" id="cal_flag" value="0" name="cal_flag">
-</form></div></div></div></div>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="claim_modal">
+<div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h4 class="modal-title">Confirmation</h4></div><div class="modal-body">
+<div class="row"><div class="col-md-12"><div class="widget box">
+<div class="widget-content">Are you sure you want to raise claim?</div>
+</div></div></div></div><div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<input type="submit" name="submit" class="btn green button-submit"></div></div></div>
+</div></form></div></div></div></div>
 
 <input type="hidden" id="lblother_manager_expense_hidd" value="<?php echo $lblother_manager_expense; ?>">
 <input type="hidden" name="request_id" id="request_id" value="<?php echo $request['id']; ?>">
@@ -1175,11 +1187,11 @@ function confirmSubmission(){$("#sureClaim").modal();}
 function submitThisForm(){$("#expense_form").submit();}
 
 $(document).ready(function(){
+
 received_total();
 
 $(".da_cb").on('change', function(){
-var amount1= $(this).attr('rel');
-var amount= amount1/2;
+var amount= $(this).attr('rel');
 var finalDA= $("#expense_da").val();
 
 var rel2= $(this).attr('rel2');
@@ -1197,12 +1209,12 @@ if($(this).prop("checked")==true)// checked
   var updatedDA= parseInt(finalDA)+parseInt(amount);
   $("#expense_da").val(updatedDA);
   
-  $("#a_m_t_"+recNo).html(amount1);
-  $("#tBox_a_m_t_"+recNo).val(amount1);
+  $("#a_m_t_"+recNo).html(amount);
+  $("#tBox_a_m_t_"+recNo).val(amount);
   
-  var newGrandSum= parseInt(oldGrandSum)+parseInt(amount1);
+  var newGrandSum= parseInt(oldGrandSum)+parseInt(amount);
   $("#da_grand_total_b").html(newGrandSum);
-  
+  //$("#lbl_da_total").html(newGrandSum);
  }
 else if($(this).prop("checked") == false)// unchecked
  {
@@ -1212,13 +1224,15 @@ else if($(this).prop("checked") == false)// unchecked
   $("#a_m_t_"+recNo).html('0');
   $("#tBox_a_m_t_"+recNo).val('0');
   
-  var newGrandSum= parseInt(oldGrandSum)-parseInt(amount1);
+  var newGrandSum= parseInt(oldGrandSum)-parseInt(amount);
   $("#da_grand_total_b").html(newGrandSum);
+  //$("#lbl_da_total").html(newGrandSum);
   
  }
 //alert($("#expense_da").val());
 received_total();
 });
+
 
 $(".shouldLessThanReturn").on('change', function(){
 	var endDate1 = $('#return_date').val().split(' ');
@@ -1324,6 +1338,7 @@ if($("#other_expense_1").val()=='' || $("#other_expense_1").val()==null)
 {
  $("#other_expense_1").val('0');
 }
+var dynamic_total_da = parseInt($("#da_grand_total_b").html());
 var hidd_total_claim = $("#hidd_total_claim").val();
 var total_unpaid_claim_hidd = $("#total_unpaid_claim_hidd").val();
 var loading_cost = $("#loading_cost").val();
@@ -1536,7 +1551,7 @@ for(var i = 2; i < other_load_row; i++)
       }
     }
   }
- 
+
  var other_trip_total_final = parseFloat(other_trip_total_hidd) + parseFloat(other_trip_total1);
  $("#other_trip_total").text(total_trip_lbl.toFixed(2));
  $("#expense_ticket").val(total_trip_lbl);
@@ -1650,8 +1665,8 @@ for(var i = 2; i < other_load_row; i++)
 	 da_allowance = 0;
     }
    var day = $("#day").val();
-   //var final_da = da_allowance * day;
-   var final_da = '<?php echo $lbl_da_total; ?>';
+   //var final_da = da_allowance * day; //var final_da = '<?php //echo $lbl_da_total; ?>';
+   var final_da = dynamic_total_da;
    var hours = $("#hours").val();
    if(hours != '0')
     {
@@ -1675,8 +1690,8 @@ for(var i = 2; i < other_load_row; i++)
    $("#da_total_hidd").val(final_da);
    $("#da_final_total").text("₨ " + final_da.toFixed(2));
    $("#lbl_final_da").text(final_da);
-   $("#lbl_da_total").text('<?php echo $lbl_da_total; ?>');
-   //$("#lbl_da_total").text(final_da);
+   $("#lbl_da_total").text(dynamic_total_da);
+   //$("#lbl_da_total").text('<?php //echo $lbl_da_total; ?>');//$("#lbl_da_total").text(final_da);
    total_unpaid_claim_hidd = parseInt(total_unpaid_claim_hidd) + parseInt(final_da);
    hidd_total_claim = parseInt(hidd_total_claim) + parseInt(final_da);
   }
@@ -1688,8 +1703,8 @@ for(var i = 2; i < other_load_row; i++)
 	 da_allowance = 0;
     }
    var day = $("#day").val();
-   //var final_da = da_allowance * day;
-   var final_da = '<?php echo $lbl_da_total; ?>';
+   //var final_da = da_allowance * day;//var final_da = '<?php //echo $lbl_da_total; ?>';
+   var final_da = dynamic_total_da;
    var hours = $("#hours").val();
    if(hours != '0')
     {
@@ -1717,8 +1732,8 @@ for(var i = 2; i < other_load_row; i++)
 
    $("#lbl_final_da").text(final_da);
    //$("#lbl_da_total").text(final_da);
-
-   $("#lbl_da_total").text(<?php echo $lbl_da_total; ?>);
+   //$("#lbl_da_total").text(<?php //echo $lbl_da_total; ?>);
+   $("#lbl_da_total").text(dynamic_total_da);
    total_unpaid_claim_hidd = parseInt(total_unpaid_claim_hidd) + parseInt(final_da);
    //alert(hidd_total_claim);
    hidd_total_claim = parseInt(hidd_total_claim) + parseInt(final_da);

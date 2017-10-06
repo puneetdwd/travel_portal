@@ -33,6 +33,7 @@
                             <li class="active"><a href="#tab1default" data-toggle="tab">Trip Approval<?php echo " (" . count($pending_request) . ")" ?></a></li>
                             <?php if(count($cancel_request) != '0') { ?><li><a href="#tab2default" data-toggle="tab">Cancellation Approval<?php echo " (" . count($cancel_request) . ")" ?></a></li> <?php } ?>
                             <?php if(count($expense_request) != '0') { ?><li><a href="#tab4default" data-toggle="tab">Expense Approval<?php echo " (" . count($expense_request) . ")" ?></a></li><?php } ?>
+                            <?php if(count($merge_expense_request) != '0') { ?><li><a href="#tab5default" data-toggle="tab">Merge Expense Approval<?php echo " (" . count($merge_expense_request) . ")" ?></a></li><?php } ?>
                             <li><a href="#tab3default" data-toggle="tab">Completed</a></li>                                
                         </ul>
                     </div>
@@ -354,6 +355,34 @@
                                                        href="<?php echo base_url() . 'employee_request/approval_request/' . $data['id']; ?>">
                                                         <i class="fa fa-eye"></i> view
                                                     </a>               
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="tab5default">
+                                <table class="table" id="make-data-table_2">
+                                    <thead>
+                                        <tr>
+                                            <th>Exp ID</th>
+                                            <th>Employee ID</th>
+                                            <th>Employee Name</th> 
+                                            <th class="no_sort" style="width:150px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($merge_expense_request as $data) { ?>
+                                            <tr>
+                                                <td><?php echo $data['exp_id']; ?></td>
+                                                <td><?php echo $data['emp_id']; ?></td>
+                                                <td><?php echo $data['requested_name']; ?></td><td nowrap>
+                                                    <?php if ($data['request_status'] == "5") { ?>
+                                                        <a class="btn btn-xs blue" 
+                                                           href="<?php echo base_url() . 'employee_request/merge_expense_pending/' . $data['id']; ?>">
+                                                            <i class="fa fa-edit"></i> Expense Approval
+                                                        </a>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

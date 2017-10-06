@@ -10,7 +10,7 @@
 <div class="page-content">
     <div class="breadcrumbs">
         <h1>
-            Finance Inbox
+            FInance Inbox
         </h1>
     </div>
     <div class="row">
@@ -32,6 +32,8 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#tab1default" data-toggle="tab">Unaudit Trip<?php echo " (" . count($request) . ")" ?></a></li>
                             <li><a href="#tab2default" data-toggle="tab">Audited Trip<?php echo " (" . count($request_audit) . ")" ?></a></li>
+                            <li><a href="#tab3default" data-toggle="tab">Merge Unaudit Trip<?php echo " (" . count($merge_expense_request) . ")" ?></a></li>
+                            <li><a href="#tab4default" data-toggle="tab">Merge Audited Trip<?php echo " (" . count($merge_request_audit_arr) . ")" ?></a></li>
                         </ul>
                     </div>
                     <div class="panel-body">
@@ -138,6 +140,101 @@
                                                     <?php if ($data['request_status'] == "8") { ?>
                                                         <a class="btn btn-xs blue" 
                                                            href="<?php echo base_url() . 'finance_desk/expense_pending/' . $data['id']; ?>">
+                                                            <i class="fa fa-edit"></i> Pay to Employee
+                                                        </a>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                            $i++;
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="tab3default">
+                                <table class="table" id="make-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Trip ID</th>
+                                            <th>EMP ID</th>
+                                            <th>Name</th>
+                                            <th>Grade</th>
+                                            <!--<th>From - To</th>-->
+                                            <th>Action By</th>
+                                            <th>Claim</th>
+                                            <th>Advance</th>
+                                            <th>Net Pay</th>
+                                            <!--<th>Reason</th>-->
+                                            <th class="no_sort" style="width:150px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $i = 1;
+                                        foreach ($merge_expense_request as $k => $data) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $data['exp_id']; ?></td>
+                                                <td><?php echo $data['emp_id']; ?></td>
+                                                <th><?php echo $data['requested_name']; ?></th>
+                                                <th><?php echo $data['gradeName']; ?></th>
+                                                <td><?php echo $data['bossName']; ?></td>
+                                                <td><?php echo $data['total_claim']; ?></td>
+                                                <td><?php echo $data['less_advance']; ?></td>
+
+                                                <td nowrap>
+                                                    <?php if ($data['request_status'] == "6") { ?>
+                                                        <a class="btn btn-xs blue" 
+                                                           href="<?php echo base_url() . 'finance_desk/merge_expense_pending/' . $data['id']; ?>">
+                                                            <i class="fa fa-edit"></i> Sent to Audit
+                                                        </a>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                            $i++;
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="tab4default">
+                                <table class="table" id="make-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Trip ID</th>
+                                            <th>EMP ID</th>
+                                            <th>Name</th>
+                                            <th>Grade</th>
+                                            <!--<th>From - To</th>-->
+                                            <th>Action By</th>
+                                            <th>Claim</th>
+                                            <th>Advance</th>
+                                            <th>Net Pay</th>
+                                            <!--<th>Reason</th>-->
+                                            <th class="no_sort" style="width:150px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $i = 1;
+                                        foreach ($merge_request_audit_arr as $k => $data) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $data['exp_id']; ?></td>
+                                                <td><?php echo $data['emp_id']; ?></td>
+                                                <th><?php echo $data['requested_name']; ?></th>
+                                                <th><?php echo $data['gradeName']; ?></th>
+                                                <td><?php echo $data['bossName']; ?></td>
+                                                <td><?php echo $data['total_claim']; ?></td>
+                                                <td><?php echo $data['less_advance']; ?></td>
+
+                                                <td nowrap>
+                                                    <?php if ($data['request_status'] == "8") { ?>
+                                                        <a class="btn btn-xs blue" 
+                                                           href="<?php echo base_url() . 'finance_desk/merge_expense_pending/' . $data['id']; ?>">
                                                             <i class="fa fa-edit"></i> Pay to Employee
                                                         </a>
                                                     <?php } ?>
