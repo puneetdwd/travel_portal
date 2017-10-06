@@ -548,32 +548,49 @@ class Employee_request extends Admin_Controller {
 //        }
 
         $policy_data = $this->travel_policy_model->get_policy_allowance_by_grade($grade_id, $to_class);
-
+		
         $convince_allowance = '';
         $hotel_allowance = '';
         $DA_allowance = '';
-        foreach ($policy_data as $key => $value) {
-            if ($value['service_type'] == "5") {
-                if ($value['actual'] == "0") {
-                    $hotel_allowance = $value['amount'];
-                } else {
-                    $hotel_allowance = "Actual";
-                }
-            } else if ($value['service_type'] == "6") {
-                if ($value['actual'] == "0") {
-                    $DA_allowance = $value['amount'];
-                } else {
-                    $DA_allowance = "Actual";
-                }
-            } else if ($value['service_type'] == "7") {
-                if ($value['actual'] == "0") {
-                    $convince_allowance = $value['amount'];
-                } else {
-                    $convince_allowance = "Actual";
-                }
-            }
-        }
-        $view_request['DA_allowance'] = $DA_allowance;
+        foreach($policy_data as $key => $value)
+		 {
+          if($value['service_type']=="5")
+		   {
+            if($value['actual']=="0")
+			 {
+              $hotel_allowance = $value['amount'];
+             }
+			else
+			 {
+              $hotel_allowance = "Actual";
+             }
+           }
+		  elseif($value['service_type']=="6")
+		   {
+            if($value['actual']=="0")
+			 {
+              $DA_allowance = $value['amount'];
+             }
+			else
+			 {
+              $DA_allowance = "Actual";
+             }
+           }
+		  elseif($value['service_type']=="7")
+		   {
+            if($value['actual']=="0")
+			 {
+              $convince_allowance = $value['amount'];
+             }
+			else
+			 {
+              $convince_allowance = "Actual";
+             }
+           }
+         }
+        //$DA_allowance
+		
+		$view_request['DA_allowance'] = $DA_allowance;
         $view_request['convince_allowance'] = $convince_allowance;
         $view_request['hotel_allowance'] = $hotel_allowance;
 
@@ -1147,7 +1164,7 @@ class Employee_request extends Admin_Controller {
         $employee_id = $this->session->userdata('employee_id');
         $request = $this->expense->get_claim_request_by_id($request_id, $employee_id);
 
-        if (empty($request)) {
+		if (empty($request)) {
             $request1 = $this->travel_request->get_emp_request_by_ea_id($request_id, $employee_id);
             if (empty($request1)) {
                 $this->session->set_flashdata('error', 'Something went wrong');
@@ -1158,8 +1175,13 @@ class Employee_request extends Admin_Controller {
                 $request = $this->expense->get_claim_request_by_id($request_id, $employee_id);
             }
         }
-
 		$view_request = array('request' => $request);
+
+		$sql = "SELECT * FROM `da_claims` WHERE travel_request_id='".$request_id."' and reference_id='".$request['reference_id']."' and employee_id='".$request['employee_id']."' order by serial ASC";
+		$result = $this->db->query($sql);
+		$existing_DA_Data = $result->result_array();
+		$view_request['existing_DA_Data'] = $existing_DA_Data;
+
         if ($request['project_id'] != '') {
             $project_id = $request['project_id'];
             $this->load->model("projects_model");
@@ -1392,8 +1414,7 @@ class Employee_request extends Admin_Controller {
                     $train_booking = $this->travel_desk->get_train_ticket_booking($request_id);
                     $view_request['train_booking'] = $train_booking;
                     if ($request['trip_type'] != "1") {
-                        
-						$data_array = array();
+                        $data_array = array();
 						//$data_array['date'] = $request['departure_date'];
                         $data_array['date'] = $request['return_date'];
 						$data_array['travel_class'] = $request['travel_class'];
@@ -1659,11 +1680,56 @@ class Employee_request extends Admin_Controller {
                     }
                 }
 
-                /* ----- Ali Code start ------ */
-//                po($_FILES);
+				
+				
+				
+				$this->db->where('travel_request_id', $request_id);
+				$this->db->delete('da_claims');
+				if($this->input->post('da_claims_serial'))
+				 {
+				  $da_claims_date= $this->input->post('da_claims_date');
+				  $da_claims_city= $this->input->post('da_claims_city');
+				  $da_claims_class= $this->input->post('da_claims_class');
+				  $da_claims_term= $this->input->post('da_claims_term');
+				  $da_claims_duration_in_hr= $this->input->post('da_claims_duration_in_hr');
+				  $da_claims_da_per_day= $this->input->post('da_claims_da_per_day');
+				  $da_claims_amount= $this->input->post('da_claims_amount');
+				  foreach($this->input->post('da_claims_serial') as $Thanda=>$Garam)
+				   {
+					$each_daata= array();
+					$each_daata['travel_request_id']=$request_id;
+					$each_daata['reference_id']=$request['reference_id'];
+					$each_daata['employee_id']=$request['employee_id'];
+					$each_daata['serial']= $Garam;
+					$each_daata['date']=$da_claims_date[$Thanda];
+					$each_daata['city']=$da_claims_city[$Thanda];
+					$each_daata['class']=$da_claims_class[$Thanda];
+					$each_daata['term']=$da_claims_term[$Thanda];
+					$each_daata['duration_in_hr']=$da_claims_duration_in_hr[$Thanda];
+					$each_daata['da_per_day']=$da_claims_da_per_day[$Thanda];
+					$each_daata['amount']=$da_claims_amount[$Thanda];
+					$index= 'claim_this_'.$Garam;
+					if($this->input->post($index))
+					{
+					 $each_daata['donate']=0;
+					 //echo 'CheckBox '.$Garam.' is checked</br>';
+					}
+					else
+					{
+					 $each_daata['donate']=1;
+					 //echo 'Checkbox '.$Garam.' is un-checked</br>';
+					}
+				    $this->common->insert_data($each_daata, 'da_claims');
+				   }
+				 }
+				
+				
+				
+				/* ----- Ali Code start ------ */
+//              po($_FILES);
                 $other_reference_id = $this->input->post('other_reference_id');
                 $other_row = $this->input->post('other_row');
-//                $i = 1;
+//              $i = 1;
                 $x = 1;
                 for ($k = 1; $k < $other_row; $k++) {
 //                if (!empty($other_reference_id)) {
@@ -2692,6 +2758,10 @@ class Employee_request extends Admin_Controller {
 		
 		//08-09-2017 11:00
 		//2017-08-23 08:00:00
+		//travel_request_id
+		
+		$this->db->where('travel_request_id', $primID);
+		$this->db->delete('da_claims');// to delete all DA Data for this trip
 		
 		$data_array= array('return_date'=>$return_date2);
 		$this->common->update_data($data_array, 'travel_request', 'id', $primID);

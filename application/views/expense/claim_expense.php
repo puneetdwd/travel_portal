@@ -319,8 +319,8 @@ foreach ($other_trip_expense as $key => $value) {
 <td width="5%"><?php
 $total = $total + $value['total'];
 $total_travel_claim_hidd = $total_travel_claim_hidd - $value['total'];
-//$lbltotal = $lbltotal + $value['total']; 
 
+//$lbltotal = $lbltotal + $value['total']; 
 
 
 //COPY FROM ABOVE $value_cost= $value['cost']+$value['tax']+$value['agency_cost'];
@@ -328,15 +328,13 @@ $total_travel_claim_hidd = $total_travel_claim_hidd - $value['total'];
 //COPY FROM ABOVE $lbltotal = $lbltotal + $value_cost;
 //COPY FROM ABOVE $ticket_cost_1 = $ticket_cost_1 + $value_cost;
 
-
-
 ?><input type='number' name='total_trip_no[]' id="<?php echo "total_trip_no" . $i ?>" onkeyup='received_total()'  class='only_number form-control required' value="<?php echo $value['total']; ?>"></td></tr><?php
 $i++;
 }
 }
 ?></tbody><tfoot><tr><td colspan="10"></td><th align="center">Total (&#8377;) </th>
-<td><b id='other_trip_total'><?php echo $total . '.00'; ?></b></td>
-<?php $expense_ticket = $total ?></tr></tfoot></table>
+<td><b id='other_trip_total'><?php echo $total . '.00'; $expense_ticket = $total; ?></b></td>
+</tr></tfoot></table>
 
 <input type="hidden" name="other_trip_row" id="other_trip_row" value="<?php echo $i; ?>">
 <input type="hidden" id="other_trip_total_hidd" value="<?php echo $lbltotal; ?>">
@@ -613,49 +611,86 @@ $d1= date(DATETIME_FORMAT, strtotime($request['departure_date']));
 $d2= date(DATETIME_FORMAT, strtotime($request['return_date']));
 $allDates= find_DA_rows($d1, $d2, 'A', 'M');
 ?><table id="da_perticulars" class="table table-hover table-bordered text-center"><thead>
-<tr class="th_blue"><th>#</th><th>Date</th><th>City</th><th>Class</th>
+<tr class="th_blue"><th># Select to claim</th><th>Date</th><th>City</th><th>Class</th>
 <th>Term</th><th>Duration</th><th>DA/day</th><th>Amount</th></tr></thead><tbody><?php
 $i=1;
-$totRecordCount= count($allDates);
 $allAmounts= array();
-foreach($allDates as $key=>$val)
-{
- ?><tr><td><?php echo $i; ?></td>
- <td><?php echo $val['FROM'].'-to-'.$val['TO']; ?></td>
- <td><?php echo $request['to_city_name']; ?></td>
- <td><?php echo $request['to_city_class']; ?></td>
- <td><?php if($val['multiple']==1){ echo 'Full DA'; }elseif($val['multiple']==0.5){ echo '1/2 DA'; }elseif($val['multiple']==0){ echo 'N/A'; } ?></td>
- <td><?php echo $val['HRS'].' hrs'; ?></td>
- <td><?php
- if($request['DA_allowance_actual'] != '1')
-  {
-   echo $request['DA_allowance'];
-   $da_to_show= $request['DA_allowance'];
-  }
- else
-  {
-   ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance" onkeyup="received_total();" placeholder="DA/Per day" value="<?php
-   if(!empty($expense_details))
-    {
-	 echo $request['DA_allowance'];
-	 $da_to_show= $request['DA_allowance'];
-	}
-   else
-    {
-	 echo 0;
-	 $da_to_show= 0;
-	}?>"><?php
-  }
- ?></td><td><?php echo $da_to_show*$val['multiple']; $allAmounts[]=$da_to_show*$val['multiple']; ?></td></tr><?php
- $i++;
-}
+if(isset($existing_DA_Data) and count($existing_DA_Data)>0)
+ {
+  foreach($existing_DA_Data as $key=>$val)
+   {
+    $amnt= $da_to_show= $val['amount'];
+	if($val['donate']==0){ $allAmounts[]= $amnt; }
+	?><tr><td title="If you do not want to claim this DA, please uncheck it.">
+	<input class="da_cb" rel="<?php echo $amnt; ?>" rel2="<?php echo 'rec_'.$i; ?>" value="1" type="checkbox" name="<?php echo 'claim_this_'.$i; ?>" <?php if($val['donate']==0){ echo 'checked="checked"'; } ?> /><?php echo $val['serial']; ?><input type="hidden" value="<?php echo $val['serial']; ?>" name="da_claims_serial[]" readonly /></td>
+	<td><?php echo $val['date']; ?><input type="hidden" value="<?php echo $val['date']; ?>" name="da_claims_date[]" readonly /></td>
+	<td><?php echo $val['city']; ?><input type="hidden" value="<?php echo $val['city']; ?>" name="da_claims_city[]" readonly /></td>
+	<td><?php echo $val['class']; ?><input type="hidden" value="<?php echo $val['class']; ?>" name="da_claims_class[]" readonly /></td>
+	<td><?php echo $val['term']; ?><input type="hidden" value="<?php echo $val['term']; ?>" name="da_claims_term[]" readonly /></td>
+	<td><?php echo $val['duration_in_hr'].' hrs'; ?><input type="hidden" value="<?php echo $val['duration_in_hr']; ?>" name="da_claims_duration_in_hr[]" readonly /></td>
+	<td><?php
+	if($request['DA_allowance_actual'] != '1')
+	 {
+      echo $da_to_show;
+     }
+	else
+	 {
+	  ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance" onkeyup="received_total();" placeholder="DA/Per day" value="<?php echo $val['amount']; ?>"><?php
+	 }
+	?><input type="hidden" value="<?php echo $da_to_show; ?>" name="da_claims_da_per_day[]" readonly /></td>
+	<td><b id="<?php echo 'a_m_t_'.$i; ?>"><?php if($val['donate']==0){ echo $amnt; } else{ echo 0; } ?></b><input id="<?php echo 'tBox_a_m_t_'.$i; ?>" type="hidden" value="<?php if($val['donate']==0){ echo $amnt; } else{ echo 0; } ?>" name="da_claims_amount[]" readonly /></td></tr><?php
+	$i++;
+   }
+ }
+else
+ {
+  foreach($allDates as $key=>$val)
+   {
+    if($request['DA_allowance_actual'] != '1')
+	 {
+      $da_to_show= $request['DA_allowance'];
+     }
+	else
+	 {
+	  if(!empty($expense_details))
+	   {
+		$da_to_show= $request['DA_allowance'];
+	   }
+      else
+	   {
+		$da_to_show= 0;
+	   }
+	 }
+	$amnt=$da_to_show*$val['multiple'];
+	$allAmounts[]=$amnt;
+	
+	?><tr><td title="If you do not want to claim this DA, please uncheck it.">
+	<input class="da_cb" rel="<?php echo $amnt; ?>" rel2="<?php echo 'rec_'.$i; ?>" value="1" type="checkbox" name="<?php echo 'claim_this_'.$i; ?>" checked="checked" /><?php echo $i; ?><input type="hidden" value="<?php echo $i; ?>" name="da_claims_serial[]" readonly /></td>
+	<td><?php echo $val['FROM'].'-to-'.$val['TO']; ?><input type="hidden" value="<?php echo $val['FROM'].'-to-'.$val['TO']; ?>" name="da_claims_date[]" readonly /></td>
+	<td><?php echo $request['to_city_name']; ?><input type="hidden" value="<?php echo $request['to_city_name']; ?>" name="da_claims_city[]" readonly /></td>
+	<td><?php echo $request['to_city_class']; ?><input type="hidden" value="<?php echo $request['to_city_class']; ?>" name="da_claims_class[]" readonly /></td>
+	<td><?php if($val['multiple']==1){ echo 'Full DA'; }elseif($val['multiple']==0.5){ echo '1/2 DA'; }elseif($val['multiple']==0){ echo 'N/A'; } ?><input type="hidden" value="<?php if($val['multiple']==1){ echo 'Full DA'; }elseif($val['multiple']==0.5){ echo '1/2 DA'; }elseif($val['multiple']==0){ echo 'N/A'; } ?>" name="da_claims_term[]" readonly /></td>
+	<td><?php echo $val['HRS'].' hrs'; ?><input type="hidden" value="<?php echo $val['HRS']; ?>" name="da_claims_duration_in_hr[]" readonly /></td>
+	<td><?php if($request['DA_allowance_actual'] != '1'){echo $da_to_show;}
+	else
+	 {
+	  ?><input type="number" class="only_number form-control required" name="da_allowance" id="da_allowance" onkeyup="received_total();" placeholder="DA/Per day" value="<?php echo $da_to_show; ?>"><?php
+	 }
+	?><input type="hidden" value="<?php echo $da_to_show; ?>" name="da_claims_da_per_day[]" readonly /></td>
+	<td><b id="<?php echo 'a_m_t_'.$i; ?>"><?php echo $amnt; ?></b>
+	<input id="<?php echo 'tBox_a_m_t_'.$i; ?>" type="hidden" value="<?php echo $amnt; ?>" name="da_claims_amount[]" readonly /></td></tr><?php
+	$i++;
+   }
+ }
+
 $t87=date_create($d1);
 $t88=date_create($d2);
 $diff=date_diff($t87,$t88);
+
+$total2= $da_total= array_sum($allAmounts);
+
 ?></tbody><tfoot><tr><td colspan="5">Includes "expenses on tea/coffee, breakfast, lunch, dinner" and any other incidental expenses.</td><th><?php echo $diff->days.' Days, '; echo $diff->h.' hrs'; ?></th>
-<th>Total (&#8377;)</th>
-<td><b><?php $total2= $da_total= array_sum($allAmounts); echo $total2.'.00'; ?></b></td>
-</tr></tfoot></table></div></div></div>
+<th>Total (&#8377;)</th><td><b id="da_grand_total_b"><?php echo $total2; ?></b></td></tr></tfoot></table></div></div></div>
 
 <input type="hidden" name="departure_date" id="departure_date" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>">
 <div style="display:none;" id="lbl_da_return_date"><?php echo date(DATETIME_FORMAT, strtotime($request['return_date'])); ?></div>
@@ -688,18 +723,13 @@ if($con_allo>0 and is_numeric($con_allo) and $value['cost']>$con_allo){$trClassT
 ?><tr class="<?php echo $trClassTX; ?>"><td></td><td><?php echo $i; ?></td><td>
 <div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
 <input style="width:140px !important;" name="con_date_1" id="con_date_1"  class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($value['date'])); ?>" readonly>
-<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-</div><?php //echo $value['date'] ?></td>
+<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span></div><?php //echo $value['date'] ?></td>
 <td><?php echo $value['expense_location']; ?></td>
 <td><?php echo $value['location_from']; ?></td>
 <td><?php echo $value['location_to']; ?></td><td><?php
-if ($value['book_by'] == "1") {
-echo "Uber";
-} else if ($value['book_by'] == "2") {
-echo "Ola";
-} else if ($value['book_by'] == "3") {
-echo "Auto";
-}
+if($value['book_by']=="1"){echo "Uber";}
+elseif($value['book_by']=="2"){echo "Ola";}
+elseif($value['book_by']=="3"){echo "Auto";}
 ?></td><td><?php
 if($request['car_hire'] == "1")
  {
@@ -863,8 +893,7 @@ foreach ($other_expencesData as $OtherExpenceData) {
 </td><td><input type='text' name='expense_type[]' id='<?php echo "expense_type" . $i; ?>' value="<?php echo $value['expense_type']; ?>" class='form-control required'></td>
 <td><select name="other_arrange_by[]" onchange='received_total()' id="<?php echo "other_expense_arrange_by_" . $i ?>" class="form-control">
 <option value="Company" <?php if ($value['arrange_by'] == "Company") echo "selected"; ?>>Company</option>
-<option value="Own" <?php if ($value['arrange_by'] == "Own") echo "selected"; ?>>Own</option>
-</select></td>
+<option value="Own" <?php if ($value['arrange_by'] == "Own") echo "selected"; ?>>Own</option></select></td>
 <td><input type='text' name='expense_bill_no[]' maxlength="15" id='<?php echo "bill_no_" . $i; ?>' value="<?php echo $value['bill_no']; ?>" class='form-control'></td>
 <td><input type="file" name="<?php echo 'other_attachment_' . $i . '[]'; ?>" id="<?php echo 'con_attachment_' . $i ?>" multiple="" class="btn green button-submit" style="width:120px !important;">
 <input type="hidden" name="other_reference_id[]" value="<?php echo $value['reference_id']; ?>"></td>
@@ -1141,19 +1170,55 @@ else
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&key=AIzaSyCdGlqSgU-wNjCn6_mig33UF5yv5QB7tqI"></script>
 <script type="text/javascript">
 
-function confirmSubmission()
- {
-  $("#sureClaim").modal();
- }
+function confirmSubmission(){$("#sureClaim").modal();}
 
-function submitThisForm()
- {
-  $("#expense_form").submit();
- }
-
+function submitThisForm(){$("#expense_form").submit();}
 
 $(document).ready(function(){
 received_total();
+
+$(".da_cb").on('change', function(){
+var amount1= $(this).attr('rel');
+var amount= amount1/2;
+var finalDA= $("#expense_da").val();
+
+var rel2= $(this).attr('rel2');
+var ifr= rel2.split('_');
+var recNo= ifr[1];
+
+var oGSum= $("#da_grand_total_b").html();
+var oldGrandSum= parseInt(oGSum);
+
+$("#a_m_t_"+recNo).html();
+$("#tBox_a_m_t_"+recNo).val();
+
+if($(this).prop("checked")==true)// checked
+ {
+  var updatedDA= parseInt(finalDA)+parseInt(amount);
+  $("#expense_da").val(updatedDA);
+  
+  $("#a_m_t_"+recNo).html(amount1);
+  $("#tBox_a_m_t_"+recNo).val(amount1);
+  
+  var newGrandSum= parseInt(oldGrandSum)+parseInt(amount1);
+  $("#da_grand_total_b").html(newGrandSum);
+  
+ }
+else if($(this).prop("checked") == false)// unchecked
+ {
+  var updatedDA= parseInt(finalDA)-parseInt(amount);
+  $("#expense_da").val(updatedDA);
+  
+  $("#a_m_t_"+recNo).html('0');
+  $("#tBox_a_m_t_"+recNo).val('0');
+  
+  var newGrandSum= parseInt(oldGrandSum)-parseInt(amount1);
+  $("#da_grand_total_b").html(newGrandSum);
+  
+ }
+//alert($("#expense_da").val());
+received_total();
+});
 
 $(".shouldLessThanReturn").on('change', function(){
 	var endDate1 = $('#return_date').val().split(' ');
@@ -1183,6 +1248,7 @@ function check_date() {
 var departure_date = $("#departure_date").val();
 var return_date = $("#return_date").val();
 var primID = '<?php echo $request['request_id']; ?>';
+
 if (departure_date == return_date) {
 $("#return_date").val('');
 alert('Departure date and return date should not be same');
@@ -1737,21 +1803,6 @@ for(var i = 2; i < other_load_row; i++)
  $("#cal_flag").val("1");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function received_total_ALI(){
 
 //                                                        var da_allow = $("#da_allow").val();
@@ -2152,7 +2203,6 @@ if (hours != '0')
    }
  }
 
-
 $("#da_total").val(final_da);
 $("#da_total_hidd").val(final_da);
 $("#da_final_total").text("₨ " + final_da.toFixed(2));
@@ -2336,15 +2386,9 @@ var autocomplete = new google.maps.places.Autocomplete(input);
 google.maps.event.addDomListener(window, 'load', initialize);
 }
 
-function locationtxti(id) {
-var id = '#' + id;
-$(id).animate({width: 150}, 'slow');
-}
+function locationtxti(id){var id = '#' + id;$(id).animate({width: 150}, 'slow');}
 
-function locationtxtd(id) {
-var id = '#' + id;
-$(id).animate({width: 80}, 'slow');
-}
+function locationtxtd(id){var id = '#' + id;$(id).animate({width: 80}, 'slow');}
 
 function add_con_row() {
 var count = document.getElementById('other_con_row').value;
@@ -2424,38 +2468,20 @@ $("#tbody").append(data);
 count++;
 $("#other_row").val(count);
 $("#add_row_flag").val('0');
-initialize_other();
-}
-});
-}
-}
+initialize_other();}});}}
 
-function remove_row(id) {
-$("#row_id_" + id).remove();
-received_total();
-}
+function remove_row(id){$("#row_id_" + id).remove();received_total();}
 
-function remove_con_row(id) {
-$("#row_con_id_" + id).remove();
-received_total();
-}
+function remove_con_row(id){$("#row_con_id_" + id).remove();received_total();}
 
-function remove_trip_row(id) {
-$("#row_trip_id_" + id).remove();
-received_total();
-}
+function remove_trip_row(id){$("#row_trip_id_" + id).remove();received_total();}
 
-function remove_load_row(id) {
-$("#row_load_id_" + id).remove();
-received_total();
-}
+function remove_load_row(id){$("#row_load_id_" + id).remove();received_total();}
 
 </script><?php
-if ($request['trip_type'] != "1") {
-$return_date = $request['return_date'];
-} else {
-$return_date = '';
-}
+
+if($request['trip_type']!="1"){$return_date = $request['return_date'];}else{$return_date = '';}
+
 ?><script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js" ?>" charset="UTF-8"></script>
 <script type="text/javascript" src="<?php echo base_url() . "assets/plugins/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.fr.js" ?>" charset="UTF-8"></script>
 <script type="text/javascript">
@@ -2473,6 +2499,4 @@ minView: 1,
 format: "<?php echo DATETIME_FORMAT_DATEPICKER; ?>"
 });
 </script>
-<style>
-.table { text-align:left;}
-</style>
+<style>.table { text-align:left;}</style>
