@@ -51,17 +51,25 @@ class Employee_model extends CI_Model {
 
             $i++;
         }
-
-
-
-        if (isset($_POST['order'])) { // here order processing
+        if(isset($_POST['order'])) { // here order processing
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
-        } else if (isset($this->order)) {
+        }
+		else if (isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
+	function get_offrole_datatables() {
+        if(isset($_POST['length']) and $_POST['length']!= -1)
+        $this->db->limit($_POST['length'], $_POST['start']);
+        $this->db->select("offroles.*");
+		$this->db->from('offroles');
+        $this->db->where("offroles.status", "1");
+        $query = $this->db->get();
+        return $query->result();
+    }
+	
     function get_datatables() {
         $this->_get_datatables_query();
         if ($_POST['length'] != -1)
@@ -495,12 +503,18 @@ class Employee_model extends CI_Model {
     function validate_emp_email($email, $id = '') {
         if (!empty($id))
             $this->db->where('id !=', $id);
-
         $this->db->where('gi_email', $email);
-
         return $this->db->get('employees')->row_array();
     }
-
+	
+	function validate_offRole_email($email, $id = '') {
+        if (!empty($id))
+            $this->db->where('id !=', $id);
+        $this->db->where('email', $email);
+        return $this->db->get('offroles')->row_array();
+    }
+	
+	
     function get_employee_by_id_new($id) {
         $sql = 'SELECT e.*, u.id as user_id, u.first_name, u.last_name
         FROM employees e

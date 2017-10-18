@@ -39,6 +39,35 @@
                     </div>
                     <div class="panel-body">
                         <div class="tab-content">
+                            <div class="tab-pane fade" id="tab5default">
+                                <table class="table" id="make-data-table_2">
+                                    <thead>
+                                        <tr>
+                                            <th>Exp ID</th>
+                                            <th>Employee ID</th>
+                                            <th>Employee Name</th> 
+                                            <th class="no_sort" style="width:150px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($merge_expense_request as $data) { ?>
+                                            <tr>
+                                                <td><?php echo $data['exp_id']; ?></td>
+                                                <td><?php echo $data['emp_id']; ?></td>
+                                                <td><?php echo $data['requested_name']; ?></td><td nowrap>
+                                                    <?php if ($data['request_status'] == "5") { ?>
+                                                        <a class="btn btn-xs blue" 
+                                                           href="<?php echo base_url() . 'employee_request/merge_expense_pending/' . $data['id']; ?>">
+                                                            <i class="fa fa-edit"></i> Expense Approval
+                                                        </a>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
                             <div class="tab-pane fade in active" id="tab1default">
                                 <table class="table" id="make-data-table">
                                     <thead>
@@ -355,34 +384,6 @@
                                                        href="<?php echo base_url() . 'employee_request/approval_request/' . $data['id']; ?>">
                                                         <i class="fa fa-eye"></i> view
                                                     </a>               
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade" id="tab5default">
-                                <table class="table" id="make-data-table_2">
-                                    <thead>
-                                        <tr>
-                                            <th>Exp ID</th>
-                                            <th>Employee ID</th>
-                                            <th>Employee Name</th> 
-                                            <th class="no_sort" style="width:150px;">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($merge_expense_request as $data) { ?>
-                                            <tr>
-                                                <td><?php echo $data['exp_id']; ?></td>
-                                                <td><?php echo $data['emp_id']; ?></td>
-                                                <td><?php echo $data['requested_name']; ?></td><td nowrap>
-                                                    <?php if ($data['request_status'] == "5") { ?>
-                                                        <a class="btn btn-xs blue" 
-                                                           href="<?php echo base_url() . 'employee_request/merge_expense_pending/' . $data['id']; ?>">
-                                                            <i class="fa fa-edit"></i> Expense Approval
-                                                        </a>
-                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

@@ -1,13 +1,14 @@
 <?php
+
 class Travel_desk extends Admin_Controller {
 
     public function __construct() {
         parent::__construct(true);
 
         $this->is_logged_in();
-		//$this->is_user_admin();
+        //$this->is_user_admin();
         //render template
-        $header_data = array('page' => 'masters','sub' => 'employee_request');
+        $header_data = array('page' => 'masters', 'sub' => 'employee_request');
 
         $this->template->write_view('header', 'templates/header', $header_data);
         $this->template->write_view('footer', 'templates/footer');
@@ -80,7 +81,7 @@ class Travel_desk extends Admin_Controller {
         $view_request['tomorrow'] = $tomorrow;
         $view_request['yesterday'] = $yesterday;
         $view_request['comingWeek'] = $comingWeek;
-//        po($view_request['request']);
+		//po($view_request['request']);
         $this->template->write_view('content', 'travel_desk/index', $view_request);
         $this->template->render();
     }
@@ -517,7 +518,14 @@ class Travel_desk extends Admin_Controller {
 
                     if ($request['travel_ticket'] == '1' || $request['travel_ticket'] == '2') {
                         if ($request['trip_type'] != "1") {
-                            if ($request['trip_ticket'] == '1' && $request['trip_ticket_return'] == '1') {
+                            //New code 
+                            if ($request['return_travel_ticket'] == '1') {
+                                $trip_ticket_return = $request['trip_ticket_return'];
+                            } else {
+                                $trip_ticket_return = 1;
+                            }
+                            if ($request['trip_ticket'] == '1' && $trip_ticket_return == '1') {
+//                            if ($request['trip_ticket'] == '1' && $request['trip_ticket_return'] == '1') {
                                 $trip_ticket = $request['trip_ticket'];
                             } else {
                                 $trip_ticket = "0";
@@ -567,10 +575,10 @@ class Travel_desk extends Admin_Controller {
         }
     }
 
-	public function classification() {
-        $city = $this->travel_request->get_active_city();        
+    public function classification() {
+        $city = $this->travel_request->get_active_city();
         $view_city = array('city' => $city);
-		$this->template->write_view('content', 'travel_desk/classification', $view_city);
+        $this->template->write_view('content', 'travel_desk/classification', $view_city);
         $this->template->render();
     }
 
@@ -613,7 +621,14 @@ class Travel_desk extends Admin_Controller {
 
                     if ($request['travel_ticket'] == '1' || $request['travel_ticket'] == '2') {
                         if ($request['trip_type'] != "1") {
-                            if ($request['trip_ticket'] == '1' && $request['trip_ticket_return'] == '1') {
+                            //New code 
+                            if ($request['return_travel_ticket'] == '1') {
+                                $trip_ticket_return = $request['trip_ticket_return'];
+                            } else {
+                                $trip_ticket_return = 1;
+                            }
+                            if ($request['trip_ticket'] == '1' && $trip_ticket_return == '1') {
+//                            if ($request['trip_ticket'] == '1' && $request['trip_ticket_return'] == '1') {
                                 $trip_ticket = $request['trip_ticket'];
                             } else {
                                 $trip_ticket = "0";
@@ -762,7 +777,14 @@ class Travel_desk extends Admin_Controller {
 
                     if ($request['travel_ticket'] == '1' || $request['travel_ticket'] == '2') {
                         if ($request['trip_type'] != "1") {
-                            if ($request['trip_ticket'] == '1' && $request['trip_ticket_return'] == '1') {
+                            //New code 
+                            if ($request['return_travel_ticket'] == '1') {
+                                $trip_ticket_return = $request['trip_ticket_return'];
+                            } else {
+                                $trip_ticket_return = 1;
+                            }
+                            if ($request['trip_ticket'] == '1' && $trip_ticket_return == '1') {
+//                            if ($request['trip_ticket'] == '1' && $request['trip_ticket_return'] == '1') {
                                 $trip_ticket = $request['trip_ticket'];
                             } else {
                                 $trip_ticket = '';
@@ -785,23 +807,25 @@ class Travel_desk extends Admin_Controller {
                     if ($check_out_date == '') {
                         $data_array['check_out_date'] = null;
                     }
-                    
-					//$cost = $this->input->post('cost');
+
+                    //$cost = $this->input->post('cost');
                     //if ($cost == '') {
-                        //$data_array['cost'] = 0;
+                    //$data_array['cost'] = 0;
                     //}
 
-					$cost = $this->input->post('cost');
+                    $cost = $this->input->post('cost');
                     if ($cost != '') {
                         $data_array['loading_expense_1'] = $cost;
+                    } else {
+                        $data_array['loading_expense_1'] = 0;
                     }
-					else{$data_array['loading_expense_1'] = 0;}
-					
+
                     $other_expense_1 = $this->input->post('other_expense_1');
                     if ($other_expense_1 != '') {
                         $data_array['other_expense_1'] = $other_expense_1;
+                    } else {
+                        $data_array['other_expense_1'] = 0;
                     }
-					else{$data_array['other_expense_1'] = 0;}
 
                     $data_array['hotel_attchment'] = '';
                     if (isset($_FILES['hotel_attchment']['name']) && $_FILES['hotel_attchment']['name'] != null) {
@@ -822,9 +846,9 @@ class Travel_desk extends Admin_Controller {
                         }
                     }
 
-                    $data_array['cost']=0;
-					unset($data_array['occupancy']);
-					//echo '<pre>'; print_r($data_array); exit;
+                    $data_array['cost'] = 0;
+                    unset($data_array['occupancy']);
+                    //echo '<pre>'; print_r($data_array); exit;
                     if ($this->common->insert_data($data_array, 'hotel_booking')) {
                         $data_array = array();
                         $redirect_flag = 0;
@@ -929,21 +953,21 @@ class Travel_desk extends Admin_Controller {
             } else {
                 if (isset($_FILES['flight_attachment']['name']) && $_FILES['flight_attachment']['name'] != null) {
                     $trip_mode = $this->input->post('trip_mode');
-					$check_booking = $this->common->select_data_by_condition('flight_ticket_booking', array('request_id' => $request_id, 'trip_mode' => $trip_mode), 'request_id');
+                    $check_booking = $this->common->select_data_by_condition('flight_ticket_booking', array('request_id' => $request_id, 'trip_mode' => $trip_mode), 'request_id');
 
                     if (empty($check_booking)) {
                         $flight_provider_id = $this->input->post('flight_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
                         $pnr_number = $this->input->post('pnr_number');
                         $trip_number = $this->input->post('flight_number');
-						$reachingAt= $this->input->post('reaching_date');
-						$request = $this->travel_desk->get_travel_request_by_id($request_id);
-                        
-						$boar_date= explode(' ', substr($request['departure_date'], 0, -3));
-						$boar= explode('-', $boar_date[0]);
-						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
-						
-						$car_booking = $request['car_booking'];
+                        $reachingAt = $this->input->post('reaching_date');
+                        $request = $this->travel_desk->get_travel_request_by_id($request_id);
+
+                        $boar_date = explode(' ', substr($request['departure_date'], 0, -3));
+                        $boar = explode('-', $boar_date[0]);
+                        $boarding_date = $boar[2] . '-' . $boar[1] . '-' . $boar[0] . ' ' . $boar_date[1];
+
+                        $car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
 
                         if ($request['car_hire'] == '1' || $request['car_hire'] == '2') {
@@ -989,8 +1013,8 @@ class Travel_desk extends Admin_Controller {
                         $data_array['ticket_type'] = $ticket_type;
                         $data_array['vendor_commission'] = $vendor_commission;
                         $data_array['arrange_by'] = "Company";
-						//echo '<pre>'; print_r($data_array); exit;
-						if ($this->common->insert_data($data_array, 'flight_ticket_booking')) {
+                        //echo '<pre>'; print_r($data_array); exit;
+                        if ($this->common->insert_data($data_array, 'flight_ticket_booking')) {
                             $data_array = array();
                             $booking_mode = 0;
                             $redirect_flag = 0;
@@ -1011,7 +1035,15 @@ class Travel_desk extends Admin_Controller {
                                         $redirect_flag++;
                                     }
                                 } else {
-                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
+//New code 
+                                    if ($request['return_travel_ticket'] == '1') {
+                                        $trip_ticket_return = $request['trip_ticket_return'];
+                                    } else {
+                                        $trip_ticket_return = 1;
+                                    }
+                                    if ($car_booking == "1" && $hotel_booking == "1" && $trip_ticket_return == '1' && $other_manager_expense == "1") {
+
+//                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
                                         $data_array['request_status'] = '4';
                                         $booking_mode = 1;
                                         $redirect_flag++;
@@ -1031,7 +1063,7 @@ class Travel_desk extends Admin_Controller {
                                 } else {
                                     $travel_day = "1";
                                     $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
-									//$travel_date = $request['departure_date'];
+                                    //$travel_date = $request['departure_date'];
                                 }
 
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1101,7 +1133,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR: " . $pnr_number . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time: " .$reachingAt. "</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time: " . $reachingAt . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1129,14 +1161,11 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
-									 {
-									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
-									 }
-									else
-									 {
-									  $this->sendEmail($to_email, $subject, $message);
-									 }
+                                    if (isset($request_data['ea_email']) and $request_data['ea_email'] != '') {
+                                        $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+                                    } else {
+                                        $this->sendEmail($to_email, $subject, $message);
+                                    }
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -1169,7 +1198,7 @@ class Travel_desk extends Admin_Controller {
     }
 
     function train_booking() {
-		if ($this->input->post('request_id')) {
+        if ($this->input->post('request_id')) {
             $request_id = $this->input->post('request_id');
             $this->form_validation->set_rules('train_provider_id', 'train_provider_id', 'required');
             $this->form_validation->set_rules('pnr_number', 'pnr_number', 'required');
@@ -1184,14 +1213,14 @@ class Travel_desk extends Admin_Controller {
                     $trip_mode = $this->input->post('trip_mode');
                     $check_booking = $this->common->select_data_by_condition('train_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
-						$pnr_number = $this->input->post('pnr_number');
+                        $pnr_number = $this->input->post('pnr_number');
                         $trip_number = $this->input->post('train_number');
-						$reachingAt = $this->input->post('reaching_date');
+                        $reachingAt = $this->input->post('reaching_date');
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
-                        $boar_date= explode(' ', substr($request['departure_date'], 0, -3));
-						$boar= explode('-', $boar_date[0]);
-						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
-						$car_booking = $request['car_booking'];
+                        $boar_date = explode(' ', substr($request['departure_date'], 0, -3));
+                        $boar = explode('-', $boar_date[0]);
+                        $boarding_date = $boar[2] . '-' . $boar[1] . '-' . $boar[0] . ' ' . $boar_date[1];
+                        $car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
                         if ($request['car_hire'] == '1' || $request['car_hire'] == '2') {
                             $car_booking = $request['car_booking'];
@@ -1209,12 +1238,11 @@ class Travel_desk extends Admin_Controller {
                             $datediff = $your_date - $now;
                             $travel_day = floor($datediff / (60 * 60 * 24));
                             $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
-							//$travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                            //$travel_date = $request['departure_date'] . " To " . $request['return_date'];
                         } else {
                             $travel_day = "1";
                             //$travel_date = $request['departure_date'];
-							$travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
-							
+                            $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
                         }
 
                         $data_array = $this->input->post();
@@ -1238,7 +1266,7 @@ class Travel_desk extends Admin_Controller {
 
                         $vendor_id = $this->input->post('train_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
-						$boarding_date = $this->input->post('boarding_date');
+                        $boarding_date = $this->input->post('boarding_date');
                         $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
                         $vendor_commission = 0;
                         if (!empty($vendor_data)) {
@@ -1252,7 +1280,7 @@ class Travel_desk extends Admin_Controller {
                         $data_array['vendor_commission'] = $vendor_commission;
                         $data_array['arrange_by'] = "Company";
                         //echo '<pre>'; print_r($data_array); exit;
-						if ($this->common->insert_data($data_array, 'train_ticket_booking')) {
+                        if ($this->common->insert_data($data_array, 'train_ticket_booking')) {
                             $booking_mode = 0;
                             $redirect_flag = 0;
                             $data_array = array();
@@ -1273,7 +1301,15 @@ class Travel_desk extends Admin_Controller {
                                         $booking_mode = 1;
                                     }
                                 } else {
-                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
+                                    //New code 
+                                    if ($request['return_travel_ticket'] == '1') {
+                                        $trip_ticket_return = $request['trip_ticket_return'];
+                                    } else {
+                                        $trip_ticket_return = 1;
+                                    }
+                                    if ($car_booking == "1" && $hotel_booking == "1" && $trip_ticket_return == '1' && $other_manager_expense == "1") {
+
+//                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
                                         $data_array['request_status'] = '4';
                                         $redirect_flag++;
                                         $booking_mode = 1;
@@ -1356,7 +1392,7 @@ class Travel_desk extends Admin_Controller {
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>PNR: " . $pnr_number . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
-	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time: ".$reachingAt."</span></span></p>
+	<span id='docs-internal-guid-b1891aba-d07d-5aac-d1bb-3bc9e9aacf51'><span style='font-size: 10pt; font-family: &quot;Trebuchet MS&quot;; color: rgb(0, 0, 0); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;'>Reaching Date&amp;Time: " . $reachingAt . "</span></span></p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
 	&nbsp;</p>
 <p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1386,14 +1422,11 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
-									 {
-									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
-									 }
-									else
-									 {
-									  $this->sendEmail($to_email, $subject, $message);
-									 }
+                                    if (isset($request_data['ea_email']) and $request_data['ea_email'] != '') {
+                                        $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+                                    } else {
+                                        $this->sendEmail($to_email, $subject, $message);
+                                    }
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -1442,9 +1475,9 @@ class Travel_desk extends Admin_Controller {
                     $check_booking = $this->common->select_data_by_condition('car_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
-						$boar_date= explode(' ', substr($request['departure_date'], 0, -3));
-						$boar= explode('-', $boar_date[0]);
-						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
+                        $boar_date = explode(' ', substr($request['departure_date'], 0, -3));
+                        $boar = explode('-', $boar_date[0]);
+                        $boarding_date = $boar[2] . '-' . $boar[1] . '-' . $boar[0] . ' ' . $boar_date[1];
 
                         $car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
@@ -1482,7 +1515,7 @@ class Travel_desk extends Admin_Controller {
 
                         $vendor_id = $this->input->post('car_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
-						$reachingAt = $this->input->post('reaching_date');
+                        $reachingAt = $this->input->post('reaching_date');
                         $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
                         $vendor_commission = 0;
                         if (!empty($vendor_data)) {
@@ -1516,7 +1549,15 @@ class Travel_desk extends Admin_Controller {
                                         $redirect_flag++;
                                     }
                                 } else {
-                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
+                                    //New code 
+                                    if ($request['return_travel_ticket'] == '1') {
+                                        $trip_ticket_return = $request['trip_ticket_return'];
+                                    } else {
+                                        $trip_ticket_return = 1;
+                                    }
+                                    if ($car_booking == "1" && $hotel_booking == "1" && $trip_ticket_return == '1' && $other_manager_expense == "1") {
+
+//                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
                                         $data_array['request_status'] = '4';
                                         $booking_mode = 1;
                                         $redirect_flag++;
@@ -1533,11 +1574,11 @@ class Travel_desk extends Admin_Controller {
                                     $datediff = $your_date - $now;
                                     $travel_day = floor($datediff / (60 * 60 * 24));
                                     $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
-									//$travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                                    //$travel_date = $request['departure_date'] . " To " . $request['return_date'];
                                 } else {
                                     $travel_day = "1";
                                     $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
-									//$travel_date = $request['departure_date'];
+                                    //$travel_date = $request['departure_date'];
                                 }
 
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1626,16 +1667,12 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    
-									if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
-									 {
-									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
-									 }
-									else
-									 {
-									  $this->sendEmail($to_email, $subject, $message);
-									 }
-									
+
+                                    if (isset($request_data['ea_email']) and $request_data['ea_email'] != '') {
+                                        $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+                                    } else {
+                                        $this->sendEmail($to_email, $subject, $message);
+                                    }
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -1683,9 +1720,9 @@ class Travel_desk extends Admin_Controller {
                     $check_booking = $this->common->select_data_by_condition('bus_ticket_booking', array('trip_mode' => $trip_mode, 'request_id' => $request_id), 'request_id');
                     if (empty($check_booking)) {
                         $request = $this->travel_desk->get_travel_request_by_id($request_id);
-						$boar_date= explode(' ', substr($request['departure_date'], 0, -3));
-						$boar= explode('-', $boar_date[0]);
-						$boarding_date= $boar[2].'-'.$boar[1].'-'.$boar[0].' '.$boar_date[1];
+                        $boar_date = explode(' ', substr($request['departure_date'], 0, -3));
+                        $boar = explode('-', $boar_date[0]);
+                        $boarding_date = $boar[2] . '-' . $boar[1] . '-' . $boar[0] . ' ' . $boar_date[1];
 
                         $car_booking = $request['car_booking'];
                         $hotel_booking = $request['hotel_booking'];
@@ -1723,7 +1760,7 @@ class Travel_desk extends Admin_Controller {
 
                         $vendor_id = $this->input->post('bus_provider_id');
                         $ticket_type = $this->input->post('ticket_type');
-						$reachingAt = $this->input->post('reaching_date');
+                        $reachingAt = $this->input->post('reaching_date');
                         $vendor_data = $this->common->select_data_by_condition('service_proviers', array('id' => $vendor_id), '*');
                         $vendor_commission = 0;
                         if (!empty($vendor_data)) {
@@ -1757,7 +1794,15 @@ class Travel_desk extends Admin_Controller {
                                         $redirect_flag++;
                                     }
                                 } else {
-                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
+//New code 
+                                    if ($request['return_travel_ticket'] == '1') {
+                                        $trip_ticket_return = $request['trip_ticket_return'];
+                                    } else {
+                                        $trip_ticket_return = 1;
+                                    }
+                                    if ($car_booking == "1" && $hotel_booking == "1" && $trip_ticket_return == '1' && $other_manager_expense == "1") {
+
+//                                    if ($car_booking == "1" && $hotel_booking == "1" && $request['trip_ticket_return'] == '1' && $other_manager_expense == "1") {
                                         $data_array['request_status'] = '4';
                                         $booking_mode = 1;
                                         $redirect_flag++;
@@ -1772,11 +1817,11 @@ class Travel_desk extends Admin_Controller {
                                     $datediff = $your_date - $now;
                                     $travel_day = floor($datediff / (60 * 60 * 24));
                                     $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
-									//$travel_date = $request['departure_date'] . " To " . $request['return_date'];
+                                    //$travel_date = $request['departure_date'] . " To " . $request['return_date'];
                                 } else {
                                     $travel_day = "1";
                                     $travel_date = substr($request['departure_date'], 0, -3) . " To " . substr($request['return_date'], 0, -3);
-									//$travel_date = $request['departure_date'];
+                                    //$travel_date = $request['departure_date'];
                                 }
 
                                 $message = "<p dir='ltr' style='line-height:1.2;margin-top:0pt;margin-bottom:0pt;'>
@@ -1869,15 +1914,12 @@ class Travel_desk extends Admin_Controller {
                                     foreach ($travel_email as $key => $value) {
                                         $to_email[] = $value['email'];
                                     }
-                                    
-									if(isset($request_data['ea_email']) and $request_data['ea_email']!='')
-									 {
-									  $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
-									 }
-									else
-									 {
-									  $this->sendEmail($to_email, $subject, $message);
-									 }
+
+                                    if (isset($request_data['ea_email']) and $request_data['ea_email'] != '') {
+                                        $this->sendEmail($to_email, $subject, $message, $request_data['ea_email']);
+                                    } else {
+                                        $this->sendEmail($to_email, $subject, $message);
+                                    }
                                 }
 
                                 $this->session->set_flashdata('success', 'Trip Booked successfully');
@@ -2064,4 +2106,5 @@ class Travel_desk extends Admin_Controller {
         $this->template->write_view('content', 'travel_desk/view_policy', $view_data);
         $this->template->render();
     }
+
 }

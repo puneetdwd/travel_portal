@@ -687,7 +687,7 @@ class Travel_request_model extends CI_Model {
         $sql = "select id,expense_name from " . $TableName . " where status='active';";
         $result = $this->db->query($sql);
         return $result->result_array();
-    } 
+    }
     
     public function get_all_merge_expense_pending_for_manager($employee_id) {
         $sql = "SELECT t.*,e.employee_id as emp_id,CONCAT(u.first_name,' ',u.last_name) as requested_name from merge_expense t "
@@ -697,4 +697,5 @@ class Travel_request_model extends CI_Model {
         $result = $this->db->query($sql);
         return $result->result_array();
     }
+
 }

@@ -1,29 +1,22 @@
 <?php
+if(!defined('BASEPATH'))
+exit('No direct script access allowed');
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-
-class Dashboard extends Admin_Controller {
-
-    public function __construct() {
+class Dashboard extends Admin_Controller{
+    public function __construct(){
         parent::__construct(true);
-
         $this->is_logged_in();
-
         //render template
         $this->template->write_view('header', 'templates/header');
         $this->template->write_view('footer', 'templates/footer');
         $this->load->model('travel_request_model', 'travel_request');
     }
 
-    function test() {
-         
+    function test(){
         $sql = "ALTER TABLE `merge_expense` CHANGE `policy_meet` `policy_meet` TINYINT(4) NULL;";
         $result = $this->db->query($sql);
-//        $result->result_array();  
+		//$result->result_array();  
         po($result);
-        
-        
     }
 
     public function index() {

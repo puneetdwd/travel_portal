@@ -86,10 +86,39 @@ class Users extends CI_Controller {
 //            redirect(base_url() . 'dashboard');
 //        }
 
-        $data = array();
+        $data=array();//first check for offrole employees after that go for normal login function (ldap)
         if ($this->input->post()) {
 
-//            $uid = $_REQUEST['username'];
+		$email = $this->input->post('username');
+		if(filter_var($email, FILTER_VALIDATE_EMAIL))// means it is an offrole member
+		 {
+		  $offRoleMember=$this->db->query("select id, first_name, last_name, password from offroles where email='".$email."'")->row_array();
+		  if(isset($offRoleMember['password']) and $offRoleMember['password']!='')
+		  {
+		   if($offRoleMember['password']==$this->input->post('password'))
+		    {
+			 //make this user login
+			 $nm= $offRoleMember['first_name'].' '.$offRoleMember['last_name'];
+			 $tm= time();
+			 $session_date=array('id'=>$offRoleMember['id'], 'username'=>$email, 'type'=>'offrole', 'employee_id' =>$offRoleMember['id'], 'last_login' =>$tm , 'name' =>$nm);
+			 $this->session->set_userdata($session_date);
+			 redirect(base_url('dashboard'));
+		    }
+		   else
+		    {
+			 $this->session->set_flashdata('error', 'You entered wrong credentials');
+             redirect(base_url());
+		    }
+		  }
+		 }
+		
+		
+		
+		
+		
+		
+		
+		//            $uid = $_REQUEST['username'];
 //            $pwd = $_REQUEST['password'];
 //            $ldap_host = "10.51.82.51"; //final IP conform by Abhishekji 
 ////            $ldap_host = "10.51.82.50";

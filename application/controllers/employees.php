@@ -16,6 +16,83 @@ Class Employees extends Admin_Controller {
         $this->load->model('employee_model');
     }
 
+	public function addOffroles($empID='') {
+        $view_data= array();
+		$states = $this->employee_model->get_all_states();
+        $view_data['states']=$states;
+		if($this->input->post())
+		{
+		 $exist=$this->employee_model->validate_offRole_email($this->input->post('gi_email'), $empID);
+		 if($exist)
+		 {
+		  $this->session->set_flashdata('error', 'This email already exists');
+		  redirect(base_url() . 'employees/offroles');
+		 }
+		 else
+		 {
+		  $data_array= array();
+		  $data_array['email']= $this->input->post('gi_email');
+		  $data_array['first_name']= ucfirst($this->input->post('first_name'));
+		  $data_array['last_name']= ucfirst($this->input->post('last_name'));
+		  $data_array['sex']= lcfirst($this->input->post('gender'));
+		  $data_array['mobile']= $this->input->post('phone');
+		  $data_array['dob']= $this->input->post('dob');
+		  $data_array['state']= $this->input->post('l_state');
+		  $data_array['city_id']= $this->input->post('city_id');
+		  $data_array['address']= $this->input->post('address');
+		  $data_array['country']= $this->input->post('l_country');
+		  $data_array['created']= time();
+		  $data_array['password']= $this->input->post('password');
+		  //$data_array['password']= $this->input->post('password');
+		  $data_array['image']= '';
+		  if($this->common->insert_data($data_array, 'offroles'))
+		  {
+		   $this->session->set_flashdata('success', 'Record Saved Successfully');
+		  }
+		  else
+		  {
+		   $this->session->set_flashdata('error', 'Something went wrong, please try again');
+		  }
+		  redirect(base_url() . 'employees/offroles');
+		 }
+		}
+		$this->template->write_view('content', 'employees/add_offrole_employee', $view_data);
+        $this->template->render();
+    }
+
+	public function offroles() {
+        $employees = array();
+        $view_data = array('employees' => $employees);
+        $this->template->write_view('content', 'employees/offroles', $view_data);
+        $this->template->render();
+    }
+	
+	public function ajax_offrole_list() {
+        $employee_data = $this->employee_model->get_offrole_datatables();
+        $all_employee = array();
+        $response = array();
+        if (!empty($employee_data)) {
+            $start = $this->input->post("start");
+            foreach ($employee_data as $key => $emp) {
+                $result_data = array();
+                $result_data[] = trim($emp->id);
+                $result_data[] = trim($emp->first_name) . " " . trim($emp->last_name);
+                $result_data[] = trim($emp->email);
+                $status = $emp->status == '0' ? 'inactive' : 'active';
+                $result_data[] = "<a class='btn btn-xs green' href=" . base_url() . "employees/view/" . $emp->id . "><i class='fa fa-eye'></i> View </a>
+                <a class='btn btn-xs purple-plum' href=" . base_url() . "employees/add/" . $emp->id . "><i class='fa fa-edit'></i> Edit</a>";
+                $all_employee[] = $result_data;
+            }
+        }
+        $output = array(
+            "draw" => null,
+            "recordsTotal" => 289,
+            "recordsFiltered" => 87,
+            "data" => $all_employee,
+        );
+        echo json_encode($output);
+    }
+	
     public function ajax_list() {
         $employee_data = $this->employee_model->get_datatables();
         $result_data = array();
@@ -367,7 +444,6 @@ Class Employees extends Admin_Controller {
         }
 
         $this->load->model('employee_model');
-
 
         $states = $this->employee_model->get_all_states();
         $view_data['states'] = $states;

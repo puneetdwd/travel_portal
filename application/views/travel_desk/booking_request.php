@@ -153,14 +153,13 @@ if ($request['request_status'] >= "4") {
 <i class="fa fa-check"></i>
 <?php echo $this->session->flashdata('success'); ?>
 </div>
-<?php } ?>
-<div class="row marginZero">
+<?php }
+
+?><div class="row marginZero">
 <div id="cardSpecificDetails" class="alert alert-info" data-original-title="" title="">
 <div class="row " data-original-title="" title="">
 <div class="col-sm-3 text-center" data-original-title="" title="">
-<label>
-<h4 class="label-class ng-binding">
-<?php
+<label><h4 class="label-class ng-binding"><?php
 if ($request['travel_type'] == "1") {
 echo "Flight Travel";
 } else if ($request['travel_type'] == "2") {
@@ -174,18 +173,13 @@ echo " - " . $request['travel_class'];
 if ($request['group_travel'] == "1") {
 echo " (Group Travel)";
 }
-?>
-</h4>
-</label>
-</div>
+?></h4></label></div>
+
 <!--<div class="col-sm-3 text-center" ng-show="travelCardObject.travelType" data-original-title="" title="">
-<label><h4 class="label-class ng-binding"><?php echo $request['travel_class'] ?></h4></label>
-</div>-->
+<label><h4 class="label-class ng-binding"><?php //echo $request['travel_class'] ?></h4></label></div>-->
+
 <div class="col-sm-3 text-center" ng-show="travelCardObject.fromLocation & amp; & amp; travelCardObject.toLocation" data-original-title="" title="">
-<label>
-<h4 class="label-class ng-binding"><?php echo $request['from_city_name'] . " To " . $request['to_city_name']; ?></h4>
-</label>
-</div>
+<label><h4 class="label-class ng-binding"><?php echo $request['from_city_name'] . " To " . $request['to_city_name']; ?></h4></label></div>
 <div class="col-sm-3 text-right" ng-show="travelCardObject.fromLocation & amp; & amp; travelCardObject.toLocation" data-original-title="" title="">                    
 <a style="color:orange;text-decoration: underline" href="#emp_modal" data-toggle="modal"><?php echo $request['employee_name']; ?></a><br>
 <?php if ($request['group_travel'] == "1") { ?>
@@ -212,21 +206,16 @@ if ($request['travel_ticket'] == '1') {
 if ($request['travel_type'] == '1') {
 if ($request['trip_ticket'] != '1') {
 ?><div id="flight_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes">
-<h4 class="form-section marginLeft15">
-<spam class="cutm_lbl btn_blue">Flight Ticket</spam>
+<h4 class="form-section marginLeft15"><spam class="cutm_lbl btn_blue">Flight Ticket</spam>
 <span style="font-size: 13px;">(<?php echo $request['from_city_name'] ?> To <?php echo $request['to_city_name'] ?>)</span>
 <a href="#cancelForm" onClick="setSubjectId('flight');" data-toggle="modal"><span class="cutm_lbl btn_red pull-right">Reject</span></a></h4>
 <form action="<?php echo base_url('travel_desk/flight_booking'); ?>" id="flight_booking" enctype="multipart/form-data" method="post" class="validate-form" role="form">
-<div class="row"><div class="col-md-12">
-
-<?php
+<div class="row"><div class="col-md-12"><?php
 if(isset($request['auto_upgrade']) and $request['auto_upgrade']==1)
  {
   ?><div class="form-group col-xs-12"><b>Approved along with upgrade travel class if required</b></div></br><?php
  }
-?>
-
-<div class="form-group col-xs-12">
+?><div class="form-group col-xs-12">
 <label for="dtp_input3" class="control-label">Boarding Date/Time<span class="required"> * </span></label>
 <div class="input-group date form_datetime" data-date="<?php echo date("Y-m-d", strtotime("+1 day")); ?>T07:00:00Z" data-link-field="dtp_input3">
 <input id="boarding_date" onChange="updateDepDateTime();" class="form-control" size="16" type="text" value="<?php echo date(DATETIME_FORMAT, strtotime($request['departure_date'])); ?>" readonly>
@@ -242,7 +231,7 @@ if(isset($request['auto_upgrade']) and $request['auto_upgrade']==1)
 
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Ticket Provider<span class="required"> * </span>:</label>                                    
-<select id="flight_provider_id"  name="flight_provider_id" class="form-control required select2me"
+<select id="flight_provider_id" name="flight_provider_id" class="form-control required select2me"
 data-placeholder="Select a Flight Provider">
 <option value=''></option>
 <?php foreach ($service_proviers as $data) { ?>
@@ -253,70 +242,50 @@ data-placeholder="Select a Flight Provider">
 </select>
 <!--<label id="flight_provider_id-error" class="error" for="flight_provider_id"></label>-->
 </div>
+
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Ticket Type<span class="required"> * </span>:</label>                                    
 <select id="ticket_type"  name="ticket_type" class="form-control required"
-data-placeholder="Select a Ticket Type">
-<option value='1'>Normal</option>
-</select>
-</div>
+data-placeholder="Select a Ticket Type"><option value='1'>Normal</option></select></div>
+
+
+
+
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">PNR number<span class="required"> * </span>:</label>                                    
-<input type="text" class="form-control required" name="pnr_number">
-</div>
+<input type="text" class="form-control required" name="pnr_number"></div>
 
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Ticket Cost<span class="required"> * </span>:</label>                                    
-<input type="number" class="form-control required" name="cost">
-</div>
+<input type="number" class="form-control required" name="cost"></div>
 
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Tax<span class="required"> * </span>:</label>                                    
-<input type="number" class="form-control required" name="tax">
-</div>
+<input type="number" class="form-control required" name="tax"></div>
 
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Agency Charge<span class="required"> * </span>:</label>                                    
-<input type="number" class="form-control required" name="agency_cost">
-</div>
+<input type="number" class="form-control required" name="agency_cost"></div>
 
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Flight number<span class="required"> * </span>:</label>                                    
-<input type="text" class="form-control required" name="flight_number">
-</div>
+<input type="text" class="form-control required" name="flight_number"></div>
+
 <div class="form-group col-xs-12">
-<label class="control-label text-left-imp">Comment:</label>                                                                            
-<textarea class="form-control" rows="4" name="comment"></textarea>
-</div>
+<label class="control-label text-left-imp">Comment:</label>
+<textarea class="form-control" rows="4" name="comment"></textarea></div>
+
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Attach<span class="required"> * </span>:</label>                                                                            
-<input type="file" class="form-control required" name="flight_attachment">
-</div>
-<div class="form-actions col-xs-12">     
+<input type="file" class="form-control required" name="flight_attachment"></div>
+
+<div class="form-actions col-xs-12">
 <label class="control-label text-left-imp">&nbsp;</label>
 <input type="hidden" name="trip_mode" value="0">
 <input type="hidden" name="booking_city_id" value="<?php echo $booking_city_id; ?>">
 <input type="hidden" name="request_id" value="<?php echo $request['request_id']; ?>">
-<button class="btn green form-control" type="submit">Submit</button>
-</div>
-</div>
-</div>
-<div class="row hidden-xs">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</div>
-</form>
-</div>
-<?php
+<button class="btn green form-control" type="submit">Submit</button></div></div></div>
+<div class="row hidden-xs"><br><br><br><br><br><br><br><br><br><br><br></div></form></div><?php
 }
 }
 }
@@ -365,6 +334,7 @@ data-placeholder="Select a Train Provider">
 <?php } ?>
 </select>
 </div>
+
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Ticket Type<span class="required"> * </span>:</label>                                    
 <select id="ticket_type" name="ticket_type" class="form-control required"
@@ -375,6 +345,7 @@ data-placeholder="Select a Ticket Type">
 <option value='4'>Window</option>
 </select>
 </div>
+
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">PNR number(Put comma for multiple PNRs)<span class="required"> * </span>:</label>                                    
 <input type="text" class="form-control required" name="pnr_number">
@@ -413,25 +384,8 @@ data-placeholder="Select a Ticket Type">
 <input type="hidden" name="booking_city_id" value="<?php echo $booking_city_id; ?>">
 <input type="hidden" name="request_id" value="<?php echo $request['request_id']; ?>">
 <button class="btn green form-control" type="submit">Submit</button>
-</div>
-</div>
-</div>
-<div class="row hidden-xs">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</div>
-</form>
-</div>
-<?php
+</div></div></div><div class="row hidden-xs"><br><br>
+<br><br><br><br><br><br><br><br><br></div></form></div><?php
 }
 }
 }
@@ -439,10 +393,7 @@ if ($request['travel_ticket'] == '1') {
 if ($request['travel_type'] == '3') {
 if ($request['trip_ticket'] != '1') {
 ?><div id="car_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes">
-<h4 class="form-section marginLeft15">
-<spam class="cutm_lbl btn_blue">
-Car Ticket
-</spam>
+<h4 class="form-section marginLeft15"><spam class="cutm_lbl btn_blue">Car Ticket</spam>
 <span style="font-size: 13px;">(<?php echo $request['from_city_name'] ?> To <?php echo $request['to_city_name'] ?>)</span>
 <a href="#cancelForm" onClick="setSubjectId('car');" data-toggle="modal"><span class="cutm_lbl btn_red pull-right">Reject</span></a>
 </h4>
@@ -500,26 +451,8 @@ data-placeholder="Select a Ticket Type">
 <label class="control-label text-left-imp">&nbsp;</label>
 <input type="hidden" name="trip_mode" value="0"><input type="hidden" name="booking_city_id" value="<?php echo $booking_city_id; ?>">
 <input type="hidden" name="request_id" value="<?php echo $request['request_id']; ?>">
-<button class="btn green form-control" type="submit">Submit</button>                                                        
-</div>
-</div>
-</div>
-<div class="row hidden-xs">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</div>
-</form>
-</div>
-<?php
+<button class="btn green form-control" type="submit">Submit</button></div></div></div>
+<div class="row hidden-xs"><br><br><br><br><br><br><br><br><br><br><br></div></form></div><?php
 }
 }
 }
@@ -588,26 +521,8 @@ data-placeholder="Select a Ticket Type">
 <label class="control-label text-left-imp">&nbsp;</label>
 <input type="hidden" name="trip_mode" value="0"><input type="hidden" name="booking_city_id" value="<?php echo $booking_city_id; ?>">
 <input type="hidden" name="request_id" value="<?php echo $request['request_id']; ?>">
-<button class="btn green form-control" type="submit">Submit</button>
-</div>
-</div>
-</div>
-<div class="row hidden-xs">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</div>
-</form>
-</div>
-<?php
+<button class="btn green form-control" type="submit">Submit</button></div></div></div>
+<div class="row hidden-xs"><br><br><br><br><br><br><br><br><br><br><br></div></form></div><?php
 }
 }
 }
@@ -615,10 +530,8 @@ data-placeholder="Select a Ticket Type">
 if ($request['accommodation'] == '1') {
 if ($request['hotel_booking'] != '1') {
 ?><div id="accomodation_HOLDER" class="col-md-4 portlet light bordered set-boxes" style="padding-bottom: 4px;">
-<h4 class="form-section marginLeft15">
-<spam class="cutm_lbl btn_blue">Accommodation</spam>
-<a href="#cancelForm" onClick="setSubjectId('accomodation');" data-toggle="modal"><span class="cutm_lbl btn_red pull-right">Reject</span></a>
-</h4>
+<h4 class="form-section marginLeft15"><spam class="cutm_lbl btn_blue">Accommodation</spam>
+<a href="#cancelForm" onClick="setSubjectId('accomodation');" data-toggle="modal"><span class="cutm_lbl btn_red pull-right">Reject</span></a></h4>
 <form action="<?php echo base_url('travel_desk/hotel_booking'); ?>" id="hotel_booking" enctype="multipart/form-data" method="post" class="validate-form" role="form">
 <div class="row"><div class="col-md-12">
 
@@ -645,14 +558,13 @@ data-placeholder="Select a Accommodation Type">
 <option value='2'>Guest House</option>
 </select>
 </div>
+
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Occupancy<span class="required"> * </span>:</label>                                    
 <select class="form-control select2me" name="occupancy" id="occupancy"
-data-placeholder="Select a Type">
-<option value='1'>Single</option>
-<option value='2'>Double</option>
-</select>
-</div>
+data-placeholder="Select a Type"><option value='1'>Single</option>
+<option value='2'>Double</option></select></div>
+
 <div class="form-group col-xs-12">
 <label class="control-label text-left-imp">Location<span class="required"> * </span>:</label>                                    
 <select id="hotel_city_id"  name="city_id" class="form-control select2me"
@@ -973,12 +885,8 @@ data-placeholder="Select a Ticket Type">
 if ($request['return_travel_ticket'] == '1') {
 if ($request['return_travel_type'] == '3') {
 if ($request['trip_ticket_return'] != '1') {
-?>
-<div id="returnCar_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes" >
-<h4 class="form-section marginLeft15">
-<spam class="cutm_lbl btn_blue">
-Return Car Ticket
-</spam>
+?><div id="returnCar_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes" >
+<h4 class="form-section marginLeft15"><spam class="cutm_lbl btn_blue">Return Car Ticket</spam>
 <span style="font-size: 13px;">(<?php echo $request['to_city_name'] ?> To <?php echo $request['from_city_name'] ?>)</span>
 <a href="#cancelForm" onClick="setSubjectId('returnCar');" data-toggle="modal"><span class="cutm_lbl btn_red pull-right">Reject</span></a>
 </h4>
@@ -1035,15 +943,10 @@ data-placeholder="Select a Ticket Type">
 if ($request['return_travel_ticket'] == '1') {
 if ($request['return_travel_type'] == '4') {
 if ($request['trip_ticket_return'] != '1') {
-?>
-<div id="returnBus_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes" >
-<h4 class="form-section marginLeft15">
-<spam class="cutm_lbl btn_blue">
-Return Bus Ticket
-</spam>
+?><div id="returnBus_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes">
+<h4 class="form-section marginLeft15"><spam class="cutm_lbl btn_blue">Return Bus Ticket</spam>
 <span style="font-size: 13px;">(<?php echo $request['to_city_name'] ?> To <?php echo $request['from_city_name'] ?>)</span>
-<a href="#cancelForm" onClick="setSubjectId('returnBus');" data-toggle="modal"><span class="cutm_lbl btn_red pull-right">Reject</span></a>
-</h4>
+<a href="#cancelForm" onClick="setSubjectId('returnBus');" data-toggle="modal"><span class="cutm_lbl btn_red pull-right">Reject</span></a></h4>
 <form action="<?php echo base_url('travel_desk/bus_ticket_booking'); ?>" id="bus_ticket_booking_return" enctype="multipart/form-data" method="post" class="validate-form" role="form">
 <div class="row">
 <div class="col-md-12">
@@ -1096,12 +999,8 @@ data-placeholder="Select a Ticket Type">
 }
 if ($request['other_manager_expense'] == "0") { ?>
 <div id="otherExp_HOLDER" class="col-md-4 portlet light bordered paddingBottom10 set-boxes" >
-<h4 class="form-section marginLeft15">
-<spam class="cutm_lbl btn_blue">
-Other Expenses <br>
-</spam>
-<span style="font-size: 13px;">(Please Mention Other Expenses Of Traveler If Provided By Travel Desk )</span>
-</h4>
+<h4 class="form-section marginLeft15"><spam class="cutm_lbl btn_blue">Other Expenses <br></spam>
+<span style="font-size: 13px;">(Please Mention Other Expenses Of Traveler If Provided By Travel Desk )</span></h4>
 <form action="<?php echo base_url('travel_desk/other_expense'); ?>" id="other_expense_form" enctype="multipart/form-data" method="post" class="validate-form" role="form">
 <div class="row">
 <div class="col-md-12">

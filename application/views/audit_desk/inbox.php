@@ -28,9 +28,6 @@
             <?php } ?>
             <div class="portlet light bordered">
 
-
-
-
                 <div class="panel with-nav-tabs panel-default">
                     <div class="panel-heading">
                         <ul class="nav nav-tabs">
@@ -146,6 +143,7 @@
                         </div>
                     </div>
                 </div>
+                <!--</div>-->
             </div>
         </div>
     </div>

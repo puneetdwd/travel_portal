@@ -26,7 +26,7 @@ class Finance_desk_model extends CI_Model {
 		left join travel_category on travel_request.travel_class_id = travel_category.id
 		left join indian_cities fromCity on travel_request.from_city_id = fromCity.id
 		left join expense on expense.request_id = travel_request.id
-		left join indian_cities toCity on travel_request.to_city_id = toCity.id  where travel_request.status='active' and merge_expense != '1' and travel_request.approval_status='Approved' and travel_request.request_status='6' and expense.expense_status ='Approved'";
+		left join indian_cities toCity on travel_request.to_city_id = toCity.id  where travel_request.merge_expense !='1' and travel_request.status='active' and travel_request.approval_status='Approved' and travel_request.request_status='6' and expense.expense_status ='Approved'";
         $result = $this->db->query($sql);
         return $result->result_array();
     }
